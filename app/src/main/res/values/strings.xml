@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">snack4diet</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--  EmptyFoodFragment  -->
+    <string name="emptyFood">오늘 등록된 음식이 없어요.\n음식을 촬영하거나\n즐겨찾기에서 등록해보세요!</string>
+    <!--  UserInfoActivity  -->
+    <string name="user_info_guide">약간의 정보로 더 구체적인\n하루 영양 권장량을 알려드려요</string>
+    <!--  ItemMacroNutrients  -->
+    <string name="kcal">칼로리</string>
+    <string name="carbohydrate">탄수화물</string>
+    <string name="protein">단백질</string>
+    <string name="province">지방</string>
+</resources>
