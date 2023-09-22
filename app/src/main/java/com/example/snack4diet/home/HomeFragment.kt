@@ -1,6 +1,8 @@
 package com.example.snack4diet.home
 
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
@@ -62,10 +65,10 @@ class HomeFragment : Fragment() {
         )
 
         nutrients = listOf(
-            Macronutrients(325, 24,32,25),
-            Macronutrients(325, 24,32,25),
-            Macronutrients(325, 24,32,25),
-            Macronutrients(325, 24,32,25)
+            Macronutrients("음식1",325, 24,32,25),
+            Macronutrients("음식2",325, 24,32,25),
+            Macronutrients("음식3",325, 24,32,25),
+            Macronutrients("음식4",325, 24,32,25)
         )
 
         if (dailyNutrition == null) {
@@ -105,6 +108,16 @@ class HomeFragment : Fragment() {
         binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
         binding.recyclerView.visibility = View.VISIBLE
         binding.underLine2.visibility = View.VISIBLE
+
+        diaryAdapter.setOnItemClickListener { position ->
+            // 아이템 클릭 시 바텀시트 프래그먼트를 띄우는 코드
+            val bottomSheetFragment = BottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putInt("position", position) // 아이템 위치 전달
+            bottomSheetFragment.arguments = bundle
+            bottomSheetFragment.setStyle(STYLE_NORMAL, R.style.DialogCustomTheme)
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+        }
     }
 
     private fun setRecyclerView() {
