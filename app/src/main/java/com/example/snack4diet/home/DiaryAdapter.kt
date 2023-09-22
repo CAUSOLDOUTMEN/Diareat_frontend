@@ -24,10 +24,10 @@ class DiaryAdapter(private val nutrients: List<Macronutrients>): RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = nutrients[position]
 
-        holder.kcal.text = item.kcal.toString()
-        holder.protein.text = item.protein.toString()
-        holder.province.text = item.province.toString()
-        holder.carbohydrate.text = item.carbohydrate.toString()
+        holder.kcal.text = item.kcal.toString() + "kcal"
+        holder.protein.text = item.protein.toString() + "g"
+        holder.province.text = item.province.toString() + "g"
+        holder.carbohydrate.text = item.carbohydrate.toString() + "g"
     }
 
     override fun getItemCount(): Int {

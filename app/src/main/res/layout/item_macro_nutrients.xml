@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="432sp"
+    android:layout_width="452sp"
     android:layout_height="132sp"
     android:layout_marginHorizontal="10dp"
     android:layout_marginTop="10dp">
@@ -78,15 +78,26 @@
             android:fontFamily="@font/pretendard"
             android:textColor="@color/black"/>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="7dp"
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="10dp"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:progressTint="@color/orange"
-            android:progress="50"/>
+            android:background="@drawable/round_frame_white_20">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="1dp"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressTint="@color/orange"
+                android:progress="50"/>
+
+        </FrameLayout>
+
+
 
     </LinearLayout>
 

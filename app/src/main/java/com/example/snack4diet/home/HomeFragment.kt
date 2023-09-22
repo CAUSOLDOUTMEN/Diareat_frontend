@@ -1,5 +1,6 @@
 package com.example.snack4diet.home
 
+import android.graphics.Paint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -87,26 +88,37 @@ class HomeFragment : Fragment() {
 
         binding.recyclerView.visibility = View.GONE
         btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.underLine1.visibility = View.VISIBLE
 
         replaceSubFragment(fragment, "EmptyFoodFragment")
     }
 
     private fun setDiaryRecyclerView() {
+        //리사이클러뷰 설정
         diaryAdapter = DiaryAdapter(nutrients)
         binding.recyclerView.adapter = diaryAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        //클릭되지 않은 버튼 처리
         btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        binding.underLine1.visibility = View.GONE
+        //클릭된 버튼 처리
         binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
         binding.recyclerView.visibility = View.VISIBLE
+        binding.underLine2.visibility = View.VISIBLE
     }
 
     private fun setRecyclerView() {
+        //리사이클러뷰 설정
         homeAdapter = HomeAdapter(dailyNutrition, requireContext())
         binding.recyclerView.adapter = homeAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        //클릭된 버튼 처리
         btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.underLine1.visibility = View.VISIBLE
+        //클릭되지 않은 버튼 처리
         binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
         binding.recyclerView.visibility = View.VISIBLE
+        binding.underLine2.visibility = View.GONE
     }
 
     private fun replaceSubFragment(fragment: Fragment, tag: String) {
