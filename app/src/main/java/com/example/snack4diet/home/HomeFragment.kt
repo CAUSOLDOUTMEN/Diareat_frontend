@@ -13,6 +13,8 @@ import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
 import com.example.snack4diet.databinding.FragmentHomeBinding
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -33,6 +35,21 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val today = LocalDate.now()
+        var dayOfWeek = today.dayOfWeek.toString()
+
+        when(dayOfWeek) {
+            DayOfWeek.MONDAY.toString() -> dayOfWeek = "월"
+            DayOfWeek.TUESDAY.toString() -> dayOfWeek = "화"
+            DayOfWeek.WEDNESDAY.toString() -> dayOfWeek = "수"
+            DayOfWeek.THURSDAY.toString() -> dayOfWeek = "목"
+            DayOfWeek.FRIDAY.toString() -> dayOfWeek = "금"
+            DayOfWeek.SATURDAY.toString() -> dayOfWeek = "토"
+            DayOfWeek.SUNDAY.toString() -> dayOfWeek = "일"
+        }
+
+        binding.date.text = "${today.monthValue}월/${today.dayOfMonth}일 ($dayOfWeek)"
 
         btnNutrition = binding.btnTodayNutrition
 
