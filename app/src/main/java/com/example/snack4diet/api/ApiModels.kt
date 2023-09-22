@@ -8,6 +8,7 @@ data class UserInfo(
 )
 
 data class Macronutrients(
+    val foodName: String,
     val kcal: Int,
     val carbohydrate: Int,
     val protein: Int,
@@ -19,3 +20,4 @@ data class NutritionItem(
     val consumedAmount: Int,
     val targetAmount: Int
 )
+
