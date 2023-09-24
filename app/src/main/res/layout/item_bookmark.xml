@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="15dp"
         android:orientation="vertical">
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,21 +26,7 @@
                 android:text="음식 1"
                 android:fontFamily="@font/pretendard"
                 android:textSize="28sp"
-                android:textColor="@color/dark_blue"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginStart="2dp"
-                android:text="9시 05분"
-                android:textSize="16sp"
-                android:textColor="@color/gray"
-                android:fontFamily="@font/pretendard"
-                android:layout_gravity="bottom"/>
+                android:textColor="@color/dark_blue"/>
 
             <Space
                 android:layout_width="0dp"
@@ -48,11 +34,20 @@
                 android:layout_weight="1"/>
 
             <ImageButton
-                android:id="@+id/btnBookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_empty_star"
+                android:src="@drawable/ic_edit"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/btnMagnifier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_close"
                 android:layout_gravity="center"/>
 
         </LinearLayout>
