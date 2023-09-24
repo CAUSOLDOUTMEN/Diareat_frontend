@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.databinding.ItemDiaryBinding
 
@@ -24,6 +25,7 @@ class DiaryAdapter(private val nutrients: List<Macronutrients>): RecyclerView.Ad
         val protein = binding.protein
         val province = binding.province
         val carbohydrate = binding.carbohydrate
+        val btnBookmark = binding.btnBookmark
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,8 +43,21 @@ class DiaryAdapter(private val nutrients: List<Macronutrients>): RecyclerView.Ad
         holder.province.text = item.province.toString() + "g"
         holder.carbohydrate.text = item.carbohydrate.toString() + "g"
 
+        if (item.isBookmark) {
+            holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
+        } else {
+            holder.btnBookmark.setImageResource(R.drawable.ic_empty_star)
+        }
+
         holder.itemView.setOnClickListener {
             onItemClick(position)
+        }
+
+        holder.btnBookmark.setOnClickListener {
+            if (!item.isBookmark) {
+                holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
+                item.isBookmark = true
+            }
         }
     }
 

@@ -12,7 +12,8 @@ data class Macronutrients(
     val kcal: Int,
     val carbohydrate: Int,
     val protein: Int,
-    val province: Int
+    val province: Int,
+    var isBookmark: Boolean
 )
 
 data class NutritionItem(

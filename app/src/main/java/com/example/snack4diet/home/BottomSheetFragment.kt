@@ -28,10 +28,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         position = arguments?.getInt("position", -1)!!
 
         nutrients = listOf(
-            Macronutrients("음식1",325, 24,32,25),
-            Macronutrients("음식2",325, 24,32,25),
-            Macronutrients("음식3",325, 24,32,25),
-            Macronutrients("음식4",325, 24,32,25)
+            Macronutrients("음식1",325, 24,32,25,false),
+            Macronutrients("음식2",325, 24,32,25,false),
+            Macronutrients("음식3",325, 24,32,25,false),
+            Macronutrients("음식4",325, 24,32,25,false)
         )
 
         return binding.root

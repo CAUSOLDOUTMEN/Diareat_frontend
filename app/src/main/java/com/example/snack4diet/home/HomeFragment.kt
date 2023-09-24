@@ -13,9 +13,11 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
+import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.FragmentHomeBinding
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -65,10 +67,10 @@ class HomeFragment : Fragment() {
         )
 
         nutrients = listOf(
-            Macronutrients("음식1",325, 24,32,25),
-            Macronutrients("음식2",325, 24,32,25),
-            Macronutrients("음식3",325, 24,32,25),
-            Macronutrients("음식4",325, 24,32,25)
+            Macronutrients("음식1",325, 24,32,25, false),
+            Macronutrients("음식2",325, 24,32,25, false),
+            Macronutrients("음식3",325, 24,32,25, false),
+            Macronutrients("음식4",325, 24,32,25, false)
         )
 
         if (dailyNutrition == null) {
@@ -83,6 +85,13 @@ class HomeFragment : Fragment() {
 
         binding.btnDiary.setOnClickListener {
             setDiaryRecyclerView()
+        }
+
+        binding.btnBookmark.setOnClickListener {
+            val mainActivity = requireActivity() as MainActivity
+            val fragment = BookmarkFragment()
+
+            mainActivity.replaceFragment(fragment, "BookmarkFragment")
         }
     }
 
