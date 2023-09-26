@@ -10,14 +10,14 @@ import com.example.snack4diet.viewModel.NutrientsViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var nutrients: NutrientsViewModel
+    private lateinit var viewModel: NutrientsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        nutrients = ViewModelProvider(this).get(NutrientsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(NutrientsViewModel::class.java)
 
         setHomeFragment()
     }
@@ -33,5 +33,9 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.mainFrame, fragment, tag)
             .addToBackStack(null) // 이전 프래그먼트를 백스택에 추가
             .commit()
+    }
+
+    fun getViewModel(): NutrientsViewModel {
+        return viewModel
     }
 }

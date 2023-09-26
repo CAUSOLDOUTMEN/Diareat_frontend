@@ -21,4 +21,3 @@ data class NutritionItem(
     val consumedAmount: Int,
     val targetAmount: Int
 )
-

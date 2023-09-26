@@ -12,6 +12,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment.STYLE_NORMAL
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
@@ -19,6 +23,7 @@ import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.FragmentHomeBinding
+import com.example.snack4diet.viewModel.NutrientsViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -28,7 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var dailyNutrition: List<NutritionItem>
     private lateinit var diaryAdapter: DiaryAdapter
-    private lateinit var nutrients: List<Macronutrients>
+    private lateinit var viewModel: NutrientsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +46,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = (requireActivity() as MainActivity).getViewModel()
 
         val today = LocalDate.now()
         var dayOfWeek = today.dayOfWeek.toString()
@@ -64,13 +71,6 @@ class HomeFragment : Fragment() {
             NutritionItem("carbohydrate", 243, 324),
             NutritionItem("protein", 16, 64,),
             NutritionItem("province", 52, 51)
-        )
-
-        nutrients = listOf(
-            Macronutrients("음식1",325, 24,32,25, false),
-            Macronutrients("음식2",325, 24,32,25, false),
-            Macronutrients("음식3",325, 24,32,25, false),
-            Macronutrients("음식4",325, 24,32,25, false)
         )
 
         if (dailyNutrition == null) {
@@ -107,7 +107,10 @@ class HomeFragment : Fragment() {
 
     private fun setDiaryRecyclerView() {
         //리사이클러뷰 설정
-        diaryAdapter = DiaryAdapter(nutrients)
+        diaryAdapter = DiaryAdapter(emptyList()) { nutrient ->
+            viewModel.resisterBookmark(nutrient)
+            diaryAdapter.notifyDataSetChanged()
+        }
         binding.recyclerView.adapter = diaryAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         //클릭되지 않은 버튼 처리
@@ -126,6 +129,11 @@ class HomeFragment : Fragment() {
             bottomSheetFragment.arguments = bundle
             bottomSheetFragment.setStyle(STYLE_NORMAL, R.style.DialogCustomTheme)
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+        }
+
+        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrientsLiveData ->
+            diaryAdapter.nutrients = nutrientsLiveData
+            diaryAdapter.notifyDataSetChanged()
         }
     }
 
