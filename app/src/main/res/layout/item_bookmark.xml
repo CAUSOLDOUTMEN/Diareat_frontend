@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="420sp"
     android:layout_height="190sp"
@@ -34,6 +34,7 @@
                 android:layout_weight="1"/>
 
             <ImageButton
+                android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -42,7 +43,7 @@
                 android:layout_gravity="center"/>
 
             <ImageButton
-                android:id="@+id/btnMagnifier"
+                android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -288,4 +289,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

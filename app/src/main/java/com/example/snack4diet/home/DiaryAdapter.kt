@@ -3,12 +3,13 @@ package com.example.snack4diet.home
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.databinding.ItemDiaryBinding
 
-class DiaryAdapter(private val nutrients: List<Macronutrients>): RecyclerView.Adapter<DiaryAdapter.ViewHolder> () {
+class DiaryAdapter( var nutrients: List<Macronutrients>, private val itemClickListener: (Macronutrients) -> Unit): RecyclerView.Adapter<DiaryAdapter.ViewHolder> () {
     private var onItemClickCallback: ((Int) -> Unit)? = null
 
     fun setOnItemClickListener(callback: (Int) -> Unit) {
@@ -54,10 +55,7 @@ class DiaryAdapter(private val nutrients: List<Macronutrients>): RecyclerView.Ad
         }
 
         holder.btnBookmark.setOnClickListener {
-            if (!item.isBookmark) {
-                holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
-                item.isBookmark = true
-            }
+            itemClickListener(item)
         }
     }
 
