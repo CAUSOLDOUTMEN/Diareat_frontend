@@ -1,5 +1,6 @@
 package com.example.snack4diet.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ class NutrientsViewModel: ViewModel() {
         }
     }
 
-    fun deleteBookmark (nutrient: Macronutrients) {
-        nutrient.isBookmark = false
+    fun deleteBookmark (nutrientName: String) {
+        nutrients.find {it.foodName == nutrientName}?.isBookmark = false
     }
 }

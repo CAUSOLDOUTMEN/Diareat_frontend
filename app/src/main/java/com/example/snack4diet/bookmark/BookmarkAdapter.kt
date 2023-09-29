@@ -41,6 +41,7 @@ class BookmarkAdapter(
 
         holder.btnDelete.setOnClickListener {
             onDeleteListener(item)
+            notifyItemRemoved(position)
         }
     }
 
