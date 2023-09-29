@@ -1,6 +1,7 @@
 package com.example.snack4diet.bookmark
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,20 +36,30 @@ class BookmarkFragment : Fragment() {
 
         //리사이클러뷰 어댑터 설정
         bookmarkAdapter = BookmarkAdapter(emptyList()) { nutrient ->
-            viewModel.deleteBookmark(nutrient)
+            viewModel.deleteBookmark(nutrient.foodName)
+            setViewModel()
             bookmarkAdapter.notifyDataSetChanged()
         }
 
         binding.recyclerView.adapter = bookmarkAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrients ->
+        setViewModel()
+    }
 
-            for (nutrient in nutrients) {
-                if (nutrient.isBookmark) {
-                    bookmarkList.add(nutrient)
-                }
+    fun updateDataSet(nutrients: MutableList<Macronutrients>) {
+        bookmarkList.clear()
+        for (nutrient in nutrients) {
+            if (nutrient.isBookmark) {
+                bookmarkList.add(nutrient)
             }
+        }
+        bookmarkAdapter.notifyDataSetChanged()
+    }
+
+    private fun setViewModel() {
+        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrients ->
+            updateDataSet(nutrients)
             bookmarkAdapter.nutrients = bookmarkList
             bookmarkAdapter.notifyDataSetChanged()
         }
