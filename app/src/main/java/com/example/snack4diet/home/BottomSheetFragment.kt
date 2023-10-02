@@ -8,15 +8,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
 import com.example.snack4diet.databinding.FragmentBottomSheetBinding
+import com.example.snack4diet.viewModel.NutrientsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetBinding
-    private lateinit var nutrients: List<Macronutrients>
+    private lateinit var nutrientList: List<Macronutrients>
+    private lateinit var viewModel: NutrientsViewModel
     private var position = -1
 
     override fun onCreateView(
@@ -27,12 +30,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         position = arguments?.getInt("position", -1)!!
 
-        nutrients = listOf(
-            Macronutrients("음식1",325, 24,32,25,false),
-            Macronutrients("음식2",325, 24,32,25,false),
-            Macronutrients("음식3",325, 24,32,25,false),
-            Macronutrients("음식4",325, 24,32,25,false)
-        )
+        viewModel = (requireActivity() as MainActivity).getViewModel()
+        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrients ->
+            nutrientList = nutrients
+        }
 
         return binding.root
     }

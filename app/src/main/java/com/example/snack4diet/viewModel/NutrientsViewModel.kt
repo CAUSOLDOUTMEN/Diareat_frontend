@@ -8,22 +8,29 @@ import com.example.snack4diet.api.Macronutrients
 
 class NutrientsViewModel: ViewModel() {
     private val nutrients = mutableListOf(
-        Macronutrients("음식1",325, 24,32,25, false),
-        Macronutrients("음식2",325, 24,32,25, false),
-        Macronutrients("음식3",325, 24,32,25, false),
-        Macronutrients("음식4",325, 24,32,25, false)
+        Macronutrients(1,"음식1",325, 24,32,25, false),
+        Macronutrients(2,"음식2",325, 24,32,25, false),
+        Macronutrients(3,"음식3",325, 24,32,25, false),
+        Macronutrients(4,"음식4",325, 24,32,25, false)
     )
+
+    private val bookmarkList = mutableListOf<Macronutrients>()
 
     val nutrientsLiveData: LiveData<MutableList<Macronutrients>>
         get() = MutableLiveData(nutrients)
 
+    val bookmarkLiveData: LiveData<MutableList<Macronutrients>>
+        get () = MutableLiveData(bookmarkList)
+
     fun resisterBookmark (nutrient: Macronutrients) {
-        if (!nutrient.isBookmark) {
-            nutrient.isBookmark = true
+        if (bookmarkList.find {it.foodId == nutrient.foodId} == null) {
+            bookmarkList.add(nutrient)
+            nutrients.find {it.foodId == nutrient.foodId}?.isBookmark = true
         }
     }
 
-    fun deleteBookmark (nutrientName: String) {
-        nutrients.find {it.foodName == nutrientName}?.isBookmark = false
+    fun deleteBookmark(nutrient: Macronutrients) {
+        bookmarkList.removeIf { it.foodId == nutrient.foodId }
+        nutrients.find {it.foodId == nutrient.foodId}?.isBookmark = false
     }
 }
