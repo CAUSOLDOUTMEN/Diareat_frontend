@@ -1,13 +1,15 @@
 package com.example.snack4diet.api
 
 data class UserInfo(
-    val sex: Boolean,
+    val nickname: String,
     val height: Float,
     val weight: Float,
+    val sex: Boolean,
     val age: Int
 )
 
 data class Macronutrients(
+    val foodId: Int,
     val foodName: String,
     val kcal: Int,
     val carbohydrate: Int,

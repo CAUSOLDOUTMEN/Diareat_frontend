@@ -36,7 +36,7 @@ class BookmarkFragment : Fragment() {
 
         //리사이클러뷰 어댑터 설정
         bookmarkAdapter = BookmarkAdapter(emptyList()) { nutrient ->
-            viewModel.deleteBookmark(nutrient.foodName)
+            viewModel.deleteBookmark(nutrient)
             setViewModel()
             bookmarkAdapter.notifyDataSetChanged()
         }
@@ -47,19 +47,8 @@ class BookmarkFragment : Fragment() {
         setViewModel()
     }
 
-    fun updateDataSet(nutrients: MutableList<Macronutrients>) {
-        bookmarkList.clear()
-        for (nutrient in nutrients) {
-            if (nutrient.isBookmark) {
-                bookmarkList.add(nutrient)
-            }
-        }
-        bookmarkAdapter.notifyDataSetChanged()
-    }
-
     private fun setViewModel() {
-        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrients ->
-            updateDataSet(nutrients)
+        viewModel.bookmarkLiveData.observe(requireActivity()) { bookmarkList ->
             bookmarkAdapter.nutrients = bookmarkList
             bookmarkAdapter.notifyDataSetChanged()
         }

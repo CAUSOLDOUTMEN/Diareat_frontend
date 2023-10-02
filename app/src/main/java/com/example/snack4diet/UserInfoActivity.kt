@@ -39,7 +39,7 @@ class UserInfoActivity : AppCompatActivity() {
                 val height = binding.height.text.toString().toFloat()
                 val weight = binding.weight.text.toString().toFloat()
                 val age = binding.age.text.toString().toInt()
-                val user = UserInfo(sex, height, weight, age)
+                val user = UserInfo("hello" , height, weight, sex, age)
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
