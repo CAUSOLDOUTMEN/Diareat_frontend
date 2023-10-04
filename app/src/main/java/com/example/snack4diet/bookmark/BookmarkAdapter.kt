@@ -10,10 +10,12 @@ import com.example.snack4diet.databinding.ItemBookmarkBinding
 
 class BookmarkAdapter(
     var nutrients: List<Macronutrients>,
+    private val itemClickListener: BookmarkFragment.OnItemClickListener,
     private val onDeleteListener: (Macronutrients) -> Unit
     ): RecyclerView.Adapter<BookmarkAdapter.ViewHolder> () {
 
     inner class ViewHolder(binding: ItemBookmarkBinding): RecyclerView.ViewHolder(binding.root) {
+        val itemLayout = binding.itemLayout
         val foodName = binding.foodName
         val kcal = binding.kcal
         val protein = binding.protein
@@ -42,6 +44,10 @@ class BookmarkAdapter(
         holder.btnDelete.setOnClickListener {
             onDeleteListener(item)
             notifyItemRemoved(position)
+        }
+
+        holder.itemLayout.setOnClickListener {
+            itemClickListener.onItemClick(item.foodId)
         }
     }
 
