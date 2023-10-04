@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
         //리사이클러뷰 설정
         diaryAdapter = DiaryAdapter(emptyList()) { nutrient ->
             viewModel.resisterBookmark(nutrient)
-            diaryAdapter.notifyDataSetChanged()
+            setDiaryDataSet()
         }
         binding.recyclerView.adapter = diaryAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -131,6 +131,10 @@ class HomeFragment : Fragment() {
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         }
 
+        setDiaryDataSet()
+    }
+
+    private fun setDiaryDataSet() {
         viewModel.nutrientsLiveData.observe(requireActivity()) { nutrientsLiveData ->
             diaryAdapter.nutrients = nutrientsLiveData
             diaryAdapter.notifyDataSetChanged()

@@ -48,14 +48,13 @@ class DiaryAdapter( var nutrients: List<Macronutrients>, private val itemClickLi
             holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
         } else {
             holder.btnBookmark.setImageResource(R.drawable.ic_empty_star)
+            holder.btnBookmark.setOnClickListener {
+                itemClickListener(item)
+            } // 즐겨찾기에 등록되어 있지 않는 아이템에 대해서만 클릭 리스너 추가
         }
 
         holder.itemView.setOnClickListener {
             onItemClick(position)
-        }
-
-        holder.btnBookmark.setOnClickListener {
-            itemClickListener(item)
         }
     }
 

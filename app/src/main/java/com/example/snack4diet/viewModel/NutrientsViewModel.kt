@@ -23,14 +23,22 @@ class NutrientsViewModel: ViewModel() {
         get () = MutableLiveData(bookmarkList)
 
     fun resisterBookmark (nutrient: Macronutrients) {
-        if (bookmarkList.find {it.foodId == nutrient.foodId} == null) {
-            bookmarkList.add(nutrient)
-            nutrients.find {it.foodId == nutrient.foodId}?.isBookmark = true
-        }
+        val new = nutrient.copy(foodId = bookmarkList.size + 1)
+        bookmarkList.add(new)
+        nutrients.find { it.foodId == nutrient.foodId }?.isBookmark = true
     }
 
     fun deleteBookmark(nutrient: Macronutrients) {
         bookmarkList.removeIf { it.foodId == nutrient.foodId }
         nutrients.find {it.foodId == nutrient.foodId}?.isBookmark = false
+    }
+
+    fun registerDiary(nutrient: Macronutrients) {
+        val new = nutrient.copy(foodId = nutrients.size + 1, isBookmark = true)
+        nutrients.add(new)
+    }
+
+    fun deleteDiary(id: Int) { 
+        nutrients.removeIf { it.foodId == id }
     }
 }
