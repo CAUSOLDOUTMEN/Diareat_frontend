@@ -25,7 +25,7 @@ class UserInfoActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo() {
-        if (binding.height.text.isNullOrEmpty() || binding.weight.text.isNullOrEmpty() || binding.age.text.isNullOrEmpty()) {
+        if (binding.nickname.text.isNullOrEmpty() || binding.height.text.isNullOrEmpty() || binding.weight.text.isNullOrEmpty() || binding.age.text.isNullOrEmpty()) {
             Toast.makeText(this, "모든 항목을 채워주세요.",
                 Toast.LENGTH_SHORT).show()
         } else {
@@ -35,11 +35,12 @@ class UserInfoActivity : AppCompatActivity() {
                 Toast.makeText(this, "성별을 선택해주세요.",
                 Toast.LENGTH_SHORT).show()
             } else {
+                val nickname = binding.nickname.text.toString()
                 val sex: Boolean = selectedButton == R.id.male // false이면 여성 true이면 남성
                 val height = binding.height.text.toString().toFloat()
                 val weight = binding.weight.text.toString().toFloat()
                 val age = binding.age.text.toString().toInt()
-                val user = UserInfo("hello" , height, weight, sex, age)
+                val user = UserInfo(nickname , height, weight, sex, age)
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
