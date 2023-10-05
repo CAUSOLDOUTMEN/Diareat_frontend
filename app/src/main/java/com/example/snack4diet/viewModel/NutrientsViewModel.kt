@@ -38,7 +38,7 @@ class NutrientsViewModel: ViewModel() {
         nutrients.add(new)
     }
 
-    fun deleteDiary(id: Int) { 
+    fun deleteDiary(id: Int) {
         nutrients.removeIf { it.foodId == id }
     }
 }
