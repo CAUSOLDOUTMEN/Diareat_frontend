@@ -3,6 +3,8 @@ package com.example.snack4diet
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.example.snack4diet.api.UserInfo
@@ -19,32 +21,48 @@ class UserInfoActivity : AppCompatActivity() {
 
         radioGroup = binding.sex
 
-        binding.btnSave.setOnClickListener {
-            saveUserInfo()
+        val textWatcher = object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val isClickable =
+                    binding.age.text.isNotEmpty()
+                            && binding.nickname.text.isNotEmpty()
+                            && binding.weight.text.isNotEmpty()
+                            && binding.height.text.isNotEmpty()
+                            && radioGroup.checkedRadioButtonId != -1
+
+                if (isClickable) {
+                    binding.btnSave.isClickable = true
+                    binding.btnSave.setImageResource(R.drawable.ic_btn_save)
+                } else {
+                    binding.btnSave.isClickable = false
+                    binding.btnSave.setImageResource(R.drawable.ic_btn_save_disabled)
+                }
+
+                binding.btnSave.setOnClickListener {
+                    saveUserInfo()
+                }
+            }
         }
+
+        binding.age.addTextChangedListener(textWatcher)
+        binding.height.addTextChangedListener(textWatcher)
+        binding.nickname.addTextChangedListener(textWatcher)
+        binding.weight.addTextChangedListener(textWatcher)
     }
 
     private fun saveUserInfo() {
-        if (binding.nickname.text.isNullOrEmpty() || binding.height.text.isNullOrEmpty() || binding.weight.text.isNullOrEmpty() || binding.age.text.isNullOrEmpty()) {
-            Toast.makeText(this, "모든 항목을 채워주세요.",
-                Toast.LENGTH_SHORT).show()
-        } else {
-            val selectedButton = radioGroup.checkedRadioButtonId
+        val nickname = binding.nickname.text.toString()
+        val sex: Boolean = radioGroup.checkedRadioButtonId == R.id.male // false이면 여성 true이면 남성
+        val height = binding.height.text.toString().toFloat()
+        val weight = binding.weight.text.toString().toFloat()
+        val age = binding.age.text.toString().toInt()
+        val user = UserInfo(nickname , height, weight, sex, age)
 
-            if (selectedButton == -1) {
-                Toast.makeText(this, "성별을 선택해주세요.",
-                Toast.LENGTH_SHORT).show()
-            } else {
-                val nickname = binding.nickname.text.toString()
-                val sex: Boolean = selectedButton == R.id.male // false이면 여성 true이면 남성
-                val height = binding.height.text.toString().toFloat()
-                val weight = binding.weight.text.toString().toFloat()
-                val age = binding.age.text.toString().toInt()
-                val user = UserInfo(nickname , height, weight, sex, age)
-
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
-        }
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }
