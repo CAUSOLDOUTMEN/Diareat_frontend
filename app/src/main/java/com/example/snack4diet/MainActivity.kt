@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment, tag: String) {
         currentFragment = fragment
 
-        if (fragment is BookmarkFragment) {
+        if (fragment is BookmarkFragment || fragment is ProfileFragment) {
             navigation.visibility = View.GONE
             camera.visibility = View.GONE
         }
