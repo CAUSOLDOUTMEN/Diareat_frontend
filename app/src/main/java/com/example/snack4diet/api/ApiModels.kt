@@ -23,3 +23,9 @@ data class NutritionItem(
     val consumedAmount: Int,
     val targetAmount: Int
 )
+
+data class DayWithWeekday(
+    val day: Int,
+    val weekday: String,
+    var isClicked: Boolean = false
+)

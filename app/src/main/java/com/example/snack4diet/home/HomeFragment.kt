@@ -19,13 +19,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.DayWithWeekday
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
 import com.example.snack4diet.bookmark.BookmarkFragment
+import com.example.snack4diet.calendar.CalendarAdapter
 import com.example.snack4diet.databinding.FragmentHomeBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.*
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -34,6 +38,13 @@ class HomeFragment : Fragment() {
     private lateinit var dailyNutrition: List<NutritionItem>
     private lateinit var diaryAdapter: DiaryAdapter
     private lateinit var viewModel: NutrientsViewModel
+    private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var dayList: MutableList<DayWithWeekday>
+    private lateinit var itemClickListener: ItemClickListener
+
+    interface ItemClickListener {
+        fun onItemClick(position: Int)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,19 +61,14 @@ class HomeFragment : Fragment() {
         viewModel = (requireActivity() as MainActivity).getViewModel()
 
         val today = LocalDate.now()
-        var dayOfWeek = today.dayOfWeek.toString()
+        val currentYear = today.year
+        val currentMonth = today.monthValue
+        val currentDay = today.dayOfMonth
 
-        when(dayOfWeek) {
-            DayOfWeek.MONDAY.toString() -> dayOfWeek = "월"
-            DayOfWeek.TUESDAY.toString() -> dayOfWeek = "화"
-            DayOfWeek.WEDNESDAY.toString() -> dayOfWeek = "수"
-            DayOfWeek.THURSDAY.toString() -> dayOfWeek = "목"
-            DayOfWeek.FRIDAY.toString() -> dayOfWeek = "금"
-            DayOfWeek.SATURDAY.toString() -> dayOfWeek = "토"
-            DayOfWeek.SUNDAY.toString() -> dayOfWeek = "일"
-        }
+        setCalendar(currentYear, currentMonth, currentDay)
 
-        binding.date.text = "${today.monthValue}월/${today.dayOfMonth}일 ($dayOfWeek)"
+        binding.year.text = today.year.toString()
+        binding.month.text = today.monthValue.toString()
 
         btnNutrition = binding.btnTodayNutrition
 
@@ -92,6 +98,38 @@ class HomeFragment : Fragment() {
             val fragment = BookmarkFragment()
 
             mainActivity.replaceFragment(fragment, "BookmarkFragment")
+        }
+
+        binding.btnLeft.setOnClickListener {
+            var currentMonth = binding.month.text.toString().toInt()
+            var currentYear = binding.year.text.toString().toInt()
+
+            if (currentMonth > 1) {
+                val newMonth = currentMonth - 1
+                binding.month.text = newMonth.toString()
+                setCalendar(currentYear, newMonth, 1)
+            } else if (currentMonth == 1) {
+                val newYear = currentYear - 1
+                binding.month.text = "12"
+                binding.year.text = newYear.toString()
+                setCalendar(newYear, 12, 1)
+            }
+        }
+
+        binding.btnRight.setOnClickListener {
+            var currentMonth = binding.month.text.toString().toInt()
+            var currentYear = binding.year.text.toString().toInt()
+
+            if (currentMonth < 12) {
+                val newMonth = currentMonth + 1
+                binding.month.text = newMonth.toString()
+                setCalendar(currentYear, newMonth, 1)
+            } else if (currentMonth == 12) {
+                val newYear = currentYear + 1
+                binding.month.text = "1"
+                binding.year.text = newYear.toString()
+                setCalendar(newYear, 1, 1)
+            }
         }
     }
 
@@ -172,5 +210,47 @@ class HomeFragment : Fragment() {
         } else {
             setRecyclerView()
         }
+    }
+
+    private fun setCalendar(year: Int, month: Int, day: Int) {
+        dayList = getDaysInMonth(year, month)
+        var initialPosition = day - 1 // 리사이클러뷰의 시작 위치 인덱스는 0부터 시작
+        dayList[initialPosition].isClicked = true
+
+        itemClickListener = object : ItemClickListener {
+            override fun onItemClick(position: Int) {
+                dayList[initialPosition].isClicked = false
+                initialPosition = position
+                dayList[initialPosition].isClicked = true
+                calendarAdapter.notifyDataSetChanged()
+            }
+        }
+
+        calendarAdapter = CalendarAdapter(dayList, initialPosition, requireContext(), itemClickListener)
+
+        binding.recyclerViewDate.adapter = calendarAdapter
+
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewDate.layoutManager = layoutManager
+
+        // 리사이클러뷰 시작 위치 조정
+        if (initialPosition - 3 < 0) layoutManager.scrollToPosition(0)
+        else layoutManager.scrollToPosition(initialPosition - 3)
+    }
+
+    private fun getDaysInMonth(year: Int, month: Int): MutableList<DayWithWeekday> {
+        val daysWithWeekdays = mutableListOf<DayWithWeekday>()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        val lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        for (i in 1..lastDay) {
+            val date = LocalDate.of(year, month, i)
+            val weekday = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) // 요일을 해당 나라의 언어로 저장하는 방법
+            daysWithWeekdays.add(DayWithWeekday(i, weekday))
+        }
+
+        return daysWithWeekdays
     }
 }
