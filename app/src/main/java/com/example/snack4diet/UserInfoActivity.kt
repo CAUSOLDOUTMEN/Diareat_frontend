@@ -57,8 +57,8 @@ class UserInfoActivity : AppCompatActivity() {
     private fun saveUserInfo() {
         val nickname = binding.nickname.text.toString()
         val sex: Boolean = radioGroup.checkedRadioButtonId == R.id.male // false이면 여성 true이면 남성
-        val height = binding.height.text.toString().toFloat()
-        val weight = binding.weight.text.toString().toFloat()
+        val height = binding.height.text.toString().toDouble()
+        val weight = binding.weight.text.toString().toDouble()
         val age = binding.age.text.toString().toInt()
         val user = UserInfo(nickname , height, weight, sex, age)
 
