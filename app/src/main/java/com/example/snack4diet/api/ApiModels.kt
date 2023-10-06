@@ -2,8 +2,8 @@ package com.example.snack4diet.api
 
 data class UserInfo(
     val nickname: String,
-    val height: Float,
-    val weight: Float,
+    val height: Double,
+    val weight: Double,
     val sex: Boolean,
     val age: Int
 )
