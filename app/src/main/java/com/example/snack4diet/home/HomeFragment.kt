@@ -94,10 +94,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnBookmark.setOnClickListener {
-            val mainActivity = requireActivity() as MainActivity
-            val fragment = BookmarkFragment()
-
-            mainActivity.replaceFragment(fragment, "BookmarkFragment")
+            setBookmarkFragment()
         }
 
         binding.btnLeft.setOnClickListener {
@@ -177,6 +174,13 @@ class HomeFragment : Fragment() {
             diaryAdapter.nutrients = nutrientsLiveData
             diaryAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun setBookmarkFragment() {
+        val mainActivity = requireActivity() as MainActivity
+        val fragment = BookmarkFragment()
+
+        mainActivity.replaceFragment(fragment, "BookmarkFragment")
     }
 
     private fun setRecyclerView() {
