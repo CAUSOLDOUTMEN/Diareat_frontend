@@ -54,6 +54,12 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    fun popFragment() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        }
+    }
+
     fun getViewModel(): NutrientsViewModel {
         return viewModel
     }
