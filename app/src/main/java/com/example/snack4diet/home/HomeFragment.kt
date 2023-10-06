@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.ContactsContract.Profile
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.VelocityTracker
@@ -25,6 +26,7 @@ import com.example.snack4diet.api.NutritionItem
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.calendar.CalendarAdapter
 import com.example.snack4diet.databinding.FragmentHomeBinding
+import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -94,10 +96,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnBookmark.setOnClickListener {
-            val mainActivity = requireActivity() as MainActivity
-            val fragment = BookmarkFragment()
-
-            mainActivity.replaceFragment(fragment, "BookmarkFragment")
+            setBookmarkFragment()
         }
 
         binding.btnLeft.setOnClickListener {
@@ -130,6 +129,10 @@ class HomeFragment : Fragment() {
                 binding.year.text = newYear.toString()
                 setCalendar(newYear, 1, 1)
             }
+        }
+
+        binding.btnProfile.setOnClickListener {
+            setProfileFragment()
         }
     }
 
@@ -177,6 +180,20 @@ class HomeFragment : Fragment() {
             diaryAdapter.nutrients = nutrientsLiveData
             diaryAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun setBookmarkFragment() {
+        val mainActivity = requireActivity() as MainActivity
+        val fragment = BookmarkFragment()
+
+        mainActivity.replaceFragment(fragment, "BookmarkFragment")
+    }
+
+    private fun setProfileFragment() {
+        val mainActivity = requireActivity() as MainActivity
+        val fragment = ProfileFragment()
+
+        mainActivity.replaceFragment(fragment, "ProfileFragment")
     }
 
     private fun setRecyclerView() {

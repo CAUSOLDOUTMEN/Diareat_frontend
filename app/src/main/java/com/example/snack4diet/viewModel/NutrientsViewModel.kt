@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.UserInfo
 
 class NutrientsViewModel: ViewModel() {
     private val nutrients = mutableListOf(
@@ -13,8 +14,8 @@ class NutrientsViewModel: ViewModel() {
         Macronutrients(3,"음식3",325, 24,32,25, false),
         Macronutrients(4,"음식4",325, 24,32,25, false)
     )
-
     private val bookmarkList = mutableListOf<Macronutrients>()
+    private val user = UserInfo("품절남", 180.0, 78.0, true, 24)
 
     val nutrientsLiveData: LiveData<MutableList<Macronutrients>>
         get() = MutableLiveData(nutrients)
@@ -40,5 +41,9 @@ class NutrientsViewModel: ViewModel() {
 
     fun deleteDiary(id: Int) {
         nutrients.removeIf { it.foodId == id }
+    }
+
+    fun getUser(): UserInfo {
+        return user
     }
 }
