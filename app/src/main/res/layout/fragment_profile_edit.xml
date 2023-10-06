@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        android:text="내 정보 수정"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard"
+            android:textColor="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="닉네임"
+            android:textColorHint="@color/black"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard_regular"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="키 (cm)"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard"
+            android:textColor="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="키"
+            android:textColorHint="@color/black"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard_regular"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="몸무게 (kg)"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard"
+            android:textColor="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="몸무게"
+            android:textColorHint="@color/black"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard_regular"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나이 (만)"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard"
+            android:textColor="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="나이"
+            android:textColorHint="@color/black"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard_regular"/>
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            style="@style/CheckBoxStyle"
+            android:background="@android:color/transparent"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="내 정보를 기준으로 기준영양소 자동 계산"
+            android:textSize="18sp"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnFinishEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_btn_finish_edit"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
