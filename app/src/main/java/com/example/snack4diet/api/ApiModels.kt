@@ -1,11 +1,11 @@
 package com.example.snack4diet.api
 
 data class UserInfo(
-    val nickname: String,
-    val height: Double,
-    val weight: Double,
-    val sex: Boolean,
-    val age: Int
+    var nickname: String,
+    var height: Double,
+    var weight: Double,
+    var sex: Boolean,
+    var age: Int
 )
 
 data class Macronutrients(
