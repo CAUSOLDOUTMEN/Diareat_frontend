@@ -46,4 +46,11 @@ class NutrientsViewModel: ViewModel() {
     fun getUser(): UserInfo {
         return user
     }
+
+    fun editUser(nickname: String, height: Double, weight: Double, age: Int) {
+        user.nickname = nickname
+        user.height = height
+        user.weight = weight
+        user.age = age
+    }
 }
