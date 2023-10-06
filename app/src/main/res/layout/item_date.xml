@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/itemLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="69dp"
     android:layout_height="69dp"
@@ -7,12 +8,13 @@
 
     <TextView
         android:id="@+id/day"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="1"
         android:textSize="28sp"
         android:fontFamily="@font/pretendard"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="@color/black"
         />
 
@@ -21,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="월"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:fontFamily="@font/pretendard"
         android:layout_gravity="center"
         android:textColor="@color/black"
