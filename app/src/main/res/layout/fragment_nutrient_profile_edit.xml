@@ -31,7 +31,7 @@
             android:textColor="@color/dark_gray"/>
 
         <EditText
-            android:id="@+id/nickname"
+            android:id="@+id/kcal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -57,7 +57,7 @@
             android:textColor="@color/dark_gray"/>
 
         <EditText
-            android:id="@+id/height"
+            android:id="@+id/carbohydrate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
@@ -83,7 +83,7 @@
             android:textColor="@color/dark_gray"/>
 
         <EditText
-            android:id="@+id/weight"
+            android:id="@+id/protein"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
@@ -109,7 +109,7 @@
             android:textColor="@color/dark_gray"/>
 
         <EditText
-            android:id="@+id/age"
+            android:id="@+id/province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
