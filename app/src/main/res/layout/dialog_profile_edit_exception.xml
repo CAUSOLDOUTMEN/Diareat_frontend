@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/dialogLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="370dp"
+    android:layout_height="180dp"
+    android:elevation="4dp"
+    android:orientation="vertical"
+    android:background="@drawable/round_frame_white_20">
+
+    <TextView
+        android:id="@+id/dialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
+        android:text="잘못된 입력이에요..\n정확한 정보를 알려주세요!"
+        android:fontFamily="@font/pretendard"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/btnOkay"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_btn_okay"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"/>
+    
+</LinearLayout>
