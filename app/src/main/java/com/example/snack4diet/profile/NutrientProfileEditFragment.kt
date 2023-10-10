@@ -1,5 +1,6 @@
 package com.example.snack4diet.profile
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.Toast
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.UserNutrientInfo
+import com.example.snack4diet.databinding.DialogNutrientProfileEditExceptionBinding
 import com.example.snack4diet.databinding.FragmentNutrientProfileEditBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
 
@@ -70,7 +72,19 @@ class NutrientProfileEditFragment : Fragment() {
                 mainActivity.popFragment()
                 Toast.makeText(requireContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show()
             } else {
+                val dialog = Dialog(requireContext())
+                dialog.setContentView(R.layout.dialog_nutrient_profile_edit_exception)
 
+                val dialogBinding = DialogNutrientProfileEditExceptionBinding.bind(dialog.findViewById(R.id.nutrientProfileEditExceptionLayout))
+
+                dialogBinding.btnOkay.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+
+                val window = dialog.window
+                window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
             }
         }
     }
