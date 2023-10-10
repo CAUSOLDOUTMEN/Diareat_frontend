@@ -8,6 +8,13 @@ data class UserInfo(
     var age: Int
 )
 
+data class UserNutrientInfo(
+    var dailyKcal: Int,
+    var dailyCarbohydrate: Int,
+    var dailyProtein: Int,
+    var dailyProvince: Int
+)
+
 data class Macronutrients(
     val foodId: Int,
     val foodName: String,

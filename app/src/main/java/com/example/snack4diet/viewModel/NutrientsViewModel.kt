@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.UserInfo
+import com.example.snack4diet.api.UserNutrientInfo
 
 class NutrientsViewModel: ViewModel() {
     private val nutrients = mutableListOf(
@@ -14,6 +15,7 @@ class NutrientsViewModel: ViewModel() {
         Macronutrients(3,"음식3",325, 24,32,25, false),
         Macronutrients(4,"음식4",325, 24,32,25, false)
     )
+    private val dailyNutrient = UserNutrientInfo(2250, 130, 75, 46)
     private val bookmarkList = mutableListOf<Macronutrients>()
     private val user = UserInfo("품절남", 180.0, 78.0, true, 24)
 
@@ -22,6 +24,9 @@ class NutrientsViewModel: ViewModel() {
 
     val bookmarkLiveData: LiveData<MutableList<Macronutrients>>
         get () = MutableLiveData(bookmarkList)
+
+    val dailyNutrientLiveData: LiveData<UserNutrientInfo>
+        get () = MutableLiveData(dailyNutrient)
 
     fun resisterBookmark (nutrient: Macronutrients) {
         val new = nutrient.copy(foodId = bookmarkList.size + 1)
@@ -52,5 +57,12 @@ class NutrientsViewModel: ViewModel() {
         user.height = height
         user.weight = weight
         user.age = age
+    }
+
+    fun editDailyNutrient(dailyKcal: Int, dailyCarbohydrate: Int, dailyProtein: Int, dailyProvince: Int) {
+        dailyNutrient.dailyKcal = dailyKcal
+        dailyNutrient.dailyCarbohydrate = dailyCarbohydrate
+        dailyNutrient.dailyProtein = dailyProtein
+        dailyNutrient.dailyProvince = dailyProvince
     }
 }
