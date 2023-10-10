@@ -5,56 +5,73 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.UserNutrientInfo
+import com.example.snack4diet.databinding.FragmentNutrientProfileEditBinding
+import com.example.snack4diet.viewModel.NutrientsViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NutrientProfileEditFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NutrientProfileEditFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentNutrientProfileEditBinding
+    private lateinit var viewModel: NutrientsViewModel
+    private lateinit var userDailyNutrient: UserNutrientInfo
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nutrient_profile_edit, container, false)
+        binding = FragmentNutrientProfileEditBinding.inflate(layoutInflater, container, false)
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NutrientProfileEditFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NutrientProfileEditFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val mainActivity = requireActivity() as MainActivity
+        viewModel = mainActivity.getViewModel()
+        viewModel.dailyNutrientLiveData.observe(requireActivity()) { dailyNutrient ->
+            userDailyNutrient = dailyNutrient
+        }
+
+        binding.kcal.hint = userDailyNutrient.dailyKcal.toString()
+        binding.carbohydrate.hint = userDailyNutrient.dailyCarbohydrate.toString()
+        binding.protein.hint = userDailyNutrient.dailyProtein.toString()
+        binding.province.hint = userDailyNutrient.dailyProvince.toString()
+
+        binding.btnFinishEdit.setOnClickListener {
+            var newKcal = binding.kcal.text.toString()
+            var newCarbohydrate = binding.carbohydrate.text.toString()
+            var newProtein = binding.protein.text.toString()
+            var newProvince = binding.province.text.toString()
+
+            if (newKcal.isEmpty()) {
+                newKcal = binding.kcal.hint.toString()
             }
+            if (newCarbohydrate.isEmpty()) {
+                newCarbohydrate = binding.carbohydrate.hint.toString()
+            }
+            if (newProtein.isEmpty()) {
+                newProtein = binding.protein.hint.toString()
+            }
+            if (newProvince.isEmpty()) {
+                newProvince = binding.province.hint.toString()
+            }
+
+            if (
+                newKcal.toInt() in 1000..10000 &&
+                newCarbohydrate.toInt() in 100..500 &&
+                newProtein.toInt() in 25..500 &&
+                newProvince.toInt() in 25..500
+            ) {
+                val mainActivity = requireActivity() as MainActivity
+                viewModel.editDailyNutrient(newKcal.toInt(), newCarbohydrate.toInt(), newProtein.toInt(), newProvince.toInt())
+                mainActivity.popFragment()
+                Toast.makeText(requireContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+
+            }
+        }
     }
 }
