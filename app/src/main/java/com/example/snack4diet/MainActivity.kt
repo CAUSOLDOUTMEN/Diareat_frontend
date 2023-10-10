@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
 import com.example.snack4diet.home.HomeFragment
+import com.example.snack4diet.profile.NutrientProfileEditFragment
 import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
 
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment, tag: String) {
         currentFragment = fragment
 
-        if (fragment is BookmarkFragment || fragment is ProfileFragment) {
+        if (fragment is BookmarkFragment || fragment is ProfileFragment || fragment is NutrientProfileEditFragment) {
             navigation.visibility = View.GONE
             camera.visibility = View.GONE
         }
