@@ -58,4 +58,11 @@ class NutrientsViewModel: ViewModel() {
         user.weight = weight
         user.age = age
     }
+
+    fun editDailyNutrient(dailyKcal: Int, dailyCarbohydrate: Int, dailyProtein: Int, dailyProvince: Int) {
+        dailyNutrient.dailyKcal = dailyKcal
+        dailyNutrient.dailyCarbohydrate = dailyCarbohydrate
+        dailyNutrient.dailyProtein = dailyProtein
+        dailyNutrient.dailyProvince = dailyProvince
+    }
 }
