@@ -30,6 +30,7 @@ import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 
@@ -262,9 +263,10 @@ class HomeFragment : Fragment() {
         calendar.set(Calendar.MONTH, month - 1)
         val lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
+        val formatter = DateTimeFormatter.ofPattern("E", Locale("ko-KR")) // 요일을 해당 나라의 언어로 저장하는 방법
         for (i in 1..lastDay) {
             val date = LocalDate.of(year, month, i)
-            val weekday = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) // 요일을 해당 나라의 언어로 저장하는 방법
+            val weekday = date.format(formatter)
             daysWithWeekdays.add(DayWithWeekday(i, weekday))
         }
 
