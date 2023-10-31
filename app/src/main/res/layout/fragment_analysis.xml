@@ -63,7 +63,7 @@
                 android:id="@+id/btnTodayNutrition"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:text="오늘의 영양"
+                android:text="일기 분석"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 android:background="@android:color/transparent"
@@ -92,7 +92,7 @@
                 android:id="@+id/btnDiary"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:text="다이어리"
+                android:text="내 랭킹"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 android:background="@android:color/transparent"
@@ -127,15 +127,7 @@
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:layout_gravity="center">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="center"/>
+        
     </FrameLayout>
 
 </LinearLayout>
