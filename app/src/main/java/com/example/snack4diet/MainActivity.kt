@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.snack4diet.analysis.AnalysisFragment
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
 import com.example.snack4diet.databinding.DialogCameraGuideBinding
@@ -44,14 +45,34 @@ class MainActivity : AppCompatActivity() {
         binding.btnCamera.setOnClickListener {
             checkPermission()
         }
+
+        binding.btnHome.setOnClickListener {
+            setHomeFragment()
+        }
+
+        binding.btnStatistics.setOnClickListener {
+            setAnalysisFragment()
+        }
     }
 
     private fun setHomeFragment() {
         val homeFragment = HomeFragment()
         navigation.visibility = View.VISIBLE
         camera.visibility = View.VISIBLE
+        binding.btnHome.setImageResource(R.drawable.ic_home_checked)
+        binding.btnStatistics.setImageResource(R.drawable.ic_statistics_unchecked)
 
         replaceFragment(homeFragment, "homeFragment")
+    }
+
+    private fun setAnalysisFragment() {
+        val analysisFragment = AnalysisFragment()
+        navigation.visibility = View.VISIBLE
+        camera.visibility = View.VISIBLE
+        binding.btnHome.setImageResource(R.drawable.ic_home_unchecked)
+        binding.btnStatistics.setImageResource(R.drawable.ic_statistics_checked)
+
+        replaceFragment(analysisFragment, "analysisFragment")
     }
 
     fun replaceFragment(fragment: Fragment, tag: String) {
