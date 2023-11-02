@@ -60,7 +60,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btnTodayNutrition"
+                android:id="@+id/btnDiaryAnalysis"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:text="일기 분석"
@@ -89,7 +89,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btnDiary"
+                android:id="@+id/btnWeeklyRanking"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:text="주간 랭킹"
