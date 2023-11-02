@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주간 식습관 점수"
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="79.60점"
+                android:textSize="45sp"
+                android:fontFamily="@font/pretendard"
+                android:textColor="@color/orange"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_btn_detail_view"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="섭취현황 분석"
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnKcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_btn_kcal_checked"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center" />
+
+            <ImageButton
+                android:id="@+id/btnCarbohydrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_btn_carbohydrate_unchecked"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/btnProtein"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_btn_protein_unchecked"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/btnProvince"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_btn_province_unchecked"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="최근 7일간"
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/dark_gray"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/weekLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="최근 4주간"
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/dark_gray"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/fourWeekLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
