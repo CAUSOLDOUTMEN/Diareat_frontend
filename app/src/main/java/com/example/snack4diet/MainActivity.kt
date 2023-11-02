@@ -1,5 +1,6 @@
 package com.example.snack4diet
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
+import com.example.snack4diet.databinding.DialogCameraGuideBinding
 import com.example.snack4diet.home.HomeFragment
 import com.example.snack4diet.home.camera.CameraActivity
 import com.example.snack4diet.profile.NutrientProfileEditFragment
@@ -98,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         val storagePermissionGranted = ContextCompat.checkSelfPermission(this, storagePermission) == PackageManager.PERMISSION_GRANTED
 
         if (cameraPermissionGranted && storagePermissionGranted) {
-            executeCamera()
+            openCameraGuideDialog()
         } else {
             val permissionsToRequest = ArrayList<String>()
             if (!cameraPermissionGranted) {
@@ -117,5 +119,22 @@ class MainActivity : AppCompatActivity() {
     private fun executeCamera() {
         val intent = Intent(this, CameraActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun openCameraGuideDialog() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_camera_guide)
+
+        val dialogBinding = DialogCameraGuideBinding.bind(dialog.findViewById(R.id.dialogCameraGuide))
+
+        dialogBinding.btnStartCamera.setOnClickListener {
+            executeCamera()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        val window = dialog.window
+        window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
     }
 }
