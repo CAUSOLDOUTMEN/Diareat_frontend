@@ -92,7 +92,7 @@
                 android:id="@+id/btnDiary"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:text="내 랭킹"
+                android:text="주간 랭킹"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 android:background="@android:color/transparent"
