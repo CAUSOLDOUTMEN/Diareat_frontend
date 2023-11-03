@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.databinding.FragmentDiaryAnalysisBinding
 import com.github.mikephil.charting.charts.LineChart
@@ -68,6 +69,11 @@ class DiaryAnalysisFragment : Fragment() {
 
         weekLineChart(weekChartData)
         fourWeekLineChart(fourWeekChartData)
+
+        binding.btnDiaryDetail.setOnClickListener {
+            val mainActivity = requireActivity() as MainActivity
+            mainActivity.setDiaryAnalysisDetailFragment()
+        }
     }
 
     private fun weekLineChart(chartData: ArrayList<Entry>) {
