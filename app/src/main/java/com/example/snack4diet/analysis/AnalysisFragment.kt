@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.example.snack4diet.R
+import com.example.snack4diet.analysis.ranking.WeeklyRankingFragment
 import com.example.snack4diet.databinding.FragmentAnalysisBinding
 
 class AnalysisFragment : Fragment() {
@@ -28,12 +29,36 @@ class AnalysisFragment : Fragment() {
         binding.underLine2.visibility = View.GONE
 
         setDiaryAnalysisFragment()
+
+        binding.btnDiaryAnalysis.setOnClickListener {
+            setDiaryAnalysisFragment()
+        }
+
+        binding.btnWeeklyRanking.setOnClickListener {
+            setWeeklyRankingFragment()
+        }
     }
 
     private fun setDiaryAnalysisFragment() {
         val diaryAnalysisFragment = DiaryAnalysisFragment()
 
+        binding.btnDiaryAnalysis.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.btnWeeklyRanking.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        binding.underLine1.visibility = View.VISIBLE
+        binding.underLine2.visibility = View.GONE
+
         replaceChildFragment(diaryAnalysisFragment, "diaryAnalysisFragment")
+    }
+
+    private fun setWeeklyRankingFragment() {
+        val weeklyRankingFragment = WeeklyRankingFragment()
+
+        binding.btnDiaryAnalysis.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        binding.btnWeeklyRanking.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.underLine2.visibility = View.VISIBLE
+        binding.underLine1.visibility = View.GONE
+
+        replaceChildFragment(weeklyRankingFragment, "weeklyRankingFragment")
     }
 
     private fun replaceChildFragment(fragment: Fragment, tag: String) {

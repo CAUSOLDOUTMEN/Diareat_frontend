@@ -36,3 +36,14 @@ data class DayWithWeekday(
     val weekday: String,
     var isClicked: Boolean = false
 )
+
+data class UserRank(
+    val userId: Long,
+    val name: String,
+    val image: String?,
+    val kcalScore: Double,
+    val carbohydrateScore: Double,
+    val proteinScore: Double,
+    val provinceScore: Double,
+    val totalScore: Double
+)
