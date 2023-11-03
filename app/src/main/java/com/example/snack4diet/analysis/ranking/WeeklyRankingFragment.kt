@@ -1,60 +1,47 @@
 package com.example.snack4diet.analysis.ranking
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.R
+import com.example.snack4diet.api.UserRank
+import com.example.snack4diet.databinding.FragmentWeeklyRankingBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [WeeklyRankingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class WeeklyRankingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private lateinit var binding: FragmentWeeklyRankingBinding
+    private lateinit var followers: List<UserRank>
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weekly_ranking, container, false)
+        binding = FragmentWeeklyRankingBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WeeklyRankingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WeeklyRankingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+
+        followers = listOf(
+            UserRank(1, "중앙대최고아웃풋", null, 20.0, 19.9, 20.15, 19.95, 92.5),
+            UserRank(2, "양념치킨안먹음", null, 20.0, 19.9, 20.15, 19.95, 90.0),
+            UserRank(3, "근데진짜너무더워", null, 20.0, 19.9, 20.15, 19.95, 89.2),
+            UserRank(4, "벤쿠버", null, 20.0, 19.9, 20.15, 19.95, 82.5)
+        )
+
+        setRecyclerView()
+    }
+
+    private fun setRecyclerView() {
+        val adapter = RankingAdapter(followers, 4)
+        binding.rankingRecyclerView.adapter = adapter
+        binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 }
