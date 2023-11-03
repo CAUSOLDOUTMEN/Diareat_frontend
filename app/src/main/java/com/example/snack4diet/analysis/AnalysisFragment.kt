@@ -37,9 +37,9 @@ class AnalysisFragment : Fragment() {
     }
 
     private fun replaceChildFragment(fragment: Fragment, tag: String) {
+        if (!isAdded) return
         childFragmentManager.beginTransaction()
-            .replace(R.id.subFrame, fragment, tag)
-            .addToBackStack(null) // 이전 프래그먼트를 백스택에 추가
+            .replace(R.id.analysisSubFrame, fragment, tag)
             .commit()
     }
 }
