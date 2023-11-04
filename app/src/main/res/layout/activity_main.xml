@@ -19,7 +19,7 @@
         android:layout_height="110dp"
         android:src="@drawable/ic_camera"
         android:background="@drawable/ic_camera_background"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:elevation="4dp"
         android:clipChildren="false"
         android:layout_gravity="center"

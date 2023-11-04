@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="420sp"
-    android:layout_height="190sp"
+    android:layout_width="match_parent"
+    android:layout_height="175dp"
     android:layout_marginVertical="5dp"
     android:layout_marginHorizontal="10dp"
     android:elevation="4dp"
@@ -25,9 +25,9 @@
                 android:layout_height="wrap_content"
                 android:text="음식 1"
                 android:fontFamily="@font/pretendard"
-                android:textSize="28sp"
+                android:textSize="25sp"
                 android:textColor="@color/dark_blue"
-                android:layout_gravity="center"/>
+                android:layout_gravity="top"/>
 
             <TextView
                 android:id="@+id/date"
@@ -37,9 +37,9 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginStart="2dp"
                 android:text="9시 05분"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/gray"
-                android:fontFamily="@font/pretendard"
+                android:fontFamily="@font/pretendard_medium"
                 android:layout_gravity="bottom"/>
 
             <Space
@@ -63,16 +63,17 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:layout_width="170dp"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="15dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -82,7 +83,7 @@
                     <Space
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -93,21 +94,21 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/kcal"
-                            android:textSize="16sp"
-                            android:textColor="@color/dark_blue"
+                            android:layout_gravity="right"
                             android:fontFamily="@font/pretendard"
-                            android:layout_gravity="right"/>
+                            android:text="@string/kcal"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/kcal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="325kcal"
-                            android:textSize="16sp"
                             android:layout_gravity="right"
+                            android:fontFamily="@font/pretendard"
+                            android:text="325kcal"
                             android:textColor="@color/dark_blue"
-                            android:fontFamily="@font/pretendard"/>
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -118,11 +119,12 @@
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="0.1"/>
 
             <FrameLayout
-                android:layout_width="170dp"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
@@ -181,8 +183,9 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:layout_width="170dp"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
@@ -235,11 +238,12 @@
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="0.1"/>
 
             <FrameLayout
-                android:layout_width="170dp"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
