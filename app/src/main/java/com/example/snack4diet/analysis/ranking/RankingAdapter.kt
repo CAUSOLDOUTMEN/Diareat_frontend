@@ -8,7 +8,15 @@ import com.example.snack4diet.R
 import com.example.snack4diet.api.UserRank
 import com.example.snack4diet.databinding.ItemRankingBinding
 
-class RankingAdapter(private val followers: List<UserRank>, private val userId: Long): RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
+class RankingAdapter(private var followers: List<UserRank>, private val userId: Long): RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
+    private var onItemClickCallback: ((Int) -> Unit)? = null
+    fun showBottomSheet(callback: (Int) -> (Unit)) {
+        onItemClickCallback = callback
+    }
+
+    private fun onItemClick(position: Int) {
+        onItemClickCallback?.invoke(position)
+    }
 
     inner class ViewHolder(binding: ItemRankingBinding): RecyclerView.ViewHolder(binding.root) {
         val itemLayout = binding.itemLayout
@@ -37,9 +45,18 @@ class RankingAdapter(private val followers: List<UserRank>, private val userId: 
         if (item.userId == userId) {
             holder.itemLayout.setBackgroundResource(R.drawable.round_frame_light_orange_20)
         }
+
+        holder.itemLayout.setOnClickListener {
+            onItemClick(position)
+        }
     }
 
     override fun getItemCount(): Int {
         return followers.size
+    }
+
+    fun updateData(following: List<UserRank>) {
+        followers = following
+        notifyDataSetChanged()
     }
 }
