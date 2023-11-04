@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="430sp"
+    android:layout_width="match_parent"
     android:layout_height="110sp"
     android:layout_marginVertical="5dp"
     android:layout_marginHorizontal="10dp"
@@ -50,188 +50,168 @@
             android:layout_marginVertical="5dp"
             android:orientation="horizontal">
 
-            <FrameLayout
-                android:layout_width="95dp"
-                android:layout_height="57dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/kcal"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/pretendard"
+                        android:layout_gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/kcal"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/pretendard"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:id="@+id/kcal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="500kcal"
-                            android:textSize="16sp"
-                            android:textColor="@color/dark_blue"
-                            android:fontFamily="@font/pretendard"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/kcal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="500kcal"
+                        android:textSize="16sp"
+                        android:textColor="@color/dark_blue"
+                        android:fontFamily="@font/pretendard"/>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="0.1"/>
 
-            <FrameLayout
-                android:layout_width="95dp"
-                android:layout_height="57dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/carbohydrate"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/pretendard"
+                        android:layout_gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/carbohydrate"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/pretendard"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:id="@+id/protein"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="32g"
-                            android:textSize="16sp"
-                            android:textColor="@color/dark_blue"
-                            android:fontFamily="@font/pretendard"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/protein"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="32g"
+                        android:textSize="16sp"
+                        android:textColor="@color/dark_blue"
+                        android:fontFamily="@font/pretendard"/>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="0.1"/>
 
-            <FrameLayout
-                android:layout_width="95dp"
-                android:layout_height="57dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:background="@drawable/round_frame_white_20_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/protein"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/pretendard"
+                        android:layout_gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/protein"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/pretendard"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:id="@+id/carbohydrate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="11g"
-                            android:layout_gravity="center"
-                            android:textSize="16sp"
-                            android:textColor="@color/dark_blue"
-                            android:fontFamily="@font/pretendard"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/carbohydrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11g"
+                        android:layout_gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/dark_blue"
+                        android:fontFamily="@font/pretendard"/>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="0.1"/>
 
-            <FrameLayout
-                android:layout_width="95dp"
-                android:layout_height="57dp"
-                android:background="@drawable/round_frame_white_20_stroke">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/round_frame_white_20_stroke"
+                android:paddingVertical="5dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/province"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/pretendard"
+                        android:layout_gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/province"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/pretendard"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:id="@+id/province"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="21g"
-                            android:layout_gravity="center"
-                            android:textSize="16sp"
-                            android:textColor="@color/dark_blue"
-                            android:fontFamily="@font/pretendard"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/province"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="21g"
+                        android:layout_gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/dark_blue"
+                        android:fontFamily="@font/pretendard"/>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

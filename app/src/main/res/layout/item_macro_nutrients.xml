@@ -1,105 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="452sp"
-    android:layout_height="132sp"
+    android:id="@+id/itemLayout"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:background="@drawable/round_frame_white_20_stroke_blue">
 
     <LinearLayout
-        android:id="@+id/itemLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:scaleType="centerInside" >
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/nutrientImage"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_kcal"
+            android:layout_gravity="center"/>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_gravity="center"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/nutrient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="left"
                 android:text="@string/kcal"
-                android:fontFamily="@font/pretendard"
+                android:fontFamily="@font/pretendard_bold"
                 android:textColor="@color/black"
-                android:textSize="28sp"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:textSize="23sp"/>
 
             <TextView
                 android:id="@+id/dailyIntake"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/kcal"
-                android:fontFamily="@font/pretendard"
-                android:textColor="@color/black"
-                android:textSize="22sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text=" / "
-                android:fontFamily="@font/pretendard"
-                android:textColor="@color/black"
-                android:textSize="22sp"/>
-
-            <TextView
-                android:id="@+id/targetIntake"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/kcal"
-                android:fontFamily="@font/pretendard"
-                android:textColor="@color/black"
-                android:textSize="22sp"/>
+                android:text="1250kcal / 2500kcal"
+                android:fontFamily="@font/pretendard_semi_bold"
+                android:textColor="@color/dark_gray"
+                android:textSize="18sp"/>
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/percent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_gravity="right"
             android:text="50%"
-            android:textSize="32sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/black"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="7dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/round_frame_white_20">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="1dp"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:progressTint="@color/orange"
-                android:progress="50"/>
-
-        </FrameLayout>
-
-
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:textSize="28sp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/itemLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        android:scaleType="centerInside" >-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/nutrient"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="@string/kcal"-->
+<!--                android:fontFamily="@font/pretendard"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="28sp"/>-->
+
+<!--            <Space-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_weight="1"/>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dailyIntake"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="@string/kcal"-->
+<!--                android:fontFamily="@font/pretendard"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="22sp"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text=" / "-->
+<!--                android:fontFamily="@font/pretendard"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="22sp"/>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/targetIntake"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="@string/kcal"-->
+<!--                android:fontFamily="@font/pretendard"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="22sp"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/percent"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:text="50%"-->
+<!--            android:textSize="32sp"-->
+<!--            android:fontFamily="@font/pretendard"-->
+<!--            android:textColor="@color/black"/>-->
+
+<!--    </LinearLayout>-->
 
 
 </FrameLayout>

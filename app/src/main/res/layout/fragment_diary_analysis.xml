@@ -64,48 +64,54 @@
             android:fontFamily="@font/pretendard_semi_bold"
             android:textColor="@color/black"/>
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/btnKcal"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_btn_kcal_checked"
-                android:background="@android:color/transparent"
-                android:layout_gravity="center" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/btnCarbohydrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_btn_carbohydrate_unchecked"
-                android:background="@android:color/transparent"
-                android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/btnKcal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_btn_kcal_checked"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center" />
 
-            <ImageButton
-                android:id="@+id/btnProtein"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_btn_protein_unchecked"
-                android:background="@android:color/transparent"
-                android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/btnCarbohydrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_btn_carbohydrate_unchecked"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"/>
 
-            <ImageButton
-                android:id="@+id/btnProvince"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_btn_province_unchecked"
-                android:background="@android:color/transparent"
-                android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/btnProtein"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_btn_protein_unchecked"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"/>
 
-        </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnProvince"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_btn_province_unchecked"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
         <TextView
             android:layout_width="wrap_content"
