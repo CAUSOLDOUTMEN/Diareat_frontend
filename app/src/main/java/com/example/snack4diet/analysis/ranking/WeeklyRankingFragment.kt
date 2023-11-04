@@ -39,9 +39,19 @@ class WeeklyRankingFragment : Fragment() {
         viewModel = mainActivity.getViewModel()
 
         setRecyclerView()
+
+        binding.search.setOnClickListener {
+            validateSearch()
+        }
+
+        binding.btnCancel.setOnClickListener {
+            setRecyclerView()
+        }
     }
 
     private fun setRecyclerView() {
+        binding.btnCancel.visibility = View.GONE
+        binding.searchData.text.clear()
         val adapter = RankingAdapter(emptyList(), 4)
         binding.rankingRecyclerView.adapter = adapter
         binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -60,5 +70,29 @@ class WeeklyRankingFragment : Fragment() {
         bottomSheetFragment.arguments = bundle
         bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogCustomTheme)
         bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+    }
+
+    private fun validateSearch() {
+        if (binding.searchData.text.isNullOrEmpty()) return
+        else {
+            showSearchResult()
+        }
+    }
+
+    private fun showSearchResult() {
+        if (binding.searchData.text.toString() == "중앙대") {
+            setSearchRecyclerView()
+        }
+    }
+
+    private fun setSearchRecyclerView() {
+        binding.btnCancel.visibility = View.VISIBLE
+        val searchData = binding.searchData.text.toString()
+        val searchAdapter = SearchAdapter(emptyList(), searchData)
+        binding.rankingRecyclerView.adapter = searchAdapter
+        binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        viewModel.searchUserLiveData.observe(requireActivity()) { searchResult ->
+            searchAdapter.updateData(searchResult)
+        }
     }
 }
