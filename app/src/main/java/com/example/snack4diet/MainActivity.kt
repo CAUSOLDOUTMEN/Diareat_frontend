@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigation: FrameLayout
     private lateinit var camera: ImageButton
     private lateinit var currentFragment: Fragment
+    private var doubleBackToExitPressedOnce = false
+    private val backButtonInterval = 2000
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
@@ -107,16 +111,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrame)
 
         if (currentFragment is BookmarkFragment) {
             navigation.visibility = View.VISIBLE
             camera.visibility = View.VISIBLE
+            super.onBackPressed()
         } else if (currentFragment is ProfileFragment) {
             navigation.visibility = View.VISIBLE
             camera.visibility = View.VISIBLE
 
             setHomeFragment()
+        } else if (currentFragment is HomeFragment || currentFragment is AnalysisFragment) {
+            if (doubleBackToExitPressedOnce) {
+                finish()
+            } else {
+                this.doubleBackToExitPressedOnce = true
+                Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+
+                Handler().postDelayed({
+                    doubleBackToExitPressedOnce = false
+                }, backButtonInterval.toLong())
+            }
+        } else {
+            super.onBackPressed()
         }
     }
 
