@@ -17,9 +17,8 @@ class HomeAdapter(private val nutrients: List<NutritionItem>, private val contex
         val itemLayout = binding.itemLayout
         val nutrient = binding.nutrient
         val dailyIntake = binding.dailyIntake
-        val targetIntake = binding.targetIntake
         val percent = binding.percent
-        val progressbar = binding.progressBar
+        val nutrientImage = binding.nutrientImage
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,29 +32,31 @@ class HomeAdapter(private val nutrients: List<NutritionItem>, private val contex
 
         if (item.nutritionItem == "kcal") {
             holder.nutrient.text = "칼로리"
-            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_kcal)
+            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_white_20_stroke_blue)
+            holder.nutrientImage.setImageResource(R.drawable.ic_kcal)
+            holder.dailyIntake.text = item.consumedAmount.toString() + "kcal / " + item.targetAmount.toString() + "kcal"
         } else if (item.nutritionItem == "carbohydrate") {
             holder.nutrient.text = "탄수화물"
-            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_carbohydrate)
+            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_white_20_stroke_yellow)
+            holder.nutrientImage.setImageResource(R.drawable.ic_carbohydrate)
+            holder.dailyIntake.text = item.consumedAmount.toString() + "g / " + item.targetAmount.toString() + "g"
         } else if (item.nutritionItem == "protein") {
             holder.nutrient.text = "단백질"
-            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_protein)
+            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_white_20_stroke_red)
+            holder.nutrientImage.setImageResource(R.drawable.ic_protein)
+            holder.dailyIntake.text = item.consumedAmount.toString() + "g / " + item.targetAmount.toString() + "g"
         } else if (item.nutritionItem == "province") {
             holder.nutrient.text = "지방"
-            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_province)
+            holder.itemLayout.setBackgroundResource(R.drawable.round_frame_white_20_stroke_gray)
+            holder.nutrientImage.setImageResource(R.drawable.ic_province)
+            holder.dailyIntake.text = item.consumedAmount.toString() + "g / " + item.targetAmount.toString() + "g"
         }
-
-        holder.dailyIntake.text = item.consumedAmount.toString()
-        holder.targetIntake.text = item.targetAmount.toString()
 
         if (item.consumedAmount > item.targetAmount) {
             holder.percent.text = "초과"
             holder.percent.setTextColor(ContextCompat.getColor(context, R.color.red))
-            holder.progressbar.progress = 100
-            holder.progressbar.progressTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red))
         } else {
             holder.percent.text = (item.consumedAmount * 100 / item.targetAmount).toString() + "%"
-            holder.progressbar.progress = (item.consumedAmount * 100 / item.targetAmount)
         }
     }
 
