@@ -1,5 +1,6 @@
 package com.example.snack4diet.analysis.ranking
 
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.UserRank
+import com.example.snack4diet.databinding.DialogRankingGuideBinding
 import com.example.snack4diet.databinding.FragmentWeeklyRankingBinding
 import com.example.snack4diet.home.BottomSheetFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
@@ -46,6 +48,10 @@ class WeeklyRankingFragment : Fragment() {
 
         binding.btnCancel.setOnClickListener {
             setRecyclerView()
+        }
+
+        binding.btnRankingGuide.setOnClickListener {
+            showRankingGuide()
         }
     }
 
@@ -94,5 +100,21 @@ class WeeklyRankingFragment : Fragment() {
         viewModel.searchUserLiveData.observe(requireActivity()) { searchResult ->
             searchAdapter.updateData(searchResult)
         }
+    }
+
+    private fun showRankingGuide() {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.dialog_ranking_guide)
+
+        val dialogBinding = DialogRankingGuideBinding.bind(dialog.findViewById(R.id.rankingGuideLayout))
+
+        dialogBinding.btnOkay.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        val window = dialog.window
+        window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
     }
 }
