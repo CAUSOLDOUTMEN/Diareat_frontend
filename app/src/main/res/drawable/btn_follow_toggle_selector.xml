@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 클릭되었을 때의 백그라운드 -->
+    <item android:drawable="@drawable/ic_btn_following" android:state_checked="true" />
+
+    <!-- 클릭되지 않았을 때의 백그라운드 -->
+    <item android:drawable="@drawable/ic_btn_follow" android:state_checked="false" />
+</selector>
