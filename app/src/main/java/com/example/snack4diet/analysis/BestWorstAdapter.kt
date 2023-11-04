@@ -26,10 +26,10 @@ class BestWorstAdapter(private val items: List<Macronutrients>): RecyclerView.Ad
         val item = items[position]
 
         holder.foodName.text = item.foodName
-        holder.kcal.text = item.kcal.toString()
-        holder.carbohydrate.text = item.carbohydrate.toString()
-        holder.protein.text = item.protein.toString()
-        holder.province.text = item.province.toString()
+        holder.kcal.text = item.kcal.toString() + "kcal"
+        holder.carbohydrate.text = item.carbohydrate.toString() + "g"
+        holder.protein.text = item.protein.toString() + "g"
+        holder.province.text = item.province.toString() + "g"
     }
 
     override fun getItemCount(): Int {
