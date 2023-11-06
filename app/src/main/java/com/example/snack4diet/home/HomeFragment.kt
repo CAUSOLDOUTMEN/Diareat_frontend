@@ -135,6 +135,10 @@ class HomeFragment : Fragment() {
         binding.btnProfile.setOnClickListener {
             setProfileFragment()
         }
+
+        binding.btnFoodEntry.setOnClickListener {
+            setFoodEntryFragment()
+        }
     }
 
     private fun setEmptyFragment() {
@@ -143,11 +147,13 @@ class HomeFragment : Fragment() {
         binding.recyclerView.visibility = View.GONE
         btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
         binding.underLine1.visibility = View.VISIBLE
+        binding.btnFoodEntry.visibility = View.GONE
 
         replaceSubFragment(fragment, "EmptyFoodFragment")
     }
 
     private fun setDiaryRecyclerView() {
+        binding.btnFoodEntry.visibility = View.VISIBLE
         //리사이클러뷰 설정
         diaryAdapter = DiaryAdapter(emptyList()) { nutrient ->
             viewModel.resisterBookmark(nutrient)
@@ -197,7 +203,15 @@ class HomeFragment : Fragment() {
         mainActivity.replaceFragment(fragment, "ProfileFragment")
     }
 
+    private fun setFoodEntryFragment() {
+        val mainActivity = requireActivity() as MainActivity
+        val fragment = FoodEntryFragment()
+
+        mainActivity.replaceFragment(fragment, "FoodEntryFragment")
+    }
+
     private fun setRecyclerView() {
+        binding.btnFoodEntry.visibility = View.GONE
         //리사이클러뷰 설정
         homeAdapter = HomeAdapter(dailyNutrition, requireContext())
         binding.recyclerView.adapter = homeAdapter
