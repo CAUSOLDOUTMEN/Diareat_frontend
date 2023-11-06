@@ -68,6 +68,14 @@ class NutrientsViewModel: ViewModel() {
         nutrients.removeIf { it.foodId == id }
     }
 
+    fun addDiary(nutrient: Macronutrients) {
+        nutrients.add(nutrient)
+    }
+
+    fun getNutrientsSize(): Int {
+        return nutrients.size
+    }
+
     fun getUser(): UserInfo {
         return user
     }
