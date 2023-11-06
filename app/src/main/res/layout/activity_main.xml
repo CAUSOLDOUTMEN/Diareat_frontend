@@ -15,8 +15,8 @@
 
     <ImageButton
         android:id="@+id/btnCamera"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/ic_camera"
         android:background="@drawable/ic_camera_background"
         android:layout_marginBottom="20dp"
