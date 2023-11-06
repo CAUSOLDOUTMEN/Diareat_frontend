@@ -5,56 +5,64 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.databinding.FragmentFoodEntryBinding
+import com.example.snack4diet.viewModel.NutrientsViewModel
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FoodEntryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FoodEntryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentFoodEntryBinding
+    private lateinit var viewModel: NutrientsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_food_entry, container, false)
+        binding = FragmentFoodEntryBinding.inflate(layoutInflater, container, false)
+        viewModel = (requireActivity() as MainActivity).getViewModel()
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FoodEntryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FoodEntryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val currentTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+
+        binding.foodName.hint = currentTime.hour.toString() + "시 " + currentTime.minute.toString() + "분의 음식"
+
+        binding.btnFoodSave.setOnClickListener {
+            saveFood()
+        }
+    }
+
+    private fun saveFood() {
+        var foodName = ""
+
+        if (binding.foodName.text.isEmpty()) foodName = binding.foodName.hint.toString()
+        else foodName = binding.foodName.text.toString()
+
+        val kcal = binding.editKcalAmount
+        val carbohydrate = binding.EditCarbohydrateAmount
+        val protein = binding.EditProteinAmount
+        val province = binding.EditProvinceAmount
+
+        if (kcal.text.isNullOrEmpty() || carbohydrate.text.isNullOrEmpty() ||
+            protein.text.isNullOrEmpty() || province.text.isNullOrEmpty()) {
+
+            Toast.makeText(requireContext(), "모든 항목을 채워주세요.", Toast.LENGTH_SHORT).show()
+        } else {
+            val id = viewModel.getNutrientsSize() + 1
+            val nutrient = Macronutrients(id, foodName, kcal.text.toString().toInt(), carbohydrate.text.toString().toInt(), protein.text.toString().toInt(), province.text.toString().toInt(), false)
+
+            viewModel.addDiary(nutrient)
+            Toast.makeText(requireContext(), "저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+
+            (requireActivity() as MainActivity).setHomeFragment()
+        }
     }
 }
