@@ -19,6 +19,7 @@ import com.example.snack4diet.analysis.DiaryAnalysisDetailFragment
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
 import com.example.snack4diet.databinding.DialogCameraGuideBinding
+import com.example.snack4diet.home.FoodEntryFragment
 import com.example.snack4diet.home.HomeFragment
 import com.example.snack4diet.home.camera.CameraActivity
 import com.example.snack4diet.profile.NutrientProfileEditFragment
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setHomeFragment() {
+    fun setHomeFragment() {
         val homeFragment = HomeFragment()
         navigation.visibility = View.VISIBLE
         camera.visibility = View.VISIBLE
@@ -89,7 +90,11 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment, tag: String) {
         currentFragment = fragment
 
-        if (fragment is BookmarkFragment || fragment is ProfileFragment || fragment is NutrientProfileEditFragment) {
+        if (
+            fragment is BookmarkFragment ||
+            fragment is ProfileFragment ||
+            fragment is NutrientProfileEditFragment ||
+            fragment is FoodEntryFragment) {
             navigation.visibility = View.GONE
             camera.visibility = View.GONE
         }
@@ -113,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrame)
 
-        if (currentFragment is BookmarkFragment) {
+        if (currentFragment is BookmarkFragment || currentFragment is FoodEntryFragment) {
             navigation.visibility = View.VISIBLE
             camera.visibility = View.VISIBLE
             super.onBackPressed()
