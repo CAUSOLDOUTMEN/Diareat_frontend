@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnKaKaoLogin.setOnClickListener {
-            val intent = Intent(this, UserInfoActivity::class.java)
+            val intent = Intent(this, KakaoLoginActivity::class.java)
             startActivity(intent)
 
             finish()
