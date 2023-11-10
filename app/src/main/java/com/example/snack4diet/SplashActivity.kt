@@ -1,20 +1,39 @@
 package com.example.snack4diet
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.example.snack4diet.databinding.ActivityMainBinding
-import com.example.snack4diet.databinding.ActivitySplashBinding
+import com.example.snack4diet.application.MyApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var app: MyApplication
+    private var jwt: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        app = applicationContext as MyApplication
+        sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        jwt = sharedPreferences.getString("jwt", null)
+
         Handler(Looper.getMainLooper()).postDelayed({
+
+//            if (jwt == null) {  // 신규 유저 로그인
+//                val intent = Intent(this, LoginActivity::class.java)
+//                startActivity(intent)
+//            } else {    // 기존 유저 로그인
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent)
+//            }
 
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
