@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.databinding.ActivityLoginBinding
 import com.kakao.sdk.auth.model.OAuthToken
@@ -18,10 +19,13 @@ import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class KakaoLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var app: MyApplication
+    private lateinit var progressDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +33,13 @@ class KakaoLoginActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val app = applicationContext as MyApplication
+        app = applicationContext as MyApplication
         sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
 
         //카카오톡 설치되어있는지 확인
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            // 로딩 스피너
+            showProgressDialog()
             // 카카오톡 로그인
             UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
                 // 로그인 실패 부분
@@ -52,23 +58,29 @@ class KakaoLoginActivity : AppCompatActivity() {
                 else if (token != null) {
                     Log.e(TAG, "로그인 성공 ${token.accessToken}")
 
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        try {
-//                            val response = app.apiService.getJwtToken(token.accessToken)
-//                            Log.d("userId", response.userId.toString())
-//                            sharedPreferences.edit().putLong("id", response.userId)
-//                            saveAccessToken(response.tokenDto.accessToken)
-//                            saveRefreshToken(response.tokenDto.refreshToken)
-//                            checkStoredTokens()
-//                        } catch (e: Exception) {
-//                            Log.e("KaKaoLoginActivity", "Error during getJwtToken API call", e)
-//                        }
-//                        makeToast()
-//                    }
-                    makeToast()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val response = app.apiService.kakaoLogin(token.accessToken)
+
+                            if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                                makeToast()
+                            } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
+                                val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
+                                intent.putExtra("accessToken", token.accessToken)
+                                startActivity(intent)
+                            }
+
+                        } catch (e: Exception) {
+                            Log.e("KaKaoLoginActivity", "Error during Login API call", e)
+                        } finally {
+                            progressDialog.dismiss()
+                        }
+                    }
                 }
             }
         } else {
+            // 로딩 스피너
+            showProgressDialog()
             //카카오 이메일 로그인
             UserApiClient.instance.loginWithKakaoAccount(this){ token, error ->
                 // 로그인 실패 부분
@@ -86,20 +98,25 @@ class KakaoLoginActivity : AppCompatActivity() {
                 // 로그인 성공 부분
                 else if (token != null) {
                     Log.e(TAG, "로그인 성공 ${token.accessToken}")
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        try {
-//                            val response = app.apiService.getJwtToken(token.accessToken)
-//                            Log.d("userId", response.userId.toString())
-//                            sharedPreferences.edit().putLong("id", response.userId)
-//                            saveAccessToken(response.tokenDto.accessToken)
-//                            saveRefreshToken(response.tokenDto.refreshToken)
-//                            checkStoredTokens()
-//                        } catch (e: Exception) {
-//                            Log.e("KaKaoLoginActivity", "Error during getJwtToken API call", e)
-//                        }
-//                        makeToast()
-//                    }
-                    makeToast()
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val response = app.apiService.kakaoLogin(token.accessToken)
+
+                            if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                                makeToast()
+                            } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
+                                val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
+                                intent.putExtra("accessToken", token.accessToken)
+                                startActivity(intent)
+                            }
+
+                        } catch (e: Exception) {
+                            Log.e("KaKaoLoginActivity", "Error during Login API call", e)
+                        } finally {
+                            progressDialog.dismiss()
+                        }
+                    }
                 }
             }
         }
@@ -108,33 +125,11 @@ class KakaoLoginActivity : AppCompatActivity() {
     private fun makeToast(){
         UserApiClient.instance.me { user, error ->
             Log.e(TAG, "닉네임 ${user?.kakaoAccount?.profile?.nickname}")
-            Log.e(TAG, "이메일 ${user?.kakaoAccount?.email}")
-            val app = applicationContext as MyApplication
 
-            val intent = Intent(this, UserInfoActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
+            Toast.makeText(this, "${user?.kakaoAccount?.profile?.nickname}님 환영합니다.", Toast.LENGTH_SHORT).show()
             startActivity(intent)
             finish()
-
-//            if (email == user?.kakaoAccount?.email && nickname != null) {
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
-//
-//                finish()
-//            } else {
-//                val email = user?.kakaoAccount?.email!!
-//                sharedPreferences.edit().putString("email", email).apply()
-//
-//                Toast.makeText(
-//                    this,
-//                    "${user?.kakaoAccount?.profile?.nickname}님 환영합니다.",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//                val intent = Intent(this, MemberInformationActivity::class.java)
-//
-//                startActivity(intent)
-//                finish()
-//            }
         }
     }
 
@@ -173,23 +168,31 @@ class KakaoLoginActivity : AppCompatActivity() {
         else if (token != null) {
             Log.e(TAG, "로그인 성공 ${token.accessToken}")
 
-            val app = applicationContext as MyApplication
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = app.apiService.kakaoLogin(token.accessToken)
 
-//            CoroutineScope(Dispatchers.IO).launch {
-//                try {
-//                    val response = app.apiService.getJwtToken(token.accessToken)
-//                    Log.d("userId", response.userId.toString())
-//                    sharedPreferences.edit().putLong("id", response.userId)
-//                    saveAccessToken(response.tokenDto.accessToken)
-//                    saveRefreshToken(response.tokenDto.refreshToken)
-//
-//                    checkStoredTokens()
-//                } catch (e: Exception) {
-//                    Log.e("KaKaoLoginActivity", "Error during getJwtToken API call", e)
-//                }
-//                makeToast()
-//            }
-            makeToast()
+                    if (response.data?.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                        makeToast()
+                    } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
+                        val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
+                        intent.putExtra("accessToken", token.accessToken)
+                        startActivity(intent)
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("KaKaoLoginActivity", "Error during Login API call", e)
+                } finally {
+                    progressDialog.dismiss()
+                }
+            }
         }
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = AlertDialog.Builder(this)
+            .setView(R.layout.progress_dialog)
+            .setCancelable(false)
+            .show()
     }
 }

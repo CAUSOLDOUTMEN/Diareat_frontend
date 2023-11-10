@@ -47,3 +47,10 @@ data class UserRank(
     val provinceScore: Double,
     val totalScore: Double
 )
+
+data class UserSearch (
+    var follow: Boolean,
+    val image: String?,
+    val name: String,
+    val userId: Int
+)
