@@ -78,8 +78,8 @@ class UserInfoActivity : AppCompatActivity() {
         val age = binding.age.text.toString().toInt()
         val app = applicationContext as MyApplication
 
-        if (radioGroup.checkedRadioButtonId == R.id.male) gender = 1
-        else if (radioGroup.checkedRadioButtonId == R.id.female) gender = 0
+        if (radioGroup.checkedRadioButtonId == R.id.male) gender = 0
+        else if (radioGroup.checkedRadioButtonId == R.id.female) gender = 1
 
         val user = Join(age, gender, height, nickname, accessToken, weight)
 
