@@ -1,11 +1,14 @@
 package com.example.snack4diet
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -16,6 +19,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.snack4diet.analysis.AnalysisFragment
 import com.example.snack4diet.analysis.DiaryAnalysisDetailFragment
+import com.example.snack4diet.api.createFood.CreateFood
+import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
 import com.example.snack4diet.databinding.DialogCameraGuideBinding
@@ -25,15 +30,22 @@ import com.example.snack4diet.home.camera.CameraActivity
 import com.example.snack4diet.profile.NutrientProfileEditFragment
 import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: NutrientsViewModel
     private lateinit var navigation: FrameLayout
     private lateinit var camera: ImageButton
+    lateinit var application: MyApplication
     private lateinit var currentFragment: Fragment
     private var doubleBackToExitPressedOnce = false
-    private val backButtonInterval = 2000
+    private val backButtonInterval = 200
+    private var userId = -1L
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
@@ -42,9 +54,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        application = applicationContext as MyApplication
+
+        sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         viewModel = ViewModelProvider(this).get(NutrientsViewModel::class.java)
         navigation = binding.navigationFrame
         camera = binding.btnCamera
+        userId = sharedPreferences.getLong("id", -1L)
 
         setHomeFragment()
 
@@ -94,7 +110,8 @@ class MainActivity : AppCompatActivity() {
             fragment is BookmarkFragment ||
             fragment is ProfileFragment ||
             fragment is NutrientProfileEditFragment ||
-            fragment is FoodEntryFragment) {
+            fragment is FoodEntryFragment
+        ) {
             navigation.visibility = View.GONE
             camera.visibility = View.GONE
         }
@@ -145,10 +162,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermission() {
         val cameraPermission = android.Manifest.permission.CAMERA
-        val storagePermission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE // 또는 Manifest.permission.READ_EXTERNAL_STORAGE
+        val storagePermission =
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE // 또는 Manifest.permission.READ_EXTERNAL_STORAGE
 
-        val cameraPermissionGranted = ContextCompat.checkSelfPermission(this, cameraPermission) == PackageManager.PERMISSION_GRANTED
-        val storagePermissionGranted = ContextCompat.checkSelfPermission(this, storagePermission) == PackageManager.PERMISSION_GRANTED
+        val cameraPermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            cameraPermission
+        ) == PackageManager.PERMISSION_GRANTED
+        val storagePermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            storagePermission
+        ) == PackageManager.PERMISSION_GRANTED
 
         if (cameraPermissionGranted && storagePermissionGranted) {
             openCameraGuideDialog()
@@ -162,7 +186,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             val permissionsArray = permissionsToRequest.toTypedArray()
-            ActivityCompat.requestPermissions(this, permissionsArray, CAMERA_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsArray,
+                CAMERA_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
@@ -176,7 +204,8 @@ class MainActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_camera_guide)
 
-        val dialogBinding = DialogCameraGuideBinding.bind(dialog.findViewById(R.id.dialogCameraGuide))
+        val dialogBinding =
+            DialogCameraGuideBinding.bind(dialog.findViewById(R.id.dialogCameraGuide))
 
         dialogBinding.btnStartCamera.setOnClickListener {
             executeCamera()
@@ -187,5 +216,23 @@ class MainActivity : AppCompatActivity() {
 
         val window = dialog.window
         window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
+    }
+
+    fun getUserId(): Long {
+        return userId
+    }
+
+    fun createFood(food: CreateFood) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.createFood(food)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during createFood API call", e)
+            }
+        }
+
+        runOnUiThread {
+            Toast.makeText(this, "저장이 완료되었습니다.", Toast.LENGTH_SHORT)
+        }
     }
 }
