@@ -1,59 +1,80 @@
 package com.example.snack4diet.home
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.ColorDrawable
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.ContactsContract.Profile
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment.STYLE_NORMAL
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.DayWithWeekday
-import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.NutritionItem
+import com.example.snack4diet.api.createFood.CreateFood
+import com.example.snack4diet.api.foodOnDate.Data
+import com.example.snack4diet.api.foodOnDate.FoodOnDate
+import com.example.snack4diet.api.foodOnDate.Header
+import com.example.snack4diet.api.nutritionSummary.NutritionSummary
+import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.calendar.CalendarAdapter
 import com.example.snack4diet.databinding.FragmentHomeBinding
 import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
-import java.time.DayOfWeek
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.*
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var btnNutrition: Button
-    private lateinit var homeAdapter: HomeAdapter
-    private lateinit var dailyNutrition: List<NutritionItem>
-    private lateinit var diaryAdapter: DiaryAdapter
-    private lateinit var viewModel: NutrientsViewModel
+    private lateinit var dailyNutrition: NutritionSummary
+    private lateinit var foodOnDate: FoodOnDate
+    lateinit var viewModel: NutrientsViewModel
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var dayList: MutableList<DayWithWeekday>
     private lateinit var itemClickListener: ItemClickListener
+    private lateinit var app: MyApplication
+    private var userId = -1L
+    private lateinit var sharedPreferences: SharedPreferences
+    private val today = LocalDate.now()
+    private var year = today.year
+    private var month = today.monthValue
+    private var day = today.dayOfMonth
+    private lateinit var jwt: String
 
     interface ItemClickListener {
         fun onItemClick(position: Int)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        sharedPreferences = (requireActivity() as MainActivity).getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        jwt = sharedPreferences.getString("jwt", "")!!
+        app = (requireActivity() as MainActivity).application
+        setCalendar(year, month, day)
+        viewModel = (requireActivity() as MainActivity).getViewModel()
+        userId = sharedPreferences.getLong("id", -1L)
 
         return binding.root
     }
@@ -61,53 +82,43 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = (requireActivity() as MainActivity).getViewModel()
-
-        val today = LocalDate.now()
-        val currentYear = today.year
-        val currentMonth = today.monthValue
-        val currentDay = today.dayOfMonth
-
-        setCalendar(currentYear, currentMonth, currentDay)
-
         binding.year.text = today.year.toString()
         binding.month.text = today.monthValue.toString()
 
         btnNutrition = binding.btnTodayNutrition
 
-        dailyNutrition = listOf(
-            NutritionItem("kcal", 1250, 2500),
-            NutritionItem("carbohydrate", 243, 324),
-            NutritionItem("protein", 16, 64,),
-            NutritionItem("province", 52, 51)
-        )
+        binding.btnTodayNutrition.setOnClickListener {// 오늘의 영양 탭 클릭 리스너
+            todayNutritionClicked()
 
-        if (dailyNutrition == null) {
-            setEmptyFragment()
-        } else {
-            setRecyclerView()
+            val currentFragment = childFragmentManager.findFragmentById(R.id.subFrame)
+
+            if (currentFragment !is TodayNutritionFragment) {
+                setNutritionSummary()
+            }
         }
 
-        binding.btnTodayNutrition.setOnClickListener {
-            onResume()
+        binding.btnDiary.setOnClickListener {// 다이어리 탭 클릭 리스너
+            diaryClicked()
+
+            val currentFragment = childFragmentManager.findFragmentById(R.id.subFrame)
+
+            if (currentFragment !is DiaryFragment) {
+                setDiaryDataSet()
+            }
         }
 
-        binding.btnDiary.setOnClickListener {
-            setDiaryRecyclerView()
-        }
-
-        binding.btnBookmark.setOnClickListener {
+        binding.btnBookmark.setOnClickListener {// 북마크 버튼 클릭 리스너
             setBookmarkFragment()
         }
 
         binding.btnLeft.setOnClickListener {
-            var currentMonth = binding.month.text.toString().toInt()
-            var currentYear = binding.year.text.toString().toInt()
+            val currentMonth = binding.month.text.toString().toInt()
+            val currentYear = binding.year.text.toString().toInt()
 
             if (currentMonth > 1) {
-                val newMonth = currentMonth - 1
-                binding.month.text = newMonth.toString()
-                setCalendar(currentYear, newMonth, 1)
+                month = currentMonth - 1
+                binding.month.text = month.toString()
+                setCalendar(currentYear, month, 1)
             } else if (currentMonth == 1) {
                 val newYear = currentYear - 1
                 binding.month.text = "12"
@@ -117,8 +128,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnRight.setOnClickListener {
-            var currentMonth = binding.month.text.toString().toInt()
-            var currentYear = binding.year.text.toString().toInt()
+            val currentMonth = binding.month.text.toString().toInt()
+            val currentYear = binding.year.text.toString().toInt()
 
             if (currentMonth < 12) {
                 val newMonth = currentMonth + 1
@@ -136,56 +147,79 @@ class HomeFragment : Fragment() {
             setProfileFragment()
         }
 
-        binding.btnFoodEntry.setOnClickListener {
-            setFoodEntryFragment()
-        }
+        todayNutritionClicked()
     }
 
     private fun setEmptyFragment() {
         val fragment = EmptyFoodFragment()
 
-        binding.recyclerView.visibility = View.GONE
-        btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
-        binding.underLine1.visibility = View.VISIBLE
-        binding.btnFoodEntry.visibility = View.GONE
-
         replaceSubFragment(fragment, "EmptyFoodFragment")
     }
 
-    private fun setDiaryRecyclerView() {
-        binding.btnFoodEntry.visibility = View.VISIBLE
-        //리사이클러뷰 설정
-        diaryAdapter = DiaryAdapter(emptyList()) { nutrient ->
-            viewModel.resisterBookmark(nutrient)
-            setDiaryDataSet()
-        }
-        binding.recyclerView.adapter = diaryAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        //클릭되지 않은 버튼 처리
-        btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-        binding.underLine1.visibility = View.GONE
-        //클릭된 버튼 처리
-        binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.underLine2.visibility = View.VISIBLE
+    private fun setTodayNutritionFragment() {
+        val fragment = TodayNutritionFragment()
 
-        diaryAdapter.setOnItemClickListener { position ->
-            // 아이템 클릭 시 바텀시트 프래그먼트를 띄우는 코드
-            val bottomSheetFragment = BottomSheetFragment()
-            val bundle = Bundle()
-            bundle.putInt("position", position) // 아이템 위치 전달
-            bottomSheetFragment.arguments = bundle
-            bottomSheetFragment.setStyle(STYLE_NORMAL, R.style.DialogCustomTheme)
-            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-        }
+        replaceSubFragment(fragment, "TodayNutritionFragment")
+    }
 
-        setDiaryDataSet()
+    private fun setDiaryFragment() {
+        val fragment = DiaryFragment()
+
+        replaceSubFragment(fragment, "DiaryFragment")
     }
 
     private fun setDiaryDataSet() {
-        viewModel.nutrientsLiveData.observe(requireActivity()) { nutrientsLiveData ->
-            diaryAdapter.nutrients = nutrientsLiveData
-            diaryAdapter.notifyDataSetChanged()
+        if (!isAdded) {
+            // 프래그먼트가 액티비티에 추가되지 않은 경우
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = app.apiService.getFoodOnDate(userId, year, month, day)
+                if (response.data == null) {
+                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
+                } else {
+                    foodOnDate = response
+                }
+                Log.e("여기는 뭔데??????", foodOnDate.toString())
+            } catch (e: Exception) {
+                Log.e("뭐가 문젠데", userId.toString())
+                Log.e("뭐가 문젠데", year.toString())
+                Log.e("뭐가 문젠데", month.toString())
+                Log.e("뭐가 문젠데", day.toString())
+                Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                Log.e("너냐???????????????", foodOnDate.toString())
+//                if (!::foodOnDate.isInitialized || foodOnDate.data == null) {
+//                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
+//                }
+                setDiaryFragment()
+            }
+        }
+    }
+
+    private fun setNutritionSummary() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                dailyNutrition = app.apiService.getNutritionSummary(userId, day, month, year)
+            } catch (e: Exception) {
+                Log.e("뭐가 문젠데", userId.toString())
+                Log.e("뭐가 문젠데", year.toString())
+                Log.e("뭐가 문젠데", month.toString())
+                Log.e("뭐가 문젠데", day.toString())
+                Log.e("HomeFragment", "Error during getNutritionSummary API call", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                if (dailyNutrition.data.totalKcal == 0) {
+                    setEmptyFragment()
+                } else {
+                    setTodayNutritionFragment()
+                }
+            }
         }
     }
 
@@ -203,28 +237,6 @@ class HomeFragment : Fragment() {
         mainActivity.replaceFragment(fragment, "ProfileFragment")
     }
 
-    private fun setFoodEntryFragment() {
-        val mainActivity = requireActivity() as MainActivity
-        val fragment = FoodEntryFragment()
-
-        mainActivity.replaceFragment(fragment, "FoodEntryFragment")
-    }
-
-    private fun setRecyclerView() {
-        binding.btnFoodEntry.visibility = View.GONE
-        //리사이클러뷰 설정
-        homeAdapter = HomeAdapter(dailyNutrition, requireContext())
-        binding.recyclerView.adapter = homeAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        //클릭된 버튼 처리
-        btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
-        binding.underLine1.visibility = View.VISIBLE
-        //클릭되지 않은 버튼 처리
-        binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.underLine2.visibility = View.GONE
-    }
-
     private fun replaceSubFragment(fragment: Fragment, tag: String) {
         childFragmentManager.beginTransaction()
             .replace(R.id.subFrame, fragment, tag)
@@ -232,19 +244,11 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun setCalendar(pYear: Int, pMonth: Int, pDay: Int) {
+        year = pYear
+        month = pMonth
+        day = pDay
 
-        val currentFragment = childFragmentManager.findFragmentById(R.id.subFrame)
-
-        if (currentFragment is EmptyFoodFragment) {
-            setEmptyFragment()
-        } else {
-            setRecyclerView()
-        }
-    }
-
-    private fun setCalendar(year: Int, month: Int, day: Int) {
         dayList = getDaysInMonth(year, month)
         var initialPosition = day - 1 // 리사이클러뷰의 시작 위치 인덱스는 0부터 시작
         dayList[initialPosition].isClicked = true
@@ -255,11 +259,11 @@ class HomeFragment : Fragment() {
                 initialPosition = position
                 dayList[initialPosition].isClicked = true
                 calendarAdapter.notifyDataSetChanged()
+                setNutritionSummary()
             }
         }
 
         calendarAdapter = CalendarAdapter(dayList, initialPosition, requireContext(), itemClickListener)
-
         binding.recyclerViewDate.adapter = calendarAdapter
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -268,6 +272,8 @@ class HomeFragment : Fragment() {
         // 리사이클러뷰 시작 위치 조정
         if (initialPosition - 3 < 0) layoutManager.scrollToPosition(0)
         else layoutManager.scrollToPosition(initialPosition - 3)
+
+        setNutritionSummary()
     }
 
     private fun getDaysInMonth(year: Int, month: Int): MutableList<DayWithWeekday> {
@@ -285,5 +291,30 @@ class HomeFragment : Fragment() {
         }
 
         return daysWithWeekdays
+    }
+
+    private fun todayNutritionClicked() {
+        btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        binding.underLine1.visibility = View.VISIBLE
+        binding.underLine2.visibility = View.GONE
+    }
+
+    private fun diaryClicked() {
+        btnNutrition.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        binding.btnDiary.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange))
+        binding.underLine1.visibility = View.GONE
+        binding.underLine2.visibility = View.VISIBLE
+    }
+
+    fun getDailyNutrition(): NutritionSummary {
+        return dailyNutrition
+    }
+
+    fun getFoodList(): List<Data> {
+//        if (!::foodOnDate.isInitialized || foodOnDate.data == null) {
+//            foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
+//        }
+        return foodOnDate.data
     }
 }
