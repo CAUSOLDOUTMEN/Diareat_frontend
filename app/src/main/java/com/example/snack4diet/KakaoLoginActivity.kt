@@ -63,6 +63,7 @@ class KakaoLoginActivity : AppCompatActivity() {
                             val response = app.apiService.kakaoLogin(token.accessToken)
 
                             if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                                sharedPreferences.edit().putLong("id", response.data.id).apply()
                                 makeToast()
                             } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
                                 val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
@@ -104,6 +105,7 @@ class KakaoLoginActivity : AppCompatActivity() {
                             val response = app.apiService.kakaoLogin(token.accessToken)
 
                             if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                                sharedPreferences.edit().putLong("id", response.data.id).apply()
                                 makeToast()
                             } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
                                 val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
@@ -172,9 +174,12 @@ class KakaoLoginActivity : AppCompatActivity() {
                 try {
                     val response = app.apiService.kakaoLogin(token.accessToken)
 
-                    if (response.data?.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                    if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
+                        println(response.data.jwt)
+                        sharedPreferences.edit().putLong("id", response.data.id).apply()
                         makeToast()
                     } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
+                        println(response.data.jwt)
                         val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
                         intent.putExtra("accessToken", token.accessToken)
                         startActivity(intent)

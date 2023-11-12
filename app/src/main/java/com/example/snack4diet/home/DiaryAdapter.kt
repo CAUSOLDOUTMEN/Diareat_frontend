@@ -7,9 +7,10 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.foodOnDate.Data
 import com.example.snack4diet.databinding.ItemDiaryBinding
 
-class DiaryAdapter( var nutrients: List<Macronutrients>, private val itemClickListener: (Macronutrients) -> Unit): RecyclerView.Adapter<DiaryAdapter.ViewHolder> () {
+class DiaryAdapter(private var nutrients: List<Data>, private val itemClickListener: (Data) -> Unit): RecyclerView.Adapter<DiaryAdapter.ViewHolder> () {
     private var onItemClickCallback: ((Int) -> Unit)? = null
 
     fun setOnItemClickListener(callback: (Int) -> Unit) {
@@ -38,13 +39,13 @@ class DiaryAdapter( var nutrients: List<Macronutrients>, private val itemClickLi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = nutrients[position]
 
-        holder.foodName.text = item.foodName
-        holder.kcal.text = item.kcal.toString() + "kcal"
-        holder.protein.text = item.protein.toString() + "g"
-        holder.province.text = item.province.toString() + "g"
-        holder.carbohydrate.text = item.carbohydrate.toString() + "g"
+        holder.foodName.text = item.name
+        holder.kcal.text = item.baseNutrition.kcal.toString() + "kcal"
+        holder.protein.text = item.baseNutrition.protein.toString() + "g"
+        holder.province.text = item.baseNutrition.fat.toString() + "g"
+        holder.carbohydrate.text = item.baseNutrition.carbohydrate.toString() + "g"
 
-        if (item.isBookmark) {
+        if (item.favorite) {
             holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
         } else {
             holder.btnBookmark.setImageResource(R.drawable.ic_empty_star)

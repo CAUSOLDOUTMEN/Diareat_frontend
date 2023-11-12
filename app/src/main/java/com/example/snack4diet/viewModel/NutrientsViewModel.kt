@@ -4,20 +4,25 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.UserInfo
 import com.example.snack4diet.api.UserNutrientInfo
 import com.example.snack4diet.api.UserRank
 import com.example.snack4diet.api.UserSearch
+import com.example.snack4diet.api.foodOnDate.Data
+import com.example.snack4diet.api.nutritionSummary.NutritionSummary
+import com.example.snack4diet.application.MyApplication
+import kotlinx.coroutines.launch
 
 class NutrientsViewModel: ViewModel() {
+
     private val nutrients = mutableListOf(
         Macronutrients(1,"음식1",325, 24,32,25, false),
         Macronutrients(2,"음식2",325, 24,32,25, false),
         Macronutrients(3,"음식3",325, 24,32,25, false),
         Macronutrients(4,"음식4",325, 24,32,25, false)
     )
-    private val dailyNutrient = UserNutrientInfo(2250, 130, 75, 46)
     private val bookmarkList = mutableListOf<Macronutrients>()
     private val user = UserInfo("품절남", 180.0, 78.0, true, 24)
     private val following = mutableListOf(
@@ -39,18 +44,15 @@ class NutrientsViewModel: ViewModel() {
     val bookmarkLiveData: LiveData<MutableList<Macronutrients>>
         get () = MutableLiveData(bookmarkList)
 
-    val dailyNutrientLiveData: LiveData<UserNutrientInfo>
-        get () = MutableLiveData(dailyNutrient)
-
     val followingLiveData: LiveData<MutableList<UserRank>>
         get() = MutableLiveData(following)
 
     val searchUserLiveData: LiveData<MutableList<UserSearch>>
         get() = MutableLiveData(searchUser)
 
-    fun resisterBookmark (nutrient: Macronutrients) {
+    fun resisterBookmark (nutrient: Data) {
         val new = nutrient.copy(foodId = bookmarkList.size + 1)
-        bookmarkList.add(new)
+//        bookmarkList.add(new)
         nutrients.find { it.foodId == nutrient.foodId }?.isBookmark = true
     }
 
@@ -85,12 +87,5 @@ class NutrientsViewModel: ViewModel() {
         user.height = height
         user.weight = weight
         user.age = age
-    }
-
-    fun editDailyNutrient(dailyKcal: Int, dailyCarbohydrate: Int, dailyProtein: Int, dailyProvince: Int) {
-        dailyNutrient.dailyKcal = dailyKcal
-        dailyNutrient.dailyCarbohydrate = dailyCarbohydrate
-        dailyNutrient.dailyProtein = dailyProtein
-        dailyNutrient.dailyProvince = dailyProvince
     }
 }

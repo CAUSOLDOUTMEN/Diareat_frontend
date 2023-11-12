@@ -1,5 +1,6 @@
 package com.example.snack4diet.api
 
+import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.api.foodOnDate.FoodOnDate
 import com.example.snack4diet.api.nutritionSummary.NutritionSummary
 import retrofit2.http.Body
@@ -21,7 +22,7 @@ interface ApiService {
 
     @GET("/api/food/{userId}")
     suspend fun getFoodOnDate(
-        @Path("userId") userId: Long,
+        @Path("userId") userId: Long?,
         @Query("yy") yy: Int,
         @Query("mm") mm: Int,
         @Query("dd") dd: Int,
@@ -29,9 +30,12 @@ interface ApiService {
 
     @GET("/api/food/{userId}/nutrition")
     suspend fun getNutritionSummary(
-        @Path("userId") userId: Long,
-        @Query("yy") yy: Int,
-        @Query("mm") mm: Int,
+        @Path("userId") userId: Long?,
         @Query("dd") dd: Int,
+        @Query("mm") mm: Int,
+        @Query("yy") yy: Int,
     ): NutritionSummary
+
+    @POST("/api/food/save")
+    suspend fun createFood(@Body createFoodDto: CreateFood)
 }
