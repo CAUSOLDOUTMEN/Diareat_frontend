@@ -1,12 +1,13 @@
 package com.example.snack4diet.api.nutritionSummary
 
 data class Data(
+    val baseNutrition: BaseNutrition,
     val checkDate: String,
     val nutritionSumType: Int,
-    val ratioCarbohydrate: Int,
-    val ratioFat: Int,
-    val ratioKcal: Int,
-    val ratioProtein: Int,
+    val ratioCarbohydrate: Double,
+    val ratioFat: Double,
+    val ratioKcal: Double,
+    val ratioProtein: Double,
     val totalCarbohydrate: Int,
     val totalFat: Int,
     val totalKcal: Int,

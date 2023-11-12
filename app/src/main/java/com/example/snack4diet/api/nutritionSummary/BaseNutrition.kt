@@ -1,4 +1,8 @@
 package com.example.snack4diet.api.nutritionSummary
 
-class BaseNutrition {
-}
+data class BaseNutrition (
+    val carbohydrate: Int,
+    val fat: Int,
+    val kcal: Int,
+    val protein: Int
+)
