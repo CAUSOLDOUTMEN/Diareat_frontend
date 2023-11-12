@@ -1,6 +1,7 @@
 package com.example.snack4diet.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,14 @@ import android.widget.Toast
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.createFood.BaseNutrition
+import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.databinding.FragmentFoodEntryBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -32,7 +39,6 @@ class FoodEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val currentTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
-
         binding.foodName.hint = currentTime.hour.toString() + "시 " + currentTime.minute.toString() + "분의 음식"
 
         binding.btnFoodSave.setOnClickListener {
@@ -43,26 +49,30 @@ class FoodEntryFragment : Fragment() {
     private fun saveFood() {
         var foodName = ""
 
-        if (binding.foodName.text.isEmpty()) foodName = binding.foodName.hint.toString()
+        if (binding.foodName.text.isEmpty()) {
+            foodName = binding.foodName.hint.toString()
+        }
         else foodName = binding.foodName.text.toString()
 
         val kcal = binding.editKcalAmount
-        val carbohydrate = binding.EditCarbohydrateAmount
-        val protein = binding.EditProteinAmount
-        val province = binding.EditProvinceAmount
+        val carbohydrate = binding.editCarbohydrateAmount
+        val protein = binding.editProteinAmount
+        val province = binding.editProvinceAmount
 
         if (kcal.text.isNullOrEmpty() || carbohydrate.text.isNullOrEmpty() ||
             protein.text.isNullOrEmpty() || province.text.isNullOrEmpty()) {
 
             Toast.makeText(requireContext(), "모든 항목을 채워주세요.", Toast.LENGTH_SHORT).show()
         } else {
-            val id = viewModel.getNutrientsSize() + 1
-            val nutrient = Macronutrients(id, foodName, kcal.text.toString().toInt(), carbohydrate.text.toString().toInt(), protein.text.toString().toInt(), province.text.toString().toInt(), false)
+            val mainActivity = requireActivity() as MainActivity
+            val id = mainActivity.getUserId()
+            val baseNutrition = BaseNutrition(carbohydrate.text.toString().toInt(), province.text.toString().toInt(), kcal.text.toString().toInt(), protein.text.toString().toInt())
+            val currentDate = LocalDate.now()
+            val food = CreateFood(baseNutrition, currentDate.dayOfMonth, currentDate.monthValue, foodName, id, currentDate.year)
 
-            viewModel.addDiary(nutrient)
-            Toast.makeText(requireContext(), "저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            Log.e("여기냐??????????", food.toString())
 
-            (requireActivity() as MainActivity).setHomeFragment()
+            mainActivity.createFood(food)
         }
     }
 }
