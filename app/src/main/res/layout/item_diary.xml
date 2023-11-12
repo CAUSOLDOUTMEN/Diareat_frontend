@@ -29,18 +29,18 @@
                 android:textColor="@color/dark_blue"
                 android:layout_gravity="top"/>
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginStart="2dp"
-                android:text="9시 05분"
-                android:textSize="14sp"
-                android:textColor="@color/gray"
-                android:fontFamily="@font/pretendard_medium"
-                android:layout_gravity="bottom"/>
+<!--            <TextView-->
+<!--                android:id="@+id/date"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:layout_marginBottom="2dp"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                android:text="9시 05분"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textColor="@color/gray"-->
+<!--                android:fontFamily="@font/pretendard_medium"-->
+<!--                android:layout_gravity="bottom"/>-->
 
             <Space
                 android:layout_width="0dp"

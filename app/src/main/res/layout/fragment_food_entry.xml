@@ -89,23 +89,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editKcalAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/editKcalAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:fontFamily="@font/pretendard"
-                    android:inputType="number"
-                    android:text="0"
-                    android:textSize="22sp" />
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/pretendard"
+                android:inputType="number"
+                android:text="0"
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -119,77 +114,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/pretendard_bold"
                 android:text="탄수화물"
-                android:textSize="22sp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center"/>
+                android:textSize="22sp" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editCarbohydrateAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditCarbohydrateAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  ⋅ 당류"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditSugarAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/pretendard"
+                android:inputType="number"
+                android:text="0"
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -214,24 +161,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editProteinAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <EditText
-                    android:id="@+id/EditProteinAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:text="0"
+                android:textSize="22sp"
+                android:fontFamily="@font/pretendard"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:inputType="number"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
 
@@ -257,193 +198,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editProvinceAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditProvinceAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  ⋅ 포화지방"
+                android:layout_weight="1"
+                android:text="0"
+                android:gravity="end"
                 android:textSize="22sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditSaturatedFatAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  ⋅ 불포화지방"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditUnsaturatedFatAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  ⋅ 트랜스지방"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditTransFatAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="나트륨"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/pretendard_bold"
-                android:layout_gravity="center"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/EditSodiumAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="22sp"
-                    android:fontFamily="@font/pretendard"
-                    android:layout_gravity="center"
-                    android:inputType="number"
-                    android:background="@android:color/transparent"/>
-
-            </LinearLayout>
+                android:fontFamily="@font/pretendard"
+                android:layout_gravity="center"
+                android:inputType="number"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
 
