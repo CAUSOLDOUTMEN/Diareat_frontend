@@ -1,9 +1,11 @@
 package com.example.snack4diet.api
 
 import com.example.snack4diet.api.createFood.CreateFood
+import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.api.foodOnDate.FoodOnDate
 import com.example.snack4diet.api.nutritionSummary.NutritionSummary
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -38,4 +40,13 @@ interface ApiService {
 
     @POST("/api/food/save")
     suspend fun createFood(@Body createFoodDto: CreateFood)
+
+    @DELETE("/api/food/{foodId}/delete")
+    suspend fun deleteFood(
+        @Header("userId") userId: Long,
+        @Path("foodId") foodId: Int
+    )
+
+    @POST("/api/food/update")
+    suspend fun editFood(@Body updateFoodDto: EditFood)
 }
