@@ -70,8 +70,6 @@ class FoodEntryFragment : Fragment() {
             val currentDate = LocalDate.now()
             val food = CreateFood(baseNutrition, currentDate.dayOfMonth, currentDate.monthValue, foodName, id, currentDate.year)
 
-            Log.e("여기냐??????????", food.toString())
-
             mainActivity.createFood(food)
         }
     }
