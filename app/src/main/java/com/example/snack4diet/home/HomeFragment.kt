@@ -58,17 +58,12 @@ class HomeFragment : Fragment() {
         fun onItemClick(position: Int)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        btnNutrition = binding.btnTodayNutrition
         sharedPreferences = (requireActivity() as MainActivity).getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         jwt = sharedPreferences.getString("jwt", "")!!
         app = (requireActivity() as MainActivity).application
@@ -85,26 +80,16 @@ class HomeFragment : Fragment() {
         binding.year.text = today.year.toString()
         binding.month.text = today.monthValue.toString()
 
-        btnNutrition = binding.btnTodayNutrition
-
         binding.btnTodayNutrition.setOnClickListener {// 오늘의 영양 탭 클릭 리스너
             todayNutritionClicked()
 
-            val currentFragment = childFragmentManager.findFragmentById(R.id.subFrame)
-
-            if (currentFragment !is TodayNutritionFragment) {
-                setNutritionSummary()
-            }
+            setNutritionSummary()
         }
 
         binding.btnDiary.setOnClickListener {// 다이어리 탭 클릭 리스너
             diaryClicked()
 
-            val currentFragment = childFragmentManager.findFragmentById(R.id.subFrame)
-
-            if (currentFragment !is DiaryFragment) {
-                setDiaryDataSet()
-            }
+            setDiaryDataSet()
         }
 
         binding.btnBookmark.setOnClickListener {// 북마크 버튼 클릭 리스너
@@ -184,32 +169,23 @@ class HomeFragment : Fragment() {
                 }
                 Log.e("여기는 뭔데??????", foodOnDate.toString())
             } catch (e: Exception) {
-                Log.e("뭐가 문젠데", userId.toString())
-                Log.e("뭐가 문젠데", year.toString())
-                Log.e("뭐가 문젠데", month.toString())
-                Log.e("뭐가 문젠데", day.toString())
                 Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
             }
 
             withContext(Dispatchers.Main) {
                 Log.e("너냐???????????????", foodOnDate.toString())
-//                if (!::foodOnDate.isInitialized || foodOnDate.data == null) {
-//                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
-//                }
                 setDiaryFragment()
             }
         }
     }
 
     private fun setNutritionSummary() {
+        todayNutritionClicked()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 dailyNutrition = app.apiService.getNutritionSummary(userId, day, month, year)
             } catch (e: Exception) {
-                Log.e("뭐가 문젠데", userId.toString())
-                Log.e("뭐가 문젠데", year.toString())
-                Log.e("뭐가 문젠데", month.toString())
-                Log.e("뭐가 문젠데", day.toString())
                 Log.e("HomeFragment", "Error during getNutritionSummary API call", e)
             }
 
@@ -257,6 +233,7 @@ class HomeFragment : Fragment() {
             override fun onItemClick(position: Int) {
                 dayList[initialPosition].isClicked = false
                 initialPosition = position
+                day = position + 1
                 dayList[initialPosition].isClicked = true
                 calendarAdapter.notifyDataSetChanged()
                 setNutritionSummary()
@@ -312,9 +289,21 @@ class HomeFragment : Fragment() {
     }
 
     fun getFoodList(): List<Data> {
-//        if (!::foodOnDate.isInitialized || foodOnDate.data == null) {
-//            foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
-//        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = app.apiService.getFoodOnDate(userId, year, month, day)
+                if (response.data == null) {
+                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
+                } else {
+                    foodOnDate = response
+                }
+                Log.e("여기는 뭔데??????", foodOnDate.toString())
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
+            }
+        }
+
         return foodOnDate.data
     }
 }
