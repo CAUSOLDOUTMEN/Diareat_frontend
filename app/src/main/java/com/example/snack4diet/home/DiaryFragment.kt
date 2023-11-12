@@ -5,56 +5,72 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.foodOnDate.Data
+import com.example.snack4diet.databinding.FragmentDiaryBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DiaryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DiaryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentDiaryBinding
+    private lateinit var diaryAdapter: DiaryAdapter
+    private lateinit var foodList: List<Data>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_diary, container, false)
+        binding = FragmentDiaryBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DiaryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiaryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val fragment = requireParentFragment() as HomeFragment
+        foodList = fragment.getFoodList()
+        if (foodList.isEmpty()) {
+            binding.emptyFoodLayout.visibility = View.VISIBLE
+        } else {
+            binding.emptyFoodLayout.visibility = View.GONE
+        }
+
+        setDiaryRecyclerView()
+
+        binding.btnFoodEntry.setOnClickListener {
+            setFoodEntryFragment()
+        }
+    }
+
+    private fun setFoodEntryFragment() {
+        val mainActivity = requireActivity() as MainActivity
+        val fragment = FoodEntryFragment()
+
+        mainActivity.replaceFragment(fragment, "FoodEntryFragment")
+    }
+
+    private fun setDiaryRecyclerView() {
+        val fragment = requireParentFragment() as HomeFragment
+
+        diaryAdapter = DiaryAdapter(foodList) { nutrient ->
+            fragment.viewModel.resisterBookmark(nutrient)
+            diaryAdapter.notifyDataSetChanged()
+        }
+        binding.recyclerView.adapter = diaryAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        diaryAdapter.setOnItemClickListener { position ->
+            // 아이템 클릭 시 바텀시트 프래그먼트를 띄우는 코드
+            val bottomSheetFragment = BottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putInt("position", position) // 아이템 위치 전달
+            bottomSheetFragment.arguments = bundle
+            bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogCustomTheme)
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+        }
     }
 }
