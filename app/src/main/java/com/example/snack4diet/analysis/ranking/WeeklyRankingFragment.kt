@@ -15,7 +15,6 @@ import com.example.snack4diet.R
 import com.example.snack4diet.api.UserRank
 import com.example.snack4diet.databinding.DialogRankingGuideBinding
 import com.example.snack4diet.databinding.FragmentWeeklyRankingBinding
-import com.example.snack4diet.home.BottomSheetFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
 
 class WeeklyRankingFragment : Fragment() {

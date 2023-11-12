@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.snack4diet.analysis.AnalysisFragment
 import com.example.snack4diet.analysis.DiaryAnalysisDetailFragment
 import com.example.snack4diet.api.createFood.CreateFood
+import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
@@ -233,6 +234,27 @@ class MainActivity : AppCompatActivity() {
 
         runOnUiThread {
             Toast.makeText(this, "저장이 완료되었습니다.", Toast.LENGTH_SHORT)
+            setHomeFragment()
+        }
+    }
+
+    fun deleteFood(foodId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.deleteFood(userId, foodId)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during deleteFood API call", e)
+            }
+        }
+    }
+
+    fun editFood(newFood: EditFood) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.editFood(newFood)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during editFood API call", e)
+            }
         }
     }
 }
