@@ -55,7 +55,7 @@ class DiaryAdapter(private var nutrients: List<Data>, private val itemClickListe
         }
 
         holder.itemView.setOnClickListener {
-            onItemClick(position)
+            onItemClick(item.foodId)
         }
     }
 
