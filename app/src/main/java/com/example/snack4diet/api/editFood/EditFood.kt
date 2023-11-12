@@ -4,5 +4,5 @@ data class EditFood(
     val baseNutrition: BaseNutrition,
     val foodId: Int,
     val name: String,
-    val userId: Int
+    val userId: Long
 )
