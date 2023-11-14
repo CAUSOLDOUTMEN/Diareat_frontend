@@ -1,9 +1,12 @@
 package com.example.snack4diet.api
 
+import com.example.snack4diet.api.addBookmark.AddBookmark
 import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.api.foodOnDate.FoodOnDate
+import com.example.snack4diet.api.getBookmark.GetBookmark
 import com.example.snack4diet.api.nutritionSummary.NutritionSummary
+import com.example.snack4diet.api.ocr.ResponseOcr
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -13,6 +16,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @POST("/parse_nutrients")
+    suspend fun sendImageKey(@Body imageKey: String): ResponseOcr
+
     @POST("/api/auth/login")
     suspend fun kakaoLogin(@Header("accessToken") accessToken: String): Login // 카카오 인가 코드를 전달했을 때 유저 id, jwt를 돌려받음
 
@@ -44,9 +50,17 @@ interface ApiService {
     @DELETE("/api/food/{foodId}/delete")
     suspend fun deleteFood(
         @Header("userId") userId: Long,
-        @Path("foodId") foodId: Int
+        @Path("foodId") foodId: Long
     )
 
     @POST("/api/food/update")
     suspend fun editFood(@Body updateFoodDto: EditFood)
+
+    @POST("/api/food/favorite")
+    suspend fun addBookmark(@Body createFavoriteFoodDto: AddBookmark)
+
+    @GET("/api/food/favorite/{userId}")
+    suspend fun getFavoriteFood(@Path("userId") userId: Long?): GetBookmark
+
+
 }
