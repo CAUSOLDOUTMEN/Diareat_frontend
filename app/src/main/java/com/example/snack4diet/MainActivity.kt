@@ -24,6 +24,7 @@ import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.api.getBookmark.GetBookmark
+import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
 import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
@@ -245,10 +246,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun deleteFood(foodId: Long) {
+    fun deleteFood(foodId: Long, yy: Int, mm: Int, dd: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                application.apiService.deleteFood(userId, foodId)
+                Log.e("뭐가 문젠데ㅔㅔㅔㅔㅔ", foodId.toString())
+                Log.e("뭐가 문젠데ㅔㅔㅔㅔㅔ", userId.toString())
+                application.apiService.deleteFood(foodId, userId, dd, mm, yy)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during deleteFood API call", e)
             }
@@ -295,5 +298,29 @@ class MainActivity : AppCompatActivity() {
 
     fun getBookmarkList(): List<Data> {
         return bookmarkList
+    }
+
+    fun deleteBookmark(favoriteFoodId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.deleteBookmark(favoriteFoodId, userId)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during deleteBookmark API call", e)
+            }
+            withContext(Dispatchers.Main) {
+                setBookmarkList()
+            }
+        }
+    }
+
+    fun editBookmark(updateFavoriteFoodDto: UpdateFavoriteFoodDto) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.e("너는 뭐냐", updateFavoriteFoodDto.toString())
+                application.apiService.updateBookmark(updateFavoriteFoodDto)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during updateBookmark API call", e)
+            }
+        }
     }
 }
