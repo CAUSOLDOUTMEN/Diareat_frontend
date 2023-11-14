@@ -7,6 +7,7 @@ import com.example.snack4diet.api.foodOnDate.FoodOnDate
 import com.example.snack4diet.api.getBookmark.GetBookmark
 import com.example.snack4diet.api.nutritionSummary.NutritionSummary
 import com.example.snack4diet.api.ocr.ResponseOcr
+import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -62,5 +63,14 @@ interface ApiService {
     @GET("/api/food/favorite/{userId}")
     suspend fun getFavoriteFood(@Path("userId") userId: Long?): GetBookmark
 
+    @DELETE("/api/food/favorite/{favoriteFoodId}")
+    suspend fun deleteBookmark(
+        @Path("favoriteFoodId") favoriteFoodId: Long,
+        @Header("userId") userId: Long
+    )
 
+    @POST("/api/food/favorite/update")
+    suspend fun updateBookmark(
+        @Body updateFavoriteFoodDto: UpdateFavoriteFoodDto
+    )
 }
