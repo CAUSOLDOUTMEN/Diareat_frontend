@@ -19,8 +19,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.snack4diet.analysis.AnalysisFragment
 import com.example.snack4diet.analysis.DiaryAnalysisDetailFragment
+import com.example.snack4diet.api.addBookmark.AddBookmark
 import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.api.editFood.EditFood
+import com.example.snack4diet.api.getBookmark.Data
+import com.example.snack4diet.api.getBookmark.GetBookmark
 import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
@@ -34,6 +37,7 @@ import com.example.snack4diet.viewModel.NutrientsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private val backButtonInterval = 200
     private var userId = -1L
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var bookmarkList: List<Data>
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
@@ -62,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         navigation = binding.navigationFrame
         camera = binding.btnCamera
         userId = sharedPreferences.getLong("id", -1L)
+        bookmarkList = emptyList()
 
         setHomeFragment()
 
@@ -227,6 +233,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 application.apiService.createFood(food)
+                Log.e("ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ", food.toString())
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during createFood API call", e)
             }
@@ -238,7 +245,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun deleteFood(foodId: Int) {
+    fun deleteFood(foodId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 application.apiService.deleteFood(userId, foodId)
@@ -256,5 +263,37 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error during editFood API call", e)
             }
         }
+    }
+
+    fun addBookmark(food: AddBookmark) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.addBookmark(food)
+                Log.e("뭐야ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ", food.toString())
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during addBookmark API call", e)
+            }
+        }
+    }
+
+    fun setBookmarkList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = application.apiService.getFavoriteFood(userId)
+                bookmarkList = response.data
+                Log.e("ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓ", bookmarkList.toString())
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getFavoriteFood API call", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                val fragment = BookmarkFragment()
+                replaceFragment(fragment, "BookmarkFragment")
+            }
+        }
+    }
+
+    fun getBookmarkList(): List<Data> {
+        return bookmarkList
     }
 }
