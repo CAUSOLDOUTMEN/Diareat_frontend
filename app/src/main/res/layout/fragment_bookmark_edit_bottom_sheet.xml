@@ -1,14 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".bookmark.BookmarkEditFragment">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/round_frame_white_top_20"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginBottom="15dp"
+    android:paddingBottom="20dp"
+    android:paddingHorizontal="20dp"
+    android:elevation="7dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="44dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:background="@color/gray"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/editFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="음식1"
+            android:textSize="28sp"
+            android:textColorHint="@color/dark_gray"
+            android:fontFamily="@font/pretendard_medium"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/registrationTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12시59분"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard"
+            android:layout_gravity="bottom"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="* 잘못된 부분이 있으면 클릭해서 수정하실 수 있어요."
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="칼로리"
+            android:textSize="22sp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/editKcalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/dark_gray"
+            android:inputType="number"
+            android:fontFamily="@font/pretendard"
+            android:gravity="end"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="탄수화물"
+            android:textSize="22sp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/editCarbohydrateAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard"
+            android:layout_gravity="center"
+            android:inputType="number"
+            android:gravity="end"
+            android:background="@android:color/transparent"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="단백질"
+            android:textSize="22sp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/editProteinAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:background="@android:color/transparent"
+            android:inputType="number" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지방"
+            android:textSize="22sp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/editFatAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:fontFamily="@font/pretendard"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:background="@android:color/transparent"
+            android:inputType="number"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnFinishEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_btn_finish_edit"
+        android:background="@android:color/transparent"/>
+
+</LinearLayout>
