@@ -2,8 +2,8 @@ package com.example.snack4diet.api.foodOnDate
 
 data class Data(
     val baseNutrition: BaseNutrition,
-    val favorite: Boolean,
-    val foodId: Int,
+    val favoriteChecked: Boolean,
+    val foodId: Long,
     val name: String,
-    val userId: Int
+    val userId: Long
 )

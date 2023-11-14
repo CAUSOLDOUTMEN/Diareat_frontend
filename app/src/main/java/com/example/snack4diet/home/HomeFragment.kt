@@ -201,9 +201,10 @@ class HomeFragment : Fragment() {
 
     private fun setBookmarkFragment() {
         val mainActivity = requireActivity() as MainActivity
-        val fragment = BookmarkFragment()
+//        val fragment = BookmarkFragment()
 
-        mainActivity.replaceFragment(fragment, "BookmarkFragment")
+        mainActivity.setBookmarkList()
+//        mainActivity.replaceFragment(fragment, "BookmarkFragment")
     }
 
     private fun setProfileFragment() {

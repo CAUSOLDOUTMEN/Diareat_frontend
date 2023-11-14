@@ -1,23 +1,20 @@
 package com.example.snack4diet.home
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snack4diet.R
-import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.foodOnDate.Data
 import com.example.snack4diet.databinding.ItemDiaryBinding
 
 class DiaryAdapter(private var nutrients: List<Data>, private val itemClickListener: (Data) -> Unit): RecyclerView.Adapter<DiaryAdapter.ViewHolder> () {
-    private var onItemClickCallback: ((Int) -> Unit)? = null
+    private var onItemClickCallback: ((Long) -> Unit)? = null
 
-    fun setOnItemClickListener(callback: (Int) -> Unit) {
+    fun setOnItemClickListener(callback: (Long) -> Unit) {
         onItemClickCallback = callback
     }
 
-    private fun onItemClick(position: Int) {
+    private fun onItemClick(position: Long) {
         onItemClickCallback?.invoke(position)
     }
 
@@ -45,7 +42,7 @@ class DiaryAdapter(private var nutrients: List<Data>, private val itemClickListe
         holder.province.text = item.baseNutrition.fat.toString() + "g"
         holder.carbohydrate.text = item.baseNutrition.carbohydrate.toString() + "g"
 
-        if (item.favorite) {
+        if (item.favoriteChecked) {
             holder.btnBookmark.setImageResource(R.drawable.ic_filled_star)
         } else {
             holder.btnBookmark.setImageResource(R.drawable.ic_empty_star)

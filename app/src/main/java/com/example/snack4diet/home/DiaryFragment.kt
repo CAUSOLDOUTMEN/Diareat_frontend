@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.addBookmark.AddBookmark
+import com.example.snack4diet.api.addBookmark.BaseNutrition
 import com.example.snack4diet.api.foodOnDate.Data
 import com.example.snack4diet.databinding.FragmentDiaryBinding
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +23,8 @@ class DiaryFragment : Fragment(), FragmentResultListener {
     private lateinit var binding: FragmentDiaryBinding
     private lateinit var diaryAdapter: DiaryAdapter
     private lateinit var foodList: List<Data>
+    private lateinit var mainActivity: MainActivity
+    private var id = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,10 @@ class DiaryFragment : Fragment(), FragmentResultListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDiaryBinding.inflate(layoutInflater, container, false)
+
+        mainActivity = requireActivity() as MainActivity
+        id = mainActivity.getUserId()
+
         return binding.root
     }
 
@@ -55,10 +63,11 @@ class DiaryFragment : Fragment(), FragmentResultListener {
     }
 
     private fun setDiaryRecyclerView() {
-        val fragment = requireParentFragment() as HomeFragment
-
         diaryAdapter = DiaryAdapter(foodList) { nutrient ->
-            fragment.viewModel.resisterBookmark(nutrient)
+            val nutrition = BaseNutrition(nutrient.baseNutrition.carbohydrate, nutrient.baseNutrition.fat, nutrient.baseNutrition.kcal, nutrient.baseNutrition.protein)
+            val food = AddBookmark(nutrition, nutrient.foodId, nutrient.name, id)
+            mainActivity.addBookmark(food)
+            getFoodList()
             diaryAdapter.notifyDataSetChanged()
         }
         binding.recyclerView.adapter = diaryAdapter

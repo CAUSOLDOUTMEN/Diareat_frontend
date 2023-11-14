@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.databinding.ItemBookmarkBinding
 
 class BookmarkAdapter(
-    var nutrients: List<Macronutrients>,
-    private val itemClickListener: BookmarkFragment.OnItemClickListener,
-    private val onDeleteListener: (Macronutrients) -> Unit
+    var nutrients: List<Data>,
+//    private val itemClickListener: BookmarkFragment.OnItemClickListener,
+//    private val onDeleteListener: (Data) -> Unit
     ): RecyclerView.Adapter<BookmarkAdapter.ViewHolder> () {
 
     inner class ViewHolder(binding: ItemBookmarkBinding): RecyclerView.ViewHolder(binding.root) {
@@ -34,21 +35,21 @@ class BookmarkAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = nutrients[position]
 
-        holder.foodName.text = item.foodName
-        holder.kcal.text = item.kcal.toString() + "kcal"
-        holder.protein.text = item.protein.toString() + "g"
-        holder.province.text = item.province.toString() + "g"
-        holder.carbohydrate.text = item.carbohydrate.toString() + "g"
+        holder.foodName.text = item.name
+        holder.kcal.text = item.baseNutrition.kcal.toString() + "kcal"
+        holder.protein.text = item.baseNutrition.protein.toString() + "g"
+        holder.province.text = item.baseNutrition.fat.toString() + "g"
+        holder.carbohydrate.text = item.baseNutrition.carbohydrate.toString() + "g"
         holder.itemView.visibility = View.VISIBLE
 
-        holder.btnDelete.setOnClickListener {
-            onDeleteListener(item)
-            notifyItemRemoved(position)
-        }
+//        holder.btnDelete.setOnClickListener {
+//            onDeleteListener(item)
+//            notifyItemRemoved(position)
+//        }
 
-        holder.itemLayout.setOnClickListener {
-            itemClickListener.onItemClick(item.foodId)
-        }
+//        holder.itemLayout.setOnClickListener {
+//            itemClickListener.onItemClick(item.favoriteFoodId)
+//        }
     }
 
     override fun getItemCount(): Int {

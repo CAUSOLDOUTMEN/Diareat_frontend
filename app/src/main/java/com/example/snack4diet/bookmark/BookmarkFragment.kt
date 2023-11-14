@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.databinding.AddDiaryDialogLayoutBinding
 import com.example.snack4diet.databinding.FragmentBookmarkBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
 
 class BookmarkFragment : Fragment() {
     private lateinit var binding: FragmentBookmarkBinding
-    private lateinit var viewModel: NutrientsViewModel
+//    private lateinit var viewModel: NutrientsViewModel
     private lateinit var bookmarkAdapter: BookmarkAdapter
+    private lateinit var mainActivity: MainActivity
+    private lateinit var bookmarkList: List<Data>
 
     interface OnItemClickListener {
         fun onItemClick(id: Int)
@@ -29,6 +32,14 @@ class BookmarkFragment : Fragment() {
         override fun onItemClick(id: Int) {
             showAddDiaryDialog(id)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mainActivity = requireActivity() as MainActivity
+        bookmarkList = mainActivity.getBookmarkList()
+        Log.e("뭔데뭔데뭔데뭔데뭔데", bookmarkList.toString())
     }
 
     override fun onCreateView(
@@ -44,27 +55,29 @@ class BookmarkFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //뷰모델 초기화
-        viewModel = (requireActivity() as MainActivity).getViewModel()
+//        viewModel = (requireActivity() as MainActivity).getViewModel()
 
         //리사이클러뷰 어댑터 설정
-        bookmarkAdapter = BookmarkAdapter(emptyList(), itemClickListener) { nutrient ->
-            viewModel.deleteBookmark(nutrient)
-            setViewModel()
-            bookmarkAdapter.notifyDataSetChanged()
-        }
+//        bookmarkAdapter = BookmarkAdapter(bookmarkList, itemClickListener) { nutrient ->
+//            viewModel.deleteBookmark(nutrient)
+//            setViewModel()
+//            bookmarkAdapter.notifyDataSetChanged()
+//        }
+
+        bookmarkAdapter = BookmarkAdapter(bookmarkList)
 
         binding.recyclerView.adapter = bookmarkAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        setViewModel()
+//        setViewModel()
     }
 
-    private fun setViewModel() {
-        viewModel.bookmarkLiveData.observe(requireActivity()) { bookmarkList ->
-            bookmarkAdapter.nutrients = bookmarkList
-            bookmarkAdapter.notifyDataSetChanged()
-        }
-    }
+//    private fun setViewModel() {
+//        viewModel.bookmarkLiveData.observe(requireActivity()) { bookmarkList ->
+//            bookmarkAdapter.nutrients = bookmarkList
+//            bookmarkAdapter.notifyDataSetChanged()
+//        }
+//    }
 
     private fun showAddDiaryDialog(id: Int) {
         val dialog = Dialog(requireContext())
@@ -78,7 +91,7 @@ class BookmarkFragment : Fragment() {
 
         dialogBinding.btnYes.setOnClickListener {
             dialog.dismiss()
-            addDiary(id)
+//            addDiary(id)
         }
 
         dialog.show()
@@ -88,11 +101,11 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun addDiary(id: Int) {
-        viewModel.bookmarkLiveData.observe(requireActivity()) { bookmarkList ->
-            viewModel.registerDiary(bookmarkList.find { it.foodId == id }!!)
-
-            Toast.makeText(requireContext(), "등록되었습니다",
-            Toast.LENGTH_SHORT).show()
-        }
+//        viewModel.bookmarkLiveData.observe(requireActivity()) { bookmarkList ->
+//            viewModel.registerDiary(bookmarkList.find { it.favoriteFoodId == id }!!)
+//
+//            Toast.makeText(requireContext(), "등록되었습니다",
+//            Toast.LENGTH_SHORT).show()
+//        }
     }
 }

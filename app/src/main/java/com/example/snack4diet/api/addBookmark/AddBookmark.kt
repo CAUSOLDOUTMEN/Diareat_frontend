@@ -1,6 +1,6 @@
-package com.example.snack4diet.api.editFood
+package com.example.snack4diet.api.addBookmark
 
-data class EditFood(
+data class AddBookmark(
     val baseNutrition: BaseNutrition,
     val foodId: Long,
     val name: String,
