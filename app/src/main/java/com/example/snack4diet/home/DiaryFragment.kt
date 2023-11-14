@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
@@ -41,6 +42,7 @@ class DiaryFragment : Fragment(), FragmentResultListener {
 
         mainActivity = requireActivity() as MainActivity
         id = mainActivity.getUserId()
+        getFoodList()
 
         return binding.root
     }
@@ -48,7 +50,6 @@ class DiaryFragment : Fragment(), FragmentResultListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getFoodList()
-        setDiaryRecyclerView()
 
         binding.btnFoodEntry.setOnClickListener {
             setFoodEntryFragment()
@@ -65,17 +66,19 @@ class DiaryFragment : Fragment(), FragmentResultListener {
     private fun setDiaryRecyclerView() {
         diaryAdapter = DiaryAdapter(foodList) { nutrient ->
             val nutrition = BaseNutrition(nutrient.baseNutrition.carbohydrate, nutrient.baseNutrition.fat, nutrient.baseNutrition.kcal, nutrient.baseNutrition.protein)
-            val food = AddBookmark(nutrition, nutrient.foodId, nutrient.name, id)
-            mainActivity.addBookmark(food)
-            getFoodList()
-            diaryAdapter.notifyDataSetChanged()
+            if (!nutrient.favoriteChecked) {
+                val food = AddBookmark(nutrition, nutrient.foodId, nutrient.name, id)
+                mainActivity.addBookmark(food)
+            }
         }
         binding.recyclerView.adapter = diaryAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         diaryAdapter.setOnItemClickListener { id ->
             // 아이템 클릭 시 바텀시트 프래그먼트를 띄우는 코드
-            val bottomSheetFragment = BottomSheetFragment(foodList.find { it.foodId == id }!!)
+            val homeFragment = requireParentFragment() as HomeFragment
+
+            val bottomSheetFragment = BottomSheetFragment(foodList.find { it.foodId == id }!!, homeFragment.year, homeFragment.month, homeFragment.day)
 
             bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogCustomTheme)
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
@@ -83,14 +86,17 @@ class DiaryFragment : Fragment(), FragmentResultListener {
     }
 
     fun getFoodList() {
-        val fragment = requireParentFragment() as HomeFragment
-        foodList = fragment.getFoodList()
-        if (foodList.isEmpty()) {
-            binding.emptyFoodLayout.visibility = View.VISIBLE
-        } else {
-            binding.emptyFoodLayout.visibility = View.GONE
+        lifecycleScope.launch {
+            val fragment = requireParentFragment() as HomeFragment
+            foodList = fragment.getFoodList()
+
+            if (foodList.isEmpty()) {
+                binding.emptyFoodLayout.visibility = View.VISIBLE
+            } else {
+                binding.emptyFoodLayout.visibility = View.GONE
+            }
+            setDiaryRecyclerView()
         }
-        setDiaryRecyclerView()
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) { // FragmentResultListener를 사용하기 위해 구현해야 하는 함수
