@@ -50,8 +50,11 @@ interface ApiService {
 
     @DELETE("/api/food/{foodId}/delete")
     suspend fun deleteFood(
+        @Path("foodId") foodId: Long,
         @Header("userId") userId: Long,
-        @Path("foodId") foodId: Long
+        @Query("dd") dd: Int,
+        @Query("mm") mm: Int,
+        @Query("yy") yy: Int,
     )
 
     @POST("/api/food/update")
