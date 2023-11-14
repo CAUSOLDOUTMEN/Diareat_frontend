@@ -1,60 +1,76 @@
 package com.example.snack4diet.bookmark
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.snack4diet.R
+import android.widget.Toast
+import androidx.core.os.bundleOf
+import com.example.snack4diet.MainActivity
+import com.example.snack4diet.api.updateFavoriteFood.BaseNutrition
+import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
+import com.example.snack4diet.databinding.FragmentBookmarkEditBottomSheetBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BookmarkEditFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class BookmarkEditFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+class BookmarkEditBottomSheetFragment(private val updateFavoriteFoodDto: UpdateFavoriteFoodDto) : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentBookmarkEditBottomSheetBinding
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bookmark_edit, container, false)
+        binding = FragmentBookmarkEditBottomSheetBinding.inflate(layoutInflater, container, false)
+
+        mainActivity = requireActivity() as MainActivity
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BookmarkEditFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BookmarkEditFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.editFoodName.hint = updateFavoriteFoodDto.name
+        binding.editKcalAmount.hint = updateFavoriteFoodDto.baseNutrition.kcal.toString()
+        binding.editCarbohydrateAmount.hint = updateFavoriteFoodDto.baseNutrition.carbohydrate.toString()
+        binding.editProteinAmount.hint = updateFavoriteFoodDto.baseNutrition.protein.toString()
+        binding.editFatAmount.hint = updateFavoriteFoodDto.baseNutrition.fat.toString()
+
+        binding.btnFinishEdit.setOnClickListener {
+            editBookmark()
+        }
+    }
+
+    private fun editBookmark() {
+        try {
+            var foodName = binding.editFoodName.text.toString()
+            var kcal = binding.editKcalAmount.text.toString()
+            var carbohydrate = binding.editCarbohydrateAmount.text.toString()
+            var protein = binding.editProteinAmount.text.toString()
+            var fat = binding.editFatAmount.text.toString()
+
+            if (foodName.isNullOrEmpty()) foodName = updateFavoriteFoodDto.name
+            if (kcal.isNullOrEmpty()) kcal = updateFavoriteFoodDto.baseNutrition.kcal.toString()
+            if (carbohydrate.isNullOrEmpty()) carbohydrate = updateFavoriteFoodDto.baseNutrition.carbohydrate.toString()
+            if (protein.isNullOrEmpty()) protein = updateFavoriteFoodDto.baseNutrition.protein.toString()
+            if (fat.isNullOrEmpty()) fat = updateFavoriteFoodDto.baseNutrition.fat.toString()
+
+            val nutrition = BaseNutrition(carbohydrate.toInt(), fat.toInt(), kcal.toInt(), protein.toInt())
+            val id = mainActivity.getUserId()
+            val newBookmark = UpdateFavoriteFoodDto(nutrition, updateFavoriteFoodDto.favoriteFoodId, foodName, id)
+            mainActivity.editBookmark(newBookmark)
+            val fragment = requireParentFragment() as BookmarkFragment
+            fragment.getBookmarkList()
+            dismiss()
+            notifyActionCompleted()
+            Toast.makeText(requireContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "제대로 입력해주세요.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun notifyActionCompleted() {
+        // Fragment Result API를 통해 다이어리 프래그먼트에 알림
+        parentFragmentManager.setFragmentResult("bookmarkEditBottomSheetResult", bundleOf("actionCompleted" to true))
     }
 }

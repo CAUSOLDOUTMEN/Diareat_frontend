@@ -10,13 +10,11 @@ import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.databinding.ItemBookmarkBinding
 
 class BookmarkAdapter(
-    var nutrients: List<Data>,
-//    private val itemClickListener: BookmarkFragment.OnItemClickListener,
-//    private val onDeleteListener: (Data) -> Unit
+    private var nutrients: List<Data>,
+    private val onItemClickListener: BookmarkFragment.OnItemClickListener,
     ): RecyclerView.Adapter<BookmarkAdapter.ViewHolder> () {
 
     inner class ViewHolder(binding: ItemBookmarkBinding): RecyclerView.ViewHolder(binding.root) {
-        val itemLayout = binding.itemLayout
         val foodName = binding.foodName
         val kcal = binding.kcal
         val protein = binding.protein
@@ -42,10 +40,15 @@ class BookmarkAdapter(
         holder.carbohydrate.text = item.baseNutrition.carbohydrate.toString() + "g"
         holder.itemView.visibility = View.VISIBLE
 
-//        holder.btnDelete.setOnClickListener {
-//            onDeleteListener(item)
-//            notifyItemRemoved(position)
-//        }
+        holder.btnDelete.setOnClickListener {
+            onItemClickListener.deleteBookmark(item.favoriteFoodId)
+            notifyDataSetChanged()
+        }
+
+        holder.btnEdit.setOnClickListener {
+            onItemClickListener.updateBookmark(item.favoriteFoodId)
+            notifyDataSetChanged()
+        }
 
 //        holder.itemLayout.setOnClickListener {
 //            itemClickListener.onItemClick(item.favoriteFoodId)
