@@ -12,5 +12,5 @@ data class Data(
     val totalFat: Int,
     val totalKcal: Int,
     val totalProtein: Int,
-    val userId: Int
+    val userId: Long
 )
