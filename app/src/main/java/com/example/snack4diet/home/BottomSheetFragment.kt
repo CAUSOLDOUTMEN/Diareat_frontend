@@ -15,7 +15,7 @@ import com.example.snack4diet.databinding.FragmentBottomSheetBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetFragment(private val food: Data) : BottomSheetDialogFragment() {
+class BottomSheetFragment(private val food: Data, val yy: Int, val mm: Int, val dd: Int) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetBinding
     private lateinit var nutrientList: List<Macronutrients>
     private lateinit var viewModel: NutrientsViewModel
@@ -55,7 +55,7 @@ class BottomSheetFragment(private val food: Data) : BottomSheetDialogFragment() 
     }
 
     private fun deleteFood() {
-        mainActivity.deleteFood(food.foodId)
+        mainActivity.deleteFood(food.foodId, yy, mm, dd)
         Toast.makeText(requireContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show()
         val fragment = requireParentFragment() as DiaryFragment
         fragment.getFoodList()
