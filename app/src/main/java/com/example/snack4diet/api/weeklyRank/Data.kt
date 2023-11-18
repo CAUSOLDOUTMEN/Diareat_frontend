@@ -1,12 +1,12 @@
 package com.example.snack4diet.api.weeklyRank
 
 data class Data(
-    val calorieScore: Int,
-    val carbohydrateScore: Int,
-    val fatScore: Int,
+    val calorieScore: Double,
+    val carbohydrateScore: Double,
+    val fatScore: Double,
     val image: String,
     val name: String,
-    val proteinScore: Int,
-    val totalScore: Int,
-    val userId: Int
+    val proteinScore: Double,
+    val totalScore: Double,
+    val userId: Long
 )
