@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,17 +38,11 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
 
     private val followListener = object: FollowListener{
         override fun followUser(followId: Long) {
-            lifecycleScope.launch {
-                mainActivity.followUser(followId)
-                validateSearch()
-            }
+            mainActivity.followUser(followId)
         }
 
         override fun unfollowUser(followId: Long) {
-            lifecycleScope.launch {
-                mainActivity.unfollowUser(followId)
-                validateSearch()
-            }
+            mainActivity.unfollowUser(followId)
         }
     }
 
@@ -73,6 +69,13 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
 
         binding.search.setOnClickListener {
             validateSearch()
+        }
+
+        binding.searchData.setOnKeyListener { v, keyCode, keyEvent ->
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
+                validateSearch()
+            }
+            true
         }
 
         binding.btnCancel.setOnClickListener {
