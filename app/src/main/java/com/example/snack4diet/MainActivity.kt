@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
     private var userId = -1L
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var bookmarkList: List<Data>
-    private var isFollowingRequestInProgress = false
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
@@ -425,39 +424,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun followUser(followId: Long) {
-        if (!isFollowingRequestInProgress) {
-            isFollowingRequestInProgress = true
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    application.apiService.followUser(userId, followId)
-                    withContext(Dispatchers.Main) {
-                        isFollowingRequestInProgress = false
-                    }
-                } catch (e: Exception) {
-                    Log.e("MainActivity", "Error during followUser API call", e)
-                    withContext(Dispatchers.Main) {
-                        isFollowingRequestInProgress = false
-                    }
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.e("뭐가 문제냐", userId.toString())
+                Log.e("뭐가 문제냐", followId.toString())
+                application.apiService.followUser(userId, followId)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during followUser API call", e)
             }
         }
     }
 
     fun unfollowUser(followId: Long) {
-        if (!isFollowingRequestInProgress) {
-            isFollowingRequestInProgress = true
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    application.apiService.unfollowUser(userId, followId)
-                    withContext(Dispatchers.Main) {
-                        isFollowingRequestInProgress = false
-                    }
-                } catch (e: Exception) {
-                    Log.e("MainActivity", "Error during unfollowUser API call", e)
-                    withContext(Dispatchers.Main) {
-                        isFollowingRequestInProgress = false
-                    }
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.e("뭐가 문제냐", userId.toString())
+                Log.e("뭐가 문제냐", followId.toString())
+                application.apiService.unfollowUser(userId, followId)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during unfollowUser API call", e)
             }
         }
     }
