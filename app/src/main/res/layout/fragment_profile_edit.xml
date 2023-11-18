@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:hint="닉네임"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/dark_gray"
             android:textSize="22sp"
             android:fontFamily="@font/pretendard_regular"/>
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="키"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/dark_gray"
             android:textSize="22sp"
             android:fontFamily="@font/pretendard_regular"/>
 
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="몸무게"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/dark_gray"
             android:textSize="22sp"
             android:fontFamily="@font/pretendard_regular"/>
 
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="나이"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/dark_gray"
             android:textSize="22sp"
             android:fontFamily="@font/pretendard_regular"/>
 

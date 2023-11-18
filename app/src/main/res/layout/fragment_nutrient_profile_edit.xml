@@ -1,203 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginHorizontal="20dp"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="24sp"
-        android:text="기준 영양소 수정"
-        android:textColor="@color/black"
-        android:fontFamily="@font/pretendard_regular"
-        android:layout_gravity="center"/>
+    android:layout_height="match_parent">
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="칼로리(kcal)"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/dark_gray"/>
+            android:layout_marginTop="20dp"
+            android:textSize="24sp"
+            android:text="기준 영양소 수정"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard_regular"
+            android:layout_gravity="center"/>
 
-        <EditText
-            android:id="@+id/kcal"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint=""
-            android:textColorHint="@color/black"
-            android:textSize="22sp"
-            android:fontFamily="@font/pretendard_regular"/>
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="칼로리(kcal)"
+                android:textSize="14sp"
+                android:fontFamily="@font/pretendard"
+                android:textColor="@color/dark_gray"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/kcal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text=""
+                android:textColorHint="@color/dark_gray"
+                android:textSize="22sp"
+                android:fontFamily="@font/pretendard_regular"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="탄수화물(g)"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/dark_gray"/>
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/carbohydrate"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint=""
-            android:textColorHint="@color/black"
-            android:textSize="22sp"
-            android:fontFamily="@font/pretendard_regular"/>
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="탄수화물(g)"
+                android:textSize="14sp"
+                android:fontFamily="@font/pretendard"
+                android:textColor="@color/black"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+            <EditText
+                android:id="@+id/carbohydrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint=""
+                android:textColorHint="@color/dark_gray"
+                android:textSize="22sp"
+                android:fontFamily="@font/pretendard_regular"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="단백질(g)"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/dark_gray"/>
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/protein"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint=""
-            android:textColorHint="@color/black"
-            android:textSize="22sp"
-            android:fontFamily="@font/pretendard_regular"/>
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="단백질(g)"
+                android:textSize="14sp"
+                android:fontFamily="@font/pretendard"
+                android:textColor="@color/black"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+            <EditText
+                android:id="@+id/protein"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint=""
+                android:textColorHint="@color/dark_gray"
+                android:textSize="22sp"
+                android:fontFamily="@font/pretendard_regular"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="지방(g)"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/dark_gray"/>
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/province"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint=""
-            android:textColorHint="@color/black"
-            android:textSize="22sp"
-            android:fontFamily="@font/pretendard_regular"/>
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="지방(g)"
+                android:textSize="14sp"
+                android:fontFamily="@font/pretendard"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/fat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint=""
+                android:textColorHint="@color/dark_gray"
+                android:textSize="22sp"
+                android:fontFamily="@font/pretendard_regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="16sp"
+                android:text="* 기준영양소 수정 가능 범위"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="16sp"
+                android:text="칼로리: 1000kcal ~ 10000kcal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="16sp"
+                android:text="탄수화물: 100g ~ 500g"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="16sp"
+                android:text="단백질: 25g ~ 500g"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="16sp"
+                android:text="지방: 25g ~ 500g"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="* 영양점수 산출 기준"
+                android:textSize="16sp"
+                android:fontFamily="@font/pretendard_medium"
+                android:textColor="@color/dark_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="각 영양소의 기준 영양소의 100%에 근접할수록 증가하고,\n멀어질수록 감소합니다."
+                android:textSize="16sp"
+                android:fontFamily="@font/pretendard_medium"
+                android:textColor="@color/dark_gray"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnFinishEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_btn_finish_edit" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
-            android:fontFamily="@font/pretendard_medium"
-            android:textSize="16sp"
-            android:text="* 기준영양소 수정 가능 범위"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
-            android:fontFamily="@font/pretendard_medium"
-            android:textSize="16sp"
-            android:text="칼로리: 1000kcal ~ 10000kcal"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
-            android:fontFamily="@font/pretendard_medium"
-            android:textSize="16sp"
-            android:text="탄수화물: 100g ~ 500g"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
-            android:fontFamily="@font/pretendard_medium"
-            android:textSize="16sp"
-            android:text="단백질: 25g ~ 500g"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
-            android:fontFamily="@font/pretendard_medium"
-            android:textSize="16sp"
-            android:text="지방: 25g ~ 500g"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="* 영양점수 산출 기준"
-            android:textSize="16sp"
-            android:fontFamily="@font/pretendard_medium"
-            android:textColor="@color/dark_gray"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="각 영양소의 기준 영양소의 100%에 근접할수록 증가하고,\n멀어질수록 감소합니다."
-            android:textSize="16sp"
-            android:fontFamily="@font/pretendard_medium"
-            android:textColor="@color/dark_gray"/>
-
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/btnFinishEdit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_btn_finish_edit" />
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

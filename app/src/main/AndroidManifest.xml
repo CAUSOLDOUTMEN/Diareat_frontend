@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-feature android:name="android.hardware.camera.any" android:required="true" />
-<!--    tools:targetApi="31"-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -20,22 +23,41 @@
         android:theme="@style/Theme.Snack4diet">
 
         <activity
+            android:name=".home.camera.foodlens.FoodlensActivity"
+            android:exported="false">
+
+            <meta-data
+                android:name="com.doinglab.foodlens.sdk.companytoken"
+                android:value="@string/foodlens_company_token" />
+            <meta-data
+                android:name="com.doinglab.foodlens.sdk.apptoken"
+                android:value="@string/foodlens_app_token" />
+            <meta-data android:name="com.doinglab.foodlens.sdk.serveraddr" android:value="www.foodlens.com"/>
+
+        </activity>
+
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+
+        <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="oauth"
-                    android:scheme="kakao032cc77ba17faa30703c6ff5d62735e6"/>
-
+                    android:scheme="kakao032cc77ba17faa30703c6ff5d62735e6" />
             </intent-filter>
         </activity>
         <activity
             android:name=".home.camera.CameraActivity"
             android:exported="false"
-            android:theme="@style/Theme.Design.Light.NoActionBar"/>
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
             android:name=".UserInfoActivity"
             android:exported="false"
@@ -66,6 +88,7 @@
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
