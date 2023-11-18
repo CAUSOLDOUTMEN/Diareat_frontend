@@ -33,10 +33,10 @@ class RankingBottomSheetFragment(private val data: Data) : BottomSheetDialogFrag
 
         binding.ranking.text = (position + 1).toString() + "위"
         binding.userName.text = data.name
-        binding.kcal.text = String.format("%.2f", data.calorieScore)
-        binding.carbohydrate.text = String.format("%.2f", data.carbohydrateScore)
-        binding.protein.text = String.format("%.2f", data.proteinScore)
-        binding.fat.text = String.format("%.2f", data.fatScore)
-        binding.totalScore.text = String.format("%.2f", data.totalScore)
+        binding.kcal.text = String.format("%.1f", data.calorieScore)
+        binding.carbohydrate.text = String.format("%.1f", data.carbohydrateScore)
+        binding.protein.text = String.format("%.1f", data.proteinScore)
+        binding.fat.text = String.format("%.1f", data.fatScore)
+        binding.totalScore.text = String.format("%.1f", data.totalScore)
     }
 }

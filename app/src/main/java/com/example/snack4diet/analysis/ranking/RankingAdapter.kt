@@ -54,7 +54,7 @@ class RankingAdapter(private val context: Context, private var followers: List<D
 
         }
         holder.nickname.text = item.name
-        holder.score.text = item.totalScore.toString()
+        holder.score.text = String.format("%.1f", item.totalScore)
 
         if (item.userId == userId) {
             holder.itemLayout.setBackgroundResource(R.drawable.round_frame_light_orange_20)

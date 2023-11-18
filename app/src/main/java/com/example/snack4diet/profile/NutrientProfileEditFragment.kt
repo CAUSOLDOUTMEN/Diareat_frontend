@@ -2,6 +2,8 @@ package com.example.snack4diet.profile
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,14 @@ class NutrientProfileEditFragment : Fragment() {
     private var userStandardIntake: UserStandardIntake? = null
     private var userId = -1L
 
+    private val textWatcher = object : TextWatcher{
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            calculateKcal()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,9 +42,13 @@ class NutrientProfileEditFragment : Fragment() {
         lifecycleScope.launch {
             userStandardIntake = mainActivity.getUserStandardIntake()
             binding.kcal.text = userStandardIntake?.data?.calorie.toString()
-            binding.carbohydrate.hint = userStandardIntake?.data?.carbohydrate.toString()
-            binding.protein.hint = userStandardIntake?.data?.protein.toString()
-            binding.fat.hint = userStandardIntake?.data?.fat.toString()
+            binding.carbohydrate.setText(userStandardIntake?.data?.carbohydrate.toString())
+            binding.protein.setText(userStandardIntake?.data?.protein.toString())
+            binding.fat.setText(userStandardIntake?.data?.fat.toString())
+
+            binding.carbohydrate.addTextChangedListener(textWatcher)
+            binding.protein.addTextChangedListener(textWatcher)
+            binding.fat.addTextChangedListener(textWatcher)
         }
     }
 
@@ -51,23 +65,23 @@ class NutrientProfileEditFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnFinishEdit.setOnClickListener {
-            var newKcal = binding.kcal.text.toString()
-            var newCarbohydrate = binding.carbohydrate.text.toString()
-            var newProtein = binding.protein.text.toString()
-            var newFat = binding.fat.text.toString()
+            val newKcal = binding.kcal.text.toString()
+            val newCarbohydrate = binding.carbohydrate.text.toString()
+            val newProtein = binding.protein.text.toString()
+            val newFat = binding.fat.text.toString()
 
-            if (newKcal.isEmpty()) {
-                newKcal = binding.kcal.hint.toString()
-            }
-            if (newCarbohydrate.isEmpty()) {
-                newCarbohydrate = binding.carbohydrate.hint.toString()
-            }
-            if (newProtein.isEmpty()) {
-                newProtein = binding.protein.hint.toString()
-            }
-            if (newFat.isEmpty()) {
-                newFat = binding.fat.hint.toString()
-            }
+//            if (newKcal.isEmpty()) {
+//                newKcal = binding.kcal.hint.toString()
+//            }
+//            if (newCarbohydrate.isEmpty()) {
+//                newCarbohydrate = binding.carbohydrate.hint.toString()
+//            }
+//            if (newProtein.isEmpty()) {
+//                newProtein = binding.protein.hint.toString()
+//            }
+//            if (newFat.isEmpty()) {
+//                newFat = binding.fat.hint.toString()
+//            }
 
             val parsedKcal = newKcal.toIntOrNull()
             val parsedCarbohydrate = newCarbohydrate.toIntOrNull()
@@ -110,5 +124,14 @@ class NutrientProfileEditFragment : Fragment() {
                 window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
             }
         }
+    }
+
+    private fun calculateKcal() {
+        val carbohydrate = binding.carbohydrate.text.toString().toIntOrNull() ?: 0
+        val protein = binding.protein.text.toString().toIntOrNull() ?: 0
+        val fat = binding.fat.text.toString().toIntOrNull() ?: 0
+
+        val kcal = carbohydrate * 4 + protein * 4 + fat * 9
+        binding.kcal.text = kcal.toString()
     }
 }

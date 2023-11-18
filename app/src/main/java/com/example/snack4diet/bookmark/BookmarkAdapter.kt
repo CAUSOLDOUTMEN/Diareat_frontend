@@ -15,6 +15,7 @@ class BookmarkAdapter(
     ): RecyclerView.Adapter<BookmarkAdapter.ViewHolder> () {
 
     inner class ViewHolder(binding: ItemBookmarkBinding): RecyclerView.ViewHolder(binding.root) {
+        val itemLayout = binding.itemLayout
         val foodName = binding.foodName
         val kcal = binding.kcal
         val protein = binding.protein
@@ -50,9 +51,9 @@ class BookmarkAdapter(
             notifyDataSetChanged()
         }
 
-//        holder.itemLayout.setOnClickListener {
-//            itemClickListener.onItemClick(item.favoriteFoodId)
-//        }
+        holder.itemLayout.setOnClickListener {
+            onItemClickListener.addToDiary(item.favoriteFoodId)
+        }
     }
 
     override fun getItemCount(): Int {
