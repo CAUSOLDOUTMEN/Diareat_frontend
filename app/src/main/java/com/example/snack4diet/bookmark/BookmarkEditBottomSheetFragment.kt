@@ -49,11 +49,11 @@ class BookmarkEditBottomSheetFragment(private val updateFavoriteFoodDto: UpdateF
             var protein = binding.editProteinAmount.text.toString()
             var fat = binding.editFatAmount.text.toString()
 
-            if (foodName.isNullOrEmpty()) foodName = updateFavoriteFoodDto.name
-            if (kcal.isNullOrEmpty()) kcal = updateFavoriteFoodDto.baseNutrition.kcal.toString()
-            if (carbohydrate.isNullOrEmpty()) carbohydrate = updateFavoriteFoodDto.baseNutrition.carbohydrate.toString()
-            if (protein.isNullOrEmpty()) protein = updateFavoriteFoodDto.baseNutrition.protein.toString()
-            if (fat.isNullOrEmpty()) fat = updateFavoriteFoodDto.baseNutrition.fat.toString()
+            if (foodName.isNullOrEmpty()) foodName = binding.editFoodName.hint.toString()
+            if (kcal.isNullOrEmpty()) kcal = binding.editKcalAmount.hint.toString()
+            if (carbohydrate.isNullOrEmpty()) carbohydrate = binding.editCarbohydrateAmount.hint.toString()
+            if (protein.isNullOrEmpty()) protein = binding.editProteinAmount.hint.toString()
+            if (fat.isNullOrEmpty()) fat = binding.editFatAmount.hint.toString()
 
             val nutrition = BaseNutrition(carbohydrate.toInt(), fat.toInt(), kcal.toInt(), protein.toInt())
             val id = mainActivity.getUserId()
