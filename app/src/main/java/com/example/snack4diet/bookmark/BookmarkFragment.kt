@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
@@ -18,6 +19,7 @@ import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
 import com.example.snack4diet.databinding.AddDiaryDialogLayoutBinding
 import com.example.snack4diet.databinding.DialogDeleteBookmarkBinding
 import com.example.snack4diet.databinding.FragmentBookmarkBinding
+import kotlinx.coroutines.launch
 
 class BookmarkFragment : Fragment(), FragmentResultListener {
     private lateinit var binding: FragmentBookmarkBinding
@@ -50,8 +52,6 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
         super.onCreate(savedInstanceState)
 
         mainActivity = requireActivity() as MainActivity
-        bookmarkList = mainActivity.getBookmarkList()
-        Log.e("뭐냐고뭐냐고뭐냐고뭐냐고", bookmarkList.toString())
         userId = mainActivity.getUserId()
 
         parentFragmentManager.setFragmentResultListener("bookmarkEditBottomSheetResult", this, this)
@@ -63,16 +63,15 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     ): View {
         binding = FragmentBookmarkBinding.inflate(layoutInflater, container, false)
 
+        lifecycleScope.launch {
+            bookmarkList = mainActivity.getBookmarkList()!!
+            bookmarkAdapter = BookmarkAdapter(bookmarkList, onItemClickListener)
+            binding.recyclerView.adapter = bookmarkAdapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            Log.e("뭐냐고뭐냐고뭐냐고뭐냐고", bookmarkList.toString())
+        }
+
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        bookmarkAdapter = BookmarkAdapter(bookmarkList, onItemClickListener)
-
-        binding.recyclerView.adapter = bookmarkAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun showAddDiaryDialog(id: Long) {
@@ -108,7 +107,12 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
 
         dialogBinding.btnYes.setOnClickListener {
             dialog.dismiss()
-            mainActivity.deleteBookmark(id)
+            lifecycleScope.launch {
+                mainActivity.deleteBookmark(id)
+
+                bookmarkList = mainActivity.getBookmarkList()!!
+                bookmarkAdapter.notifyDataSetChanged()
+            }
         }
 
         dialog.show()
@@ -119,7 +123,6 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
 
     private fun showBookmarkEditBottomSheet(id: Long) {
         val bookmarkItem = bookmarkList.find { it.favoriteFoodId == id }!!
-        Log.e("뭔데뭔데", id.toString())
         Log.e("뭔데뭔데", bookmarkItem.toString())
         val baseNutrition = BaseNutrition(bookmarkItem.baseNutrition.carbohydrate, bookmarkItem.baseNutrition.fat, bookmarkItem.baseNutrition.kcal, bookmarkItem.baseNutrition.protein)
         val favoriteFoodId = bookmarkItem.favoriteFoodId
@@ -137,20 +140,18 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     }
 
     fun getBookmarkList() {
-        bookmarkList = mainActivity.getBookmarkList()
+        lifecycleScope.launch {
+            bookmarkList = mainActivity.getBookmarkList()!!
+            bookmarkAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == "bottomSheetResult") {
             // 작업 완료 시 호출되는 로직
             if (result.getBoolean("actionCompleted", false)) {
-                updateBookmarkList()
+                getBookmarkList()
             }
         }
     }// FragmentResultListener를 사용하기 위해 구현해야 하는 함수
-
-    private fun updateBookmarkList() {
-        getBookmarkList()
-        bookmarkAdapter.notifyDataSetChanged()
-    }
 }
