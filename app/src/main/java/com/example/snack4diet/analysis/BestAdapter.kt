@@ -3,11 +3,10 @@ package com.example.snack4diet.analysis
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.bestWorst.Best
 import com.example.snack4diet.databinding.ItemBestWorstBinding
 
-class BestWorstAdapter(private val items: List<Best>): RecyclerView.Adapter<BestWorstAdapter.ViewHolder> () {
+class BestAdapter(private val items: List<Best>): RecyclerView.Adapter<BestAdapter.ViewHolder> () {
 
     inner class ViewHolder(binding: ItemBestWorstBinding): RecyclerView.ViewHolder(binding.root){
         val foodName = binding.foodName
