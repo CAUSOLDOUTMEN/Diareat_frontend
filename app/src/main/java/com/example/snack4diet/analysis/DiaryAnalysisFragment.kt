@@ -2,6 +2,7 @@ package com.example.snack4diet.analysis
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
+import com.example.snack4diet.api.analysisGraph.Data
 import com.example.snack4diet.databinding.FragmentDiaryAnalysisBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -18,7 +20,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
-class DiaryAnalysisFragment : Fragment() {
+class DiaryAnalysisFragment(private val data: Data) : Fragment() {
     private lateinit var binding: FragmentDiaryAnalysisBinding
     private lateinit var weekLineChart: LineChart
     private lateinit var fourWeekLineChart: LineChart
@@ -51,24 +53,9 @@ class DiaryAnalysisFragment : Fragment() {
             }
         }
 
-        weekChartData.add(Entry(10.0f, 30.0f))
-        weekChartData.add(Entry(11.0f, 35.0f))
-        weekChartData.add(Entry(12.0f, 39.0f))
-        weekChartData.add(Entry(13.0f, 31.0f))
-        weekChartData.add(Entry(14.0f, 36.0f))
-        weekChartData.add(Entry(15.0f, 34.0f))
-        weekChartData.add(Entry(16.0f, 30.0f))
+        selectButton(0)
 
-        fourWeekChartData.add(Entry(10.0f, 34.0f))
-        fourWeekChartData.add(Entry(11.0f, 39.0f))
-        fourWeekChartData.add(Entry(12.0f, 36.0f))
-        fourWeekChartData.add(Entry(13.0f, 33.0f))
-        fourWeekChartData.add(Entry(14.0f, 31.0f))
-        fourWeekChartData.add(Entry(15.0f, 38.0f))
-        fourWeekChartData.add(Entry(16.0f, 35.0f))
-
-        weekLineChart(weekChartData)
-        fourWeekLineChart(fourWeekChartData)
+        binding.weeklyScore.text = data.totalScore.toString()
 
         binding.btnDiaryDetail.setOnClickListener {
             val mainActivity = requireActivity() as MainActivity
@@ -133,16 +120,103 @@ class DiaryAnalysisFragment : Fragment() {
         when(i) {
             0 -> {
                 buttons[0].setImageResource(R.drawable.ic_btn_kcal_checked)
+                kcalSelected()
             }
             1 -> {
                 buttons[1].setImageResource(R.drawable.ic_btn_carbohydrate_checked)
+                carbohydrateSelected()
             }
             2 -> {
                 buttons[2].setImageResource(R.drawable.ic_btn_protein_checked)
+                proteinSelected()
             }
             3 -> {
                 buttons[3].setImageResource(R.drawable.ic_btn_province_checked)
+                fatSelected()
             }
         }
+    }
+
+    private fun kcalSelected() {
+        weekChartData.clear()
+        fourWeekChartData.clear()
+
+        for (i in data.calorieLastSevenDays.indices) {
+            weekChartData.add(Entry(i.toFloat(), data.calorieLastSevenDays[i].toFloat()))
+        }
+
+        for (i in data.calorieLastFourWeek.indices) {
+            fourWeekChartData.add(Entry(i.toFloat(), data.calorieLastFourWeek[i].toFloat()))
+        }
+        fourWeekChartData.add(Entry(10.0f, 34.0f))
+        fourWeekChartData.add(Entry(11.0f, 39.0f))
+        fourWeekChartData.add(Entry(12.0f, 36.0f))
+        fourWeekChartData.add(Entry(13.0f, 33.0f))
+        fourWeekChartData.add(Entry(14.0f, 31.0f))
+        fourWeekChartData.add(Entry(15.0f, 38.0f))
+        fourWeekChartData.add(Entry(16.0f, 35.0f))
+
+        Log.e("뭐가 문제냐", weekChartData.toString())
+        Log.e("뭐가 문제냐", fourWeekChartData.toString())
+
+        weekLineChart(weekChartData)
+        fourWeekLineChart(fourWeekChartData)
+    }
+
+    private fun carbohydrateSelected() {
+        weekChartData.clear()
+        fourWeekChartData.clear()
+
+        for (i in data.carbohydrateLastSevenDays.indices) {
+            weekChartData.add(Entry(i.toFloat(), data.carbohydrateLastSevenDays[i].toFloat()))
+        }
+
+        for (i in data.carbohydrateLastFourWeek.indices) {
+            fourWeekChartData.add(Entry(i.toFloat(), data.carbohydrateLastFourWeek[i].toFloat()))
+        }
+
+        Log.e("뭐가 문제냐", weekChartData.toString())
+        Log.e("뭐가 문제냐", fourWeekChartData.toString())
+
+        weekLineChart(weekChartData)
+        fourWeekLineChart(fourWeekChartData)
+    }
+
+    private fun proteinSelected() {
+        weekChartData.clear()
+        fourWeekChartData.clear()
+
+        for (i in data.proteinLastSevenDays.indices) {
+            weekChartData.add(Entry(i.toFloat(), data.proteinLastSevenDays[i].toFloat()))
+        }
+
+        for (i in data.proteinLastFourWeek.indices) {
+            fourWeekChartData.add(Entry(i.toFloat(), data.proteinLastFourWeek[i].toFloat()))
+        }
+
+        Log.e("뭐가 문제냐", weekChartData.toString())
+        Log.e("뭐가 문제냐", fourWeekChartData.toString())
+
+        weekLineChart(weekChartData)
+        fourWeekLineChart(fourWeekChartData)
+    }
+
+    private fun fatSelected() {
+        weekChartData.clear()
+        fourWeekChartData.clear()
+
+        for (i in data.fatLastSevenDays.indices) {
+            weekChartData.add(Entry(i.toFloat(), data.fatLastSevenDays[i].toFloat()))
+        }
+
+        for (i in data.fatLastFourWeek.indices) {
+            fourWeekChartData.add(Entry(i.toFloat(), data.fatLastFourWeek[i].toFloat()))
+        }
+
+        Log.e("뭐가 문제냐", weekChartData.toString())
+        Log.e("뭐가 문제냐", fourWeekChartData.toString())
+
+        weekLineChart(weekChartData)
+        fourWeekLineChart(fourWeekChartData)
     }
 }
