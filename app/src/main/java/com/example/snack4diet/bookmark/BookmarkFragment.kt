@@ -136,7 +136,7 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addDiary(id: Long) {
-
+        mainActivity.createFoodFromBookmark(id)
     }
 
     fun getBookmarkList() {
