@@ -56,6 +56,12 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_home_checked"/>
 
+            <Button
+                android:id="@+id/btnTemp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
+
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

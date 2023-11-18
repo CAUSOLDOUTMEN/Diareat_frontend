@@ -21,10 +21,18 @@ import com.example.snack4diet.analysis.AnalysisFragment
 import com.example.snack4diet.analysis.DiaryAnalysisDetailFragment
 import com.example.snack4diet.api.addBookmark.AddBookmark
 import com.example.snack4diet.api.createFood.CreateFood
+import com.example.snack4diet.api.createFoodFromBookmark.CreateFoodFromBookmark
 import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.api.getBookmark.GetBookmark
+import com.example.snack4diet.api.searchUser.SearchUser
+import com.example.snack4diet.api.searchUserResponse.SearchUserResponse
 import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
+import com.example.snack4diet.api.updateUser.UpdateUserDto
+import com.example.snack4diet.api.updateUserStandardIntake.UpdateUserStandardIntake
+import com.example.snack4diet.api.userInfo.UserInfo
+import com.example.snack4diet.api.userInfoSimple.SimpleUserInfo
+import com.example.snack4diet.api.userStandardIntake.UserStandardIntake
 import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.bookmark.BookmarkFragment
 import com.example.snack4diet.databinding.ActivityMainBinding
@@ -32,6 +40,7 @@ import com.example.snack4diet.databinding.DialogCameraGuideBinding
 import com.example.snack4diet.home.FoodEntryFragment
 import com.example.snack4diet.home.HomeFragment
 import com.example.snack4diet.home.camera.CameraActivity
+import com.example.snack4diet.home.camera.foodlens.FoodlensActivity
 import com.example.snack4diet.profile.NutrientProfileEditFragment
 import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
@@ -39,7 +48,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
+import java.time.LocalDate
+import kotlin.Exception
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -53,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     private var userId = -1L
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var bookmarkList: List<Data>
+    private var isFollowingRequestInProgress = false
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
@@ -83,6 +94,11 @@ class MainActivity : AppCompatActivity() {
         binding.btnStatistics.setOnClickListener {
             setAnalysisFragment()
         }
+
+        binding.btnTemp.setOnClickListener {
+            val intent = Intent(this, FoodlensActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun setHomeFragment() {
@@ -106,9 +122,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setDiaryAnalysisDetailFragment() {
-        val diaryAnalysisDetailFragment = DiaryAnalysisDetailFragment()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = application.apiService.getBestWorstFood(userId)
+                Log.e("정체가 뭐냐", response.data.toString())
 
-        replaceFragment(diaryAnalysisDetailFragment, "diaryAnalysisDetailFragment")
+                withContext(Dispatchers.Main) {
+                    val diaryAnalysisDetailFragment = DiaryAnalysisDetailFragment(response.data)
+                    replaceFragment(diaryAnalysisDetailFragment, "diaryAnalysisDetailFragment")
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getBestWorst API call", e)
+            }
+        }
     }
 
     fun replaceFragment(fragment: Fragment, tag: String) {
@@ -279,25 +305,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setBookmarkList() {
-        CoroutineScope(Dispatchers.IO).launch {
+    suspend fun getBookmarkList(): List<Data>? {
+        return withContext(Dispatchers.Main) {
             try {
                 val response = application.apiService.getFavoriteFood(userId)
-                bookmarkList = response.data
-                Log.e("ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓ", bookmarkList.toString())
+                Log.e("ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓ", response.data.toString())
+                return@withContext response.data
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during getFavoriteFood API call", e)
-            }
-
-            withContext(Dispatchers.Main) {
-                val fragment = BookmarkFragment()
-                replaceFragment(fragment, "BookmarkFragment")
+                return@withContext null
             }
         }
     }
 
-    fun getBookmarkList(): List<Data> {
-        return bookmarkList
+    fun createFoodFromBookmark(favoriteFoodId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val createFoodFromBookmark = CreateFoodFromBookmark(favoriteFoodId, userId)
+                Log.e("데이터 확인해보자", createFoodFromBookmark.toString())
+                application.apiService.createFoodFromBookmark(createFoodFromBookmark)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during createFoodFromBookmark API call", e)
+            }
+        }
     }
 
     fun deleteBookmark(favoriteFoodId: Long) {
@@ -306,9 +336,6 @@ class MainActivity : AppCompatActivity() {
                 application.apiService.deleteBookmark(favoriteFoodId, userId)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during deleteBookmark API call", e)
-            }
-            withContext(Dispatchers.Main) {
-                setBookmarkList()
             }
         }
     }
@@ -320,6 +347,134 @@ class MainActivity : AppCompatActivity() {
                 application.apiService.updateBookmark(updateFavoriteFoodDto)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during updateBookmark API call", e)
+            }
+        }
+    }
+
+    suspend fun getSimpleUserInfo(): com.example.snack4diet.api.userInfoSimple.Data? {
+        return withContext(Dispatchers.Main) {
+            try {
+                val response = application.apiService.getSimpleUserInfo(userId)
+                Log.e("무ㅏ냐고 ", response.data.toString())
+
+                return@withContext response.data
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getSimpleUserInfo API call", e)
+                return@withContext null
+            }
+        }
+    }
+
+    suspend fun getUserInfo(): UserInfo? {
+        return withContext(Dispatchers.Main) {
+            try {
+                val response = application.apiService.getUserInfo(userId)
+                Log.e("무ㅏㅓㅇ;ㅁ워밍뭐ㅣㅁ", response.data.toString())
+                return@withContext response
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getUserInfo API call", e)
+                return@withContext null
+            }
+        }
+    }
+
+    fun updateUserInfo(updateUserDto: UpdateUserDto) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.updateUserInfo(updateUserDto)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during updateUserInfo API call", e)
+            }
+        }
+    }
+
+    suspend fun getUserStandardIntake(): UserStandardIntake? {
+        return withContext(Dispatchers.Main) {
+            try {
+                val response = application.apiService.getUserStandardIntake(userId)
+                Log.e("너는 뭐냐", response.data.toString())
+                return@withContext response
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getUserStandardIntake API call", e)
+                return@withContext null
+            }
+        }
+    }
+
+    fun updateUserStandardIntake(updateUserStandardIntake: UpdateUserStandardIntake) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                application.apiService.updateUserStandardIntake(updateUserStandardIntake)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during updateUserStandardIntake API call", e)
+            }
+        }
+    }
+
+    suspend fun searchUser(searchUser: SearchUser): SearchUserResponse? {
+        return withContext(Dispatchers.Main) {
+            try {
+                val response = application.apiService.searchUser(searchUser)
+                Log.e("정체가 뭐냐", response.data.toString())
+                return@withContext response
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during searchUser API call", e)
+                return@withContext null
+            }
+        }
+    }
+
+    fun followUser(followId: Long) {
+        if (!isFollowingRequestInProgress) {
+            isFollowingRequestInProgress = true
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    application.apiService.followUser(userId, followId)
+                    withContext(Dispatchers.Main) {
+                        isFollowingRequestInProgress = false
+                    }
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error during followUser API call", e)
+                    withContext(Dispatchers.Main) {
+                        isFollowingRequestInProgress = false
+                    }
+                }
+            }
+        }
+    }
+
+    fun unfollowUser(followId: Long) {
+        if (!isFollowingRequestInProgress) {
+            isFollowingRequestInProgress = true
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    application.apiService.unfollowUser(userId, followId)
+                    withContext(Dispatchers.Main) {
+                        isFollowingRequestInProgress = false
+                    }
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error during unfollowUser API call", e)
+                    withContext(Dispatchers.Main) {
+                        isFollowingRequestInProgress = false
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getWeeklyRankingData(): List<com.example.snack4diet.api.weeklyRank.Data>? {
+        return withContext(Dispatchers.Main) {
+            try {
+                val currentDate = LocalDate.now()
+                val year = currentDate.year
+                val month = currentDate.monthValue
+                val day = currentDate.dayOfMonth
+                val response = application.apiService.getWeeklyRank(userId, day, month, year)
+                Log.e("너느 뭐임???", response.data.toString())
+                return@withContext response.data
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error during getWeeklyRank API call", e)
+                return@withContext null
             }
         }
     }

@@ -10,13 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.DayWithWeekday
-import com.example.snack4diet.api.NutritionItem
-import com.example.snack4diet.api.createFood.CreateFood
 import com.example.snack4diet.api.foodOnDate.Data
 import com.example.snack4diet.api.foodOnDate.FoodOnDate
 import com.example.snack4diet.api.foodOnDate.Header
@@ -29,12 +26,14 @@ import com.example.snack4diet.profile.ProfileFragment
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.Exception
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -49,9 +48,9 @@ class HomeFragment : Fragment() {
     private var userId = -1L
     private lateinit var sharedPreferences: SharedPreferences
     private val today = LocalDate.now()
-    private var year = today.year
-    private var month = today.monthValue
-    private var day = today.dayOfMonth
+    var year = today.year
+    var month = today.monthValue
+    var day = today.dayOfMonth
     private lateinit var jwt: String
 
     interface ItemClickListener {
@@ -167,7 +166,7 @@ class HomeFragment : Fragment() {
                 } else {
                     foodOnDate = response
                 }
-                Log.e("여기는 뭔데??????", foodOnDate.toString())
+
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
             }
@@ -201,10 +200,9 @@ class HomeFragment : Fragment() {
 
     private fun setBookmarkFragment() {
         val mainActivity = requireActivity() as MainActivity
-//        val fragment = BookmarkFragment()
+        val fragment = BookmarkFragment()
 
-        mainActivity.setBookmarkList()
-//        mainActivity.replaceFragment(fragment, "BookmarkFragment")
+        mainActivity.replaceFragment(fragment, "BookmarkFragment")
     }
 
     private fun setProfileFragment() {
@@ -289,22 +287,49 @@ class HomeFragment : Fragment() {
         return dailyNutrition
     }
 
-    fun getFoodList(): List<Data> {
+    suspend fun getFoodList(): List<Data> {
 
-        CoroutineScope(Dispatchers.IO).launch {
+
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val deferredFoodOnDate = async {
+//                    delay(2000) // 2초 지연
+//                    app.apiService.getFoodOnDate(userId, year, month, day)
+//                }
+//
+//                val response = deferredFoodOnDate.await()
+//
+//                if (response.data == null) {
+//                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
+//                } else {
+//                    foodOnDate = response
+//                }
+//
+//                Log.e("여기는 뭔데??????", foodOnDate.toString())
+//            } catch (e: Exception) {
+//                Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
+//            }
+//        }
+//
+//        return foodOnDate.data
+//    }
+        return withContext(Dispatchers.IO) {
             try {
                 val response = app.apiService.getFoodOnDate(userId, year, month, day)
+
                 if (response.data == null) {
                     foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
                 } else {
                     foodOnDate = response
                 }
+
                 Log.e("여기는 뭔데??????", foodOnDate.toString())
+
+                return@withContext foodOnDate.data
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
+                return@withContext emptyList()
             }
         }
-
-        return foodOnDate.data
     }
 }

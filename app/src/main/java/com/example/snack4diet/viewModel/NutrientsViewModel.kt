@@ -23,7 +23,7 @@ class NutrientsViewModel: ViewModel() {
         Macronutrients(3,"음식3",325, 24,32,25, false),
         Macronutrients(4,"음식4",325, 24,32,25, false)
     )
-    private val bookmarkList = mutableListOf<Macronutrients>()
+    private val bookmarkList = mutableListOf<com.example.snack4diet.api.getBookmark.Data>()
     private val user = UserInfo("품절남", 180.0, 78.0, true, 24)
     private val following = mutableListOf(
         UserRank(1, "중앙대최고아웃풋", null, 20.0, 19.9, 20.15, 19.95, 92.5),
@@ -41,7 +41,7 @@ class NutrientsViewModel: ViewModel() {
     val nutrientsLiveData: LiveData<MutableList<Macronutrients>>
         get() = MutableLiveData(nutrients)
 
-    val bookmarkLiveData: LiveData<MutableList<Macronutrients>>
+    val bookmarkLiveData: LiveData<MutableList<com.example.snack4diet.api.getBookmark.Data>>
         get () = MutableLiveData(bookmarkList)
 
     val followingLiveData: LiveData<MutableList<UserRank>>
@@ -50,16 +50,12 @@ class NutrientsViewModel: ViewModel() {
     val searchUserLiveData: LiveData<MutableList<UserSearch>>
         get() = MutableLiveData(searchUser)
 
-    fun resisterBookmark (nutrient: Data) {
-        val new = nutrient.copy(foodId = bookmarkList.size + 1)
-//        bookmarkList.add(new)
-        nutrients.find { it.foodId == nutrient.foodId }?.isBookmark = true
-    }
+//    fun resisterBookmark (nutrient: Data) {
+//        val new = nutrient.copy(foodId = bookmarkList.size + 1)
+////        bookmarkList.add(new)
+//        nutrients.find { it.foodId == nutrient.foodId }?.isBookmark = true
+//    }
 
-    fun deleteBookmark(nutrient: Macronutrients) {
-        bookmarkList.removeIf { it.foodId == nutrient.foodId }
-        nutrients.find {it.foodId == nutrient.foodId}?.isBookmark = false
-    }
 
     fun registerDiary(nutrient: Macronutrients) {
         val new = nutrient.copy(foodId = nutrients.size + 1, isBookmark = true)
