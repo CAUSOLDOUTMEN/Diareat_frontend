@@ -6,14 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.snack4diet.R
-import com.example.snack4diet.api.Macronutrients
+import com.example.snack4diet.api.bestWorst.Best
+import com.example.snack4diet.api.bestWorst.Data
+import com.example.snack4diet.api.bestWorst.Worst
 import com.example.snack4diet.databinding.FragmentDiaryAnalysisDetailBinding
 
-class DiaryAnalysisDetailFragment : Fragment() {
+class DiaryAnalysisDetailFragment(private val bestWorst: Data) : Fragment() {
     private lateinit var binding: FragmentDiaryAnalysisDetailBinding
-    private lateinit var bestItem: List<Macronutrients>
-    private lateinit var worstItem: List<Macronutrients>
+    private lateinit var bestItem: List<Best>
+    private lateinit var worstItem: List<Worst>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,30 +27,26 @@ class DiaryAnalysisDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bestItem = listOf(
-            Macronutrients(1,"음식1",500, 32,11,21, false),
-            Macronutrients(1,"음식1",500, 32,11,21, false),
-            Macronutrients(1,"음식1",500, 32,11,21, false)
-        )
-
-        worstItem = listOf(
-            Macronutrients(1,"음식1",500, 32,11,21, false),
-            Macronutrients(1,"음식1",500, 32,11,21, false),
-            Macronutrients(1,"음식1",500, 32,11,21, false)
-        )
+        bestItem = bestWorst.best
+        worstItem = bestWorst.worst
+        binding.totalScore.text = bestWorst.totalScore.toString()
+        binding.kcalScore.text = bestWorst.calorieScore.toString()
+        binding.carbohydrateScore.text = bestWorst.carbohydrateScore.toString()
+        binding.proteinScore.text = bestWorst.proteinScore.toString()
+        binding.fatScore.text = bestWorst.fatScore.toString()
 
         setBestReayclerView()
         setWorstRecyclerView()
     }
 
     private fun setBestReayclerView() {
-        val adapter = BestWorstAdapter(bestItem)
+        val adapter = BestAdapter(bestItem)
         binding.bestRecyclerView.adapter = adapter
         binding.bestRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun setWorstRecyclerView() {
-        val adapter = BestWorstAdapter(worstItem)
+        val adapter = WorstAdapter(worstItem)
         binding.worstRecyclerView.adapter = adapter
         binding.worstRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
