@@ -9,5 +9,5 @@ data class Data(
     val fatLastSevenDays: List<Int>,
     val proteinLastFourWeek: List<Int>,
     val proteinLastSevenDays: List<Int>,
-    val totalScore: Int
+    val totalScore: Double
 )
