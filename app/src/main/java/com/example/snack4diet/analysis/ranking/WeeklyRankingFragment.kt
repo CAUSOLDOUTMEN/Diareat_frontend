@@ -9,19 +9,54 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.UserRank
+import com.example.snack4diet.api.searchUser.SearchUser
+import com.example.snack4diet.api.searchUserResponse.SearchUserResponse
+import com.example.snack4diet.api.weeklyRank.Data
 import com.example.snack4diet.databinding.DialogRankingGuideBinding
 import com.example.snack4diet.databinding.FragmentWeeklyRankingBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
+import kotlinx.coroutines.launch
 
-class WeeklyRankingFragment : Fragment() {
+class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
     private lateinit var binding: FragmentWeeklyRankingBinding
-    private lateinit var followers: List<UserRank>
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var viewModel: NutrientsViewModel
+    private lateinit var mainActivity: MainActivity
+    private var searchResponse: SearchUserResponse? = null
+    private var userId = -1L
+
+    interface FollowListener{
+        fun followUser(followId: Long)
+        fun unfollowUser(followId: Long)
+    }
+
+    private val followListener = object: FollowListener{
+        override fun followUser(followId: Long) {
+            lifecycleScope.launch {
+                mainActivity.followUser(followId)
+                validateSearch()
+            }
+        }
+
+        override fun unfollowUser(followId: Long) {
+            lifecycleScope.launch {
+                mainActivity.unfollowUser(followId)
+                validateSearch()
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mainActivity = requireActivity() as MainActivity
+        sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        userId = sharedPreferences.getLong("id", -1)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,11 +68,6 @@ class WeeklyRankingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-
-        val mainActivity = requireActivity() as MainActivity
-        viewModel = mainActivity.getViewModel()
 
         setRecyclerView()
 
@@ -55,21 +85,21 @@ class WeeklyRankingFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
-        binding.btnCancel.visibility = View.GONE
-        binding.searchData.text.clear()
-        val adapter = RankingAdapter(emptyList(), 4)
-        binding.rankingRecyclerView.adapter = adapter
-        binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter.showBottomSheet { position ->
-            rankingBottomSheet(position)
-        }
-        viewModel.followingLiveData.observe(requireActivity()) { followingLiveData ->
-            adapter.updateData(followingLiveData)
+        lifecycleScope.launch {
+            rankList = mainActivity.getWeeklyRankingData()!!
+            binding.btnCancel.visibility = View.GONE
+            binding.searchData.text.clear()
+            val adapter = RankingAdapter(requireContext(), rankList, userId)
+            binding.rankingRecyclerView.adapter = adapter
+            binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            adapter.showBottomSheet { position ->
+                rankingBottomSheet(position)
+            }
         }
     }
 
     private fun rankingBottomSheet(position: Int) {
-        val bottomSheetFragment = RankingBottomSheetFragment()
+        val bottomSheetFragment = RankingBottomSheetFragment(rankList[position])
         val bundle = Bundle()
         bundle.putInt("position", position) // 아이템 위치 전달
         bottomSheetFragment.arguments = bundle
@@ -80,12 +110,14 @@ class WeeklyRankingFragment : Fragment() {
     private fun validateSearch() {
         if (binding.searchData.text.isNullOrEmpty()) return
         else {
-            showSearchResult()
+            showSearchResult(binding.searchData.text.toString())
         }
     }
 
-    private fun showSearchResult() {
-        if (binding.searchData.text.toString() == "중앙대") {
+    private fun showSearchResult(inputName: String) {
+        val user = SearchUser(inputName, userId)
+        lifecycleScope.launch {
+            searchResponse = mainActivity.searchUser(user)
             setSearchRecyclerView()
         }
     }
@@ -93,12 +125,9 @@ class WeeklyRankingFragment : Fragment() {
     private fun setSearchRecyclerView() {
         binding.btnCancel.visibility = View.VISIBLE
         val searchData = binding.searchData.text.toString()
-        val searchAdapter = SearchAdapter(emptyList(), searchData)
+        val searchAdapter = SearchAdapter(requireContext(), searchResponse!!.data, searchData, followListener)
         binding.rankingRecyclerView.adapter = searchAdapter
         binding.rankingRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.searchUserLiveData.observe(requireActivity()) { searchResult ->
-            searchAdapter.updateData(searchResult)
-        }
     }
 
     private fun showRankingGuide() {
