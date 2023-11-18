@@ -64,6 +64,7 @@
                 android:layout_weight="1"/>
 
             <TextView
+                android:id="@+id/totalScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="79.60"
@@ -195,7 +196,7 @@
                 android:layout_weight="1"/>
 
             <TextView
-                android:id="@+id/provinceScore"
+                android:id="@+id/fatScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="19.95"

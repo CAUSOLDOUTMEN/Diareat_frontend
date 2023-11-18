@@ -10,4 +10,7 @@
     <string name="carbohydrate">탄수화물</string>
     <string name="protein">단백질</string>
     <string name="province">지방</string>
+
+    <string name="foodlens_app_token">75a642f172174236b74d5c32c9fa2140</string>
+    <string name="foodlens_company_token">3b7145b391774328b137c818331f8436</string>
 </resources>
