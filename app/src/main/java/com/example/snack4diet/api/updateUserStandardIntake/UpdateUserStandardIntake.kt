@@ -5,5 +5,5 @@ data class UpdateUserStandardIntake(
     val carbohydrate: Int,
     val fat: Int,
     val protein: Int,
-    val userId: Int
+    val userId: Long
 )
