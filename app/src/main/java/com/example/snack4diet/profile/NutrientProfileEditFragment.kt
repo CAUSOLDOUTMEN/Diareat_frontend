@@ -7,17 +7,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.R
 import com.example.snack4diet.api.UserNutrientInfo
+import com.example.snack4diet.api.updateUserStandardIntake.UpdateUserStandardIntake
+import com.example.snack4diet.api.userStandardIntake.UserStandardIntake
 import com.example.snack4diet.databinding.DialogNutrientProfileEditExceptionBinding
 import com.example.snack4diet.databinding.FragmentNutrientProfileEditBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
+import kotlinx.coroutines.launch
 
 class NutrientProfileEditFragment : Fragment() {
     private lateinit var binding: FragmentNutrientProfileEditBinding
-    private lateinit var viewModel: NutrientsViewModel
-    private lateinit var userDailyNutrient: UserNutrientInfo
+    private lateinit var mainActivity: MainActivity
+    private var userStandardIntake: UserStandardIntake? = null
+    private var userId = -1L
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mainActivity = requireActivity() as MainActivity
+        userId = mainActivity.getUserId()
+        lifecycleScope.launch {
+            userStandardIntake = mainActivity.getUserStandardIntake()
+            binding.kcal.text = userStandardIntake?.data?.calorie.toString()
+            binding.carbohydrate.hint = userStandardIntake?.data?.carbohydrate.toString()
+            binding.protein.hint = userStandardIntake?.data?.protein.toString()
+            binding.fat.hint = userStandardIntake?.data?.fat.toString()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,22 +50,11 @@ class NutrientProfileEditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mainActivity = requireActivity() as MainActivity
-        viewModel = mainActivity.getViewModel()
-        viewModel.dailyNutrientLiveData.observe(requireActivity()) { dailyNutrient ->
-            userDailyNutrient = dailyNutrient
-        }
-
-        binding.kcal.hint = userDailyNutrient.dailyKcal.toString()
-        binding.carbohydrate.hint = userDailyNutrient.dailyCarbohydrate.toString()
-        binding.protein.hint = userDailyNutrient.dailyProtein.toString()
-        binding.province.hint = userDailyNutrient.dailyProvince.toString()
-
         binding.btnFinishEdit.setOnClickListener {
             var newKcal = binding.kcal.text.toString()
             var newCarbohydrate = binding.carbohydrate.text.toString()
             var newProtein = binding.protein.text.toString()
-            var newProvince = binding.province.text.toString()
+            var newFat = binding.fat.text.toString()
 
             if (newKcal.isEmpty()) {
                 newKcal = binding.kcal.hint.toString()
@@ -57,18 +65,33 @@ class NutrientProfileEditFragment : Fragment() {
             if (newProtein.isEmpty()) {
                 newProtein = binding.protein.hint.toString()
             }
-            if (newProvince.isEmpty()) {
-                newProvince = binding.province.hint.toString()
+            if (newFat.isEmpty()) {
+                newFat = binding.fat.hint.toString()
             }
 
+            val parsedKcal = newKcal.toIntOrNull()
+            val parsedCarbohydrate = newCarbohydrate.toIntOrNull()
+            val parsedProtein = newProtein.toIntOrNull()
+            val parsedFat = newFat.toIntOrNull()
+
             if (
-                newKcal.toInt() in 1000..10000 &&
-                newCarbohydrate.toInt() in 100..500 &&
-                newProtein.toInt() in 25..500 &&
-                newProvince.toInt() in 25..500
+                parsedKcal != null &&
+                parsedCarbohydrate != null &&
+                parsedProtein != null &&
+                parsedFat != null &&
+                parsedKcal.toInt() in 1000..10000 &&
+                parsedCarbohydrate.toInt() in 100..500 &&
+                parsedProtein.toInt() in 25..500 &&
+                parsedFat.toInt() in 25..500
             ) {
-                val mainActivity = requireActivity() as MainActivity
-                viewModel.editDailyNutrient(newKcal.toInt(), newCarbohydrate.toInt(), newProtein.toInt(), newProvince.toInt())
+                val newStandardIntake = UpdateUserStandardIntake(
+                    parsedKcal.toInt(),
+                    parsedCarbohydrate.toInt(),
+                    parsedFat.toInt(),
+                    parsedProtein.toInt(),
+                    userId
+                )
+                mainActivity.updateUserStandardIntake(newStandardIntake)
                 mainActivity.popFragment()
                 Toast.makeText(requireContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show()
             } else {
