@@ -67,6 +67,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:hint=""
+                android:text=""
+                android:textColor="@color/black"
                 android:textColorHint="@color/dark_gray"
                 android:textSize="22sp"
                 android:fontFamily="@font/pretendard_regular"/>
@@ -93,6 +95,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:hint=""
+                android:text=""
+                android:textColor="@color/black"
                 android:textColorHint="@color/dark_gray"
                 android:textSize="22sp"
                 android:fontFamily="@font/pretendard_regular"/>
@@ -119,6 +123,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:hint=""
+                android:text=""
+                android:textColor="@color/black"
                 android:textColorHint="@color/dark_gray"
                 android:textSize="22sp"
                 android:fontFamily="@font/pretendard_regular"/>
