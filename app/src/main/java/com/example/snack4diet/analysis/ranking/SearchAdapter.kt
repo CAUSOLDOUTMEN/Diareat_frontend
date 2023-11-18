@@ -57,41 +57,14 @@ class SearchAdapter(
         }
         holder.nickname.text = item.name
         holder.btnFollow.isChecked = item.follow
-//        holder.btnFollow.setOnClickListener {
-//            item.follow = holder.btnFollow.isChecked
-//            if (item.follow) {
-//                followListener.followUser(item.userId)
-//            } else {
-//                followListener.unfollowUser(item.userId)
-//            }
-//        }
-
         holder.btnFollow.setOnClickListener {
-            val isChecked = holder.btnFollow.isChecked
-            holder.btnFollow.isChecked = !isChecked // UI를 우선 업데이트
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    if (isChecked) {
-                        followListener.unfollowUser(item.userId)
-                    } else {
-                        followListener.followUser(item.userId)
-                    }
-                    withContext(Dispatchers.Main) {
-                        // 팔로우 상태가 성공적으로 변경된 경우 UI 업데이트
-                        item.follow = isChecked
-                        holder.btnFollow.isChecked = isChecked
-                    }
-                } catch (e: Exception) {
-                    Log.e("YourAdapter", "Error during follow/unfollow API call", e)
-                    withContext(Dispatchers.Main) {
-                        // 실패 시 다시 원래 상태로 돌려놓기
-                        holder.btnFollow.isChecked = !isChecked
-                    }
-                }
+            item.follow = holder.btnFollow.isChecked
+            if (item.follow) {
+                followListener.followUser(item.userId)
+            } else {
+                followListener.unfollowUser(item.userId)
             }
         }
-
 
         holder.nickname.text = highlightKeyword(item.name, searchedTitle)
     }
