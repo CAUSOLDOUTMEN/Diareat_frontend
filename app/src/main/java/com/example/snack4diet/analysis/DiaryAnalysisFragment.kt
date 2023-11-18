@@ -148,13 +148,6 @@ class DiaryAnalysisFragment(private val data: Data) : Fragment() {
         for (i in data.calorieLastFourWeek.indices) {
             fourWeekChartData.add(Entry(i.toFloat(), data.calorieLastFourWeek[i].toFloat()))
         }
-        fourWeekChartData.add(Entry(10.0f, 34.0f))
-        fourWeekChartData.add(Entry(11.0f, 39.0f))
-        fourWeekChartData.add(Entry(12.0f, 36.0f))
-        fourWeekChartData.add(Entry(13.0f, 33.0f))
-        fourWeekChartData.add(Entry(14.0f, 31.0f))
-        fourWeekChartData.add(Entry(15.0f, 38.0f))
-        fourWeekChartData.add(Entry(16.0f, 35.0f))
 
         Log.e("뭐가 문제냐", weekChartData.toString())
         Log.e("뭐가 문제냐", fourWeekChartData.toString())
