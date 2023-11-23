@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -136,20 +137,24 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addDiary(id: Long) {
-        mainActivity.createFoodFromBookmark(id)
+        lifecycleScope.launch {
+            mainActivity.createFoodFromBookmark(id)
+        }
     }
 
     fun getBookmarkList() {
         lifecycleScope.launch {
             bookmarkList = mainActivity.getBookmarkList()!!
-            bookmarkAdapter.notifyDataSetChanged()
+            bookmarkAdapter.nutrients = bookmarkList
+            binding.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == "bottomSheetResult") {
             // 작업 완료 시 호출되는 로직
-            if (result.getBoolean("actionCompleted", false)) {
+            if (result.getBoolean("actionCompleted", true)) {
+                Log.e("kkkkkkkkkk", "작업 완료")
                 getBookmarkList()
             }
         }

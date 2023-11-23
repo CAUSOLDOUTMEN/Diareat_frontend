@@ -1,19 +1,24 @@
 package com.example.snack4diet.home
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import com.example.snack4diet.MainActivity
+import com.example.snack4diet.R
 import com.example.snack4diet.api.Macronutrients
 import com.example.snack4diet.api.editFood.BaseNutrition
 import com.example.snack4diet.api.editFood.EditFood
 import com.example.snack4diet.api.foodOnDate.Data
+import com.example.snack4diet.databinding.DialogDeleteBookmarkBinding
 import com.example.snack4diet.databinding.FragmentBottomSheetBinding
 import com.example.snack4diet.viewModel.NutrientsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class BottomSheetFragment(private val food: Data, val yy: Int, val mm: Int, val dd: Int) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetBinding
@@ -55,11 +60,7 @@ class BottomSheetFragment(private val food: Data, val yy: Int, val mm: Int, val 
     }
 
     private fun deleteFood() {
-        mainActivity.deleteFood(food.foodId, yy, mm, dd)
-        Toast.makeText(requireContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show()
-        val fragment = requireParentFragment() as DiaryFragment
-        fragment.getFoodList()
-        dismiss()
+        showDeleteFoodDialog()
     }
 
     private fun editFood() {
@@ -79,15 +80,41 @@ class BottomSheetFragment(private val food: Data, val yy: Int, val mm: Int, val 
             val nutrition = BaseNutrition(carbohydrate.toInt(), fat.toInt(), kcal.toInt(), protein.toInt())
             val id = mainActivity.getUserId()
             val newFood = EditFood(nutrition, food.foodId, foodName, id)
-            mainActivity.editFood(newFood)
-            val fragment = requireParentFragment() as DiaryFragment
-            fragment.getFoodList()
-            dismiss()
+            lifecycleScope.launch {
+                mainActivity.editFood(newFood)
+                (requireParentFragment() as DiaryFragment).getFoodList()
+                dismiss()
+            }
             notifyActionCompleted()
             Toast.makeText(requireContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "제대로 입력해주세요.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showDeleteFoodDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.dialog_delete_food)
+
+        val dialogBinding = DialogDeleteBookmarkBinding.bind(dialog.findViewById(R.id.deleteFoodDialogLayout))
+
+        dialogBinding.btnNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnYes.setOnClickListener {
+            dialog.dismiss()
+            mainActivity.deleteFood(food.foodId, yy, mm, dd)
+            Toast.makeText(requireContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            val fragment = requireParentFragment() as DiaryFragment
+            fragment.getFoodList()
+            dismiss()
+        }
+
+        dialog.show()
+
+        val window = dialog.window
+        window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
     }
 
     private fun notifyActionCompleted() {

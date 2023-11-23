@@ -68,7 +68,12 @@ interface ApiService {
     )
 
     @POST("/api/food/update")
-    suspend fun editFood(@Body updateFoodDto: EditFood)
+    suspend fun editFood(
+        @Body updateFoodDto: EditFood,
+        @Query("dd") dd: Int,
+        @Query("mm") mm: Int,
+        @Query("yy") yy: Int,
+    )
 
     @POST("/api/food/favorite")
     suspend fun addBookmark(@Body createFavoriteFoodDto: AddBookmark)
@@ -99,7 +104,12 @@ interface ApiService {
     ): NutrientAnalysisGraph
 
     @GET("/api/food/{userId}/score")
-    suspend fun getBestWorstFood(@Path("userId") userId: Long): BestWorst
+    suspend fun getBestWorstFood(
+        @Path("userId") userId: Long,
+        @Query("dd") dd: Int,
+        @Query("mm") mm: Int,
+        @Query("yy") yy: Int,
+    ): BestWorst
 
     @GET("/api/user/{userId}/info/simple")
     suspend fun getSimpleUserInfo(@Path("userId") userId: Long): SimpleUserInfo
