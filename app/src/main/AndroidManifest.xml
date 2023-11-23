@@ -22,17 +22,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Snack4diet">
 
+        <meta-data
+            android:name="com.doinglab.foodlens.sdk.companytoken"
+            android:value="@string/foodlens_company_token" />
+        <meta-data
+            android:name="com.doinglab.foodlens.sdk.apptoken"
+            android:value="@string/foodlens_app_token" />
+
         <activity
             android:name=".home.camera.foodlens.FoodlensActivity"
             android:exported="false">
-
-            <meta-data
-                android:name="com.doinglab.foodlens.sdk.companytoken"
-                android:value="@string/foodlens_company_token" />
-            <meta-data
-                android:name="com.doinglab.foodlens.sdk.apptoken"
-                android:value="@string/foodlens_app_token" />
-            <meta-data android:name="com.doinglab.foodlens.sdk.serveraddr" android:value="www.foodlens.com"/>
 
         </activity>
 

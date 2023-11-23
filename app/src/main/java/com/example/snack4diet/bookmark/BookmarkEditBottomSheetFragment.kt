@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import com.example.snack4diet.MainActivity
 import com.example.snack4diet.api.updateFavoriteFood.BaseNutrition
 import com.example.snack4diet.api.updateFavoriteFood.UpdateFavoriteFoodDto
 import com.example.snack4diet.databinding.FragmentBookmarkEditBottomSheetBinding
+import com.example.snack4diet.home.HomeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class BookmarkEditBottomSheetFragment(private val updateFavoriteFoodDto: UpdateFavoriteFoodDto) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBookmarkEditBottomSheetBinding
@@ -58,19 +61,14 @@ class BookmarkEditBottomSheetFragment(private val updateFavoriteFoodDto: UpdateF
             val nutrition = BaseNutrition(carbohydrate.toInt(), fat.toInt(), kcal.toInt(), protein.toInt())
             val id = mainActivity.getUserId()
             val newBookmark = UpdateFavoriteFoodDto(nutrition, updateFavoriteFoodDto.favoriteFoodId, foodName, id)
-            mainActivity.editBookmark(newBookmark)
-            val fragment = requireParentFragment() as BookmarkFragment
-            fragment.getBookmarkList()
-            dismiss()
-            notifyActionCompleted()
+            lifecycleScope.launch {
+                mainActivity.editBookmark(newBookmark)
+                (parentFragment as BookmarkFragment).getBookmarkList()
+                dismiss()
+            }
             Toast.makeText(requireContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "제대로 입력해주세요.", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun notifyActionCompleted() {
-        // Fragment Result API를 통해 다이어리 프래그먼트에 알림
-        parentFragmentManager.setFragmentResult("bookmarkEditBottomSheetResult", bundleOf("actionCompleted" to true))
     }
 }

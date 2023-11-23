@@ -3,6 +3,7 @@ package com.example.snack4diet.application
 import android.app.Application
 import com.example.snack4diet.api.ApiService
 import com.example.snack4diet.api.OcrService
+import com.example.snack4diet.api.createFood.BaseNutrition
 import com.kakao.sdk.common.KakaoSdk
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit
 class MyApplication : Application() {
     lateinit var apiService: ApiService
     lateinit var ocrService: OcrService
+    var baseNutrition = BaseNutrition(0, 0, 0, 0)
     override fun onCreate() {
         super.onCreate()
 

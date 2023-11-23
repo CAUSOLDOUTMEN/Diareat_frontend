@@ -288,31 +288,6 @@ class HomeFragment : Fragment() {
     }
 
     suspend fun getFoodList(): List<Data> {
-
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val deferredFoodOnDate = async {
-//                    delay(2000) // 2초 지연
-//                    app.apiService.getFoodOnDate(userId, year, month, day)
-//                }
-//
-//                val response = deferredFoodOnDate.await()
-//
-//                if (response.data == null) {
-//                    foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
-//                } else {
-//                    foodOnDate = response
-//                }
-//
-//                Log.e("여기는 뭔데??????", foodOnDate.toString())
-//            } catch (e: Exception) {
-//                Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
-//            }
-//        }
-//
-//        return foodOnDate.data
-//    }
         return withContext(Dispatchers.IO) {
             try {
                 val response = app.apiService.getFoodOnDate(userId, year, month, day)

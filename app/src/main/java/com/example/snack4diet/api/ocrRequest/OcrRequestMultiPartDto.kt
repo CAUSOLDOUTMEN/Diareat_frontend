@@ -1,3 +1,7 @@
 package com.example.snack4diet.api.ocrRequest
 
-data class OcrRequestMultiPartDto()
+import okhttp3.MultipartBody
+
+data class OcrRequestMultiPartDto(
+    val file: MultipartBody.Part
+)

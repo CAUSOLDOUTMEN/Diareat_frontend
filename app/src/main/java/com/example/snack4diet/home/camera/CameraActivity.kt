@@ -1,12 +1,15 @@
 package com.example.snack4diet.home.camera
 
-import android.content.ContentValues.TAG
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.util.Rational
+import android.util.Size
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -16,12 +19,17 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.snack4diet.R
+import com.example.snack4diet.application.MyApplication
 import com.example.snack4diet.databinding.ActivityCameraBinding
-import com.example.snack4diet.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -32,12 +40,14 @@ class CameraActivity : AppCompatActivity() {
     private var savedUri: Uri? = null
     private lateinit var previewView: PreviewView
     private lateinit var binding: ActivityCameraBinding
+    private lateinit var app: MyApplication
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        app = applicationContext as MyApplication
         previewView = binding.previewView
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -81,17 +91,20 @@ class CameraActivity : AppCompatActivity() {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
 
-            imageCapture = ImageCapture.Builder().build()
+            imageCapture = ImageCapture.Builder()
+                .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                .build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+            val camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+            val cameraControl = camera.cameraControl
 
             if (imageCapture != null) {
+                cameraControl.setZoomRatio(0.05f)
 
                 if (binding.btnIngredientPhoto.isPressed) {
                     val image = imageCapture!!.takePicture(cameraExecutor, object : ImageCapture.OnImageCapturedCallback() {
                         override fun onCaptureSuccess(image: ImageProxy) {
-
                             image.close()
                         }
 
@@ -102,7 +115,6 @@ class CameraActivity : AppCompatActivity() {
                 } else if (binding.btnFoodPhoto.isPressed) {
                     val image = imageCapture!!.takePicture(cameraExecutor, object : ImageCapture.OnImageCapturedCallback() {
                         override fun onCaptureSuccess(image: ImageProxy) {
-
                             image.close()
                         }
 
@@ -111,11 +123,8 @@ class CameraActivity : AppCompatActivity() {
                         }
                     })
                 }
-
             }
-
         }, ContextCompat.getMainExecutor(this))
-
     }
 
     override fun onDestroy() {
@@ -140,6 +149,30 @@ class CameraActivity : AppCompatActivity() {
                     savedUri = Uri.fromFile(photoFile)
 
                     if (savedUri != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val file = File(savedUri!!.path!!)
+                            val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+                            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+                            try {
+                                val startTime = System.currentTimeMillis()
+                                val response = app.ocrService.sendFile(body)
+                                Log.e("제발제발제발제발제발제발", response.toString())
+
+                                val endTime = System.currentTimeMillis()
+                                val elapsedTime = endTime - startTime
+
+                                Log.e("작업 시간", "$elapsedTime 밀리초")
+
+                                val baseNutrition = com.example.snack4diet.api.createFood.BaseNutrition(response.carbohydrate.toInt(), response.fat.toInt(), response.kcal.toInt(), response.protein.toInt())
+                                app.baseNutrition = baseNutrition
+                                val resultIntent = Intent()
+                                setResult(Activity.RESULT_OK, resultIntent)
+                                finish()
+                            } catch (e: Exception) {
+                                Log.e("CameraActivity", "Error during uploadImage API call", e)
+                            }
+                        }
                         binding.imageViewPreview.setImageURI(savedUri)
                         binding.frameLayoutPreview.visibility = View.VISIBLE
                     }
@@ -150,6 +183,7 @@ class CameraActivity : AppCompatActivity() {
                     onBackPressed()
                 }
 
-            })
+            }
+        )
     }
 }

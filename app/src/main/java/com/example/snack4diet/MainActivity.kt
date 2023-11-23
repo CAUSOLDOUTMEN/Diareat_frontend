@@ -1,5 +1,6 @@
 package com.example.snack4diet
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -39,6 +41,7 @@ import com.example.snack4diet.databinding.ActivityMainBinding
 import com.example.snack4diet.databinding.DialogCameraGuideBinding
 import com.example.snack4diet.home.FoodEntryFragment
 import com.example.snack4diet.home.HomeFragment
+import com.example.snack4diet.home.camera.AnalysisResultFragment
 import com.example.snack4diet.home.camera.CameraActivity
 import com.example.snack4diet.home.camera.foodlens.FoodlensActivity
 import com.example.snack4diet.profile.NutrientProfileEditFragment
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bookmarkList: List<Data>
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
+    private val CAMERA_REQUEST_CODE = 123   //카메라 액티비티 실행 후 결과 처리를 위한 변수
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +127,12 @@ class MainActivity : AppCompatActivity() {
     fun setDiaryAnalysisDetailFragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = application.apiService.getBestWorstFood(userId)
+                val currentDate = LocalDate.now()
+                val year = currentDate.year
+                val month = currentDate.monthValue
+                val day = currentDate.dayOfMonth
+
+                val response = application.apiService.getBestWorstFood(userId, day, month, year)
                 Log.e("정체가 뭐냐", response.data.toString())
 
                 withContext(Dispatchers.Main) {
@@ -143,7 +152,8 @@ class MainActivity : AppCompatActivity() {
             fragment is BookmarkFragment ||
             fragment is ProfileFragment ||
             fragment is NutrientProfileEditFragment ||
-            fragment is FoodEntryFragment
+            fragment is FoodEntryFragment ||
+            fragment is AnalysisResultFragment
         ) {
             navigation.visibility = View.GONE
             camera.visibility = View.GONE
@@ -227,10 +237,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val startCameraForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val fragment = AnalysisResultFragment()
 
-    private fun executeCamera() {
+                replaceFragment(fragment, "AnalysisResultFragment")
+            }
+        }
+
+    fun executeCamera() {
         val intent = Intent(this, CameraActivity::class.java)
-        startActivity(intent)
+        startCameraForResult.launch(intent)
     }
 
     private fun openCameraGuideDialog() {
@@ -286,7 +304,12 @@ class MainActivity : AppCompatActivity() {
     fun editFood(newFood: EditFood) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                application.apiService.editFood(newFood)
+                val currentDate = LocalDate.now()
+                val year = currentDate.year
+                val month = currentDate.monthValue
+                val day = currentDate.dayOfMonth
+
+                application.apiService.editFood(newFood, day, month, year)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during editFood API call", e)
             }
@@ -323,6 +346,11 @@ class MainActivity : AppCompatActivity() {
                 val createFoodFromBookmark = CreateFoodFromBookmark(favoriteFoodId, userId)
                 Log.e("데이터 확인해보자", createFoodFromBookmark.toString())
                 application.apiService.createFoodFromBookmark(createFoodFromBookmark)
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "등록되었습니다.", Toast.LENGTH_SHORT).show()
+                    setHomeFragment()
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during createFoodFromBookmark API call", e)
             }

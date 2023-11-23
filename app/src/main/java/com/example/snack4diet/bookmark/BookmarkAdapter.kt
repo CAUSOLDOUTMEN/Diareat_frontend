@@ -10,7 +10,7 @@ import com.example.snack4diet.api.getBookmark.Data
 import com.example.snack4diet.databinding.ItemBookmarkBinding
 
 class BookmarkAdapter(
-    private var nutrients: List<Data>,
+    var nutrients: List<Data>,
     private val onItemClickListener: BookmarkFragment.OnItemClickListener,
     ): RecyclerView.Adapter<BookmarkAdapter.ViewHolder> () {
 
@@ -43,12 +43,10 @@ class BookmarkAdapter(
 
         holder.btnDelete.setOnClickListener {
             onItemClickListener.deleteBookmark(item.favoriteFoodId)
-            notifyDataSetChanged()
         }
 
         holder.btnEdit.setOnClickListener {
             onItemClickListener.updateBookmark(item.favoriteFoodId)
-            notifyDataSetChanged()
         }
 
         holder.itemLayout.setOnClickListener {

@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:hint="음식1"
             android:textSize="28sp"
+            android:textColor="@color/black"
             android:textColorHint="@color/dark_gray"
             android:fontFamily="@font/pretendard_medium"
             android:layout_gravity="bottom"
