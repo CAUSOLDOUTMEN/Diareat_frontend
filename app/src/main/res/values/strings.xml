@@ -11,6 +11,6 @@
     <string name="protein">단백질</string>
     <string name="province">지방</string>
 
-    <string name="foodlens_app_token">75a642f172174236b74d5c32c9fa2140</string>
-    <string name="foodlens_company_token">3b7145b391774328b137c818331f8436</string>
+    <string name="foodlens_app_token">d42819eed98a4f0b8d6e34126a315dc8</string>
+    <string name="foodlens_company_token">9884b8fa803549d08914c7d388ca7a9f</string>
 </resources>

@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
+    android:orientation="vertical"
     android:layout_gravity="center">
 
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
         android:layout_gravity="center"
-        style="?android:attr/progressBarStyleLarge" />
+        android:max="100"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressBackgroundTint="#FBE7C6"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:progressDrawable="@drawable/circle_progressbar"
+        android:progressTint="#edbf41"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:text="로딩 중..." />
+        android:text="잠시만 기다려주세요.." />
 
-</FrameLayout>
+</LinearLayout>

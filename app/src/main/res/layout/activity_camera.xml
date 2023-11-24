@@ -23,7 +23,7 @@
             android:id="@+id/btn_ingredient_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_btn_ingredient_photo"
+            android:src="@drawable/ic_btn_ingredient_photo_pressed"
             android:background="@android:color/transparent"/>
 
         <ImageButton

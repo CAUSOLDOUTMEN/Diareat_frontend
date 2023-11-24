@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textSize="24sp"
-            android:text="기준 영양소 수정"
+            android:text="기준 섭취량 수정"
             android:textColor="@color/black"
             android:fontFamily="@font/pretendard_regular"
             android:layout_gravity="center"/>

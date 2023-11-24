@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.foodfood"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -12,7 +13,7 @@
         android:required="true" />
 
     <application
-        android:name=".application.MyApplication"
+        android:name="com.example.foodfood.application.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,18 +23,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Snack4diet">
 
+        <activity
+            android:name="com.example.foodfood.home.camera.foodlens.FoodlensActivity"
+            android:exported="false">
+
+        </activity>
+
         <meta-data
             android:name="com.doinglab.foodlens.sdk.companytoken"
             android:value="@string/foodlens_company_token" />
         <meta-data
             android:name="com.doinglab.foodlens.sdk.apptoken"
             android:value="@string/foodlens_app_token" />
-
-        <activity
-            android:name=".home.camera.foodlens.FoodlensActivity"
-            android:exported="false">
-
-        </activity>
+<!--        <meta-data-->
+<!--            android:name="com.doinglab.foodlens.sdk.accesstoken"-->
+<!--            android:value="@string/foodlens_app_token" />-->
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -54,11 +58,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".home.camera.CameraActivity"
+            android:name="com.example.foodfood.home.camera.CameraActivity"
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".UserInfoActivity"
+            android:name="com.example.foodfood.UserInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <meta-data
@@ -66,7 +70,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".KakaoLoginActivity"
+            android:name="com.example.foodfood.KakaoLoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <meta-data
@@ -74,7 +78,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.example.foodfood.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <meta-data
@@ -82,7 +86,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name="com.example.foodfood.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
@@ -96,7 +100,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.foodfood.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <meta-data

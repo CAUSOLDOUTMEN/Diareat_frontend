@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="내 정보를 기준으로 기준영양소 자동 계산"
+            android:text="내 정보를 기준으로 기준 섭취량 자동 계산"
             android:textSize="18sp"
             android:fontFamily="@font/pretendard_semi_bold"
             android:textColor="@color/black"/>
