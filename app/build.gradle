@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.snack4diet'
+    namespace 'com.example.foodfood'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.snack4diet"
+        applicationId "com.example.foodfood"
         minSdk 26
         targetSdk 32
         versionCode 1
@@ -19,8 +19,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false // 디버그 빌드에서는 프로가드 비활성화
         }
     }
     compileOptions {
