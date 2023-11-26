@@ -17,7 +17,7 @@ import com.example.foodfood.databinding.FragmentAnalysisResultBinding
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class AnalysisResultFragment : Fragment() {
+class AnalysisResultFragment(private val foodName: String?) : Fragment() {
     private lateinit var binding: FragmentAnalysisResultBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var application: MyApplication
@@ -49,7 +49,11 @@ class AnalysisResultFragment : Fragment() {
         val hour = currentTime.hour
         val minute = currentTime.minute
 
-        binding.foodName.setText(hour.toString() + "시 " + minute.toString() + "분의 음식")
+        if (foodName == null) {
+            binding.foodName.setText(hour.toString() + "시 " + minute.toString() + "분의 음식")
+        } else {
+            binding.foodName.setText(foodName.toString())
+        }
         binding.editKcalAmount.setText(baseNutrition.kcal.toString())
         binding.editCarbohydrateAmount.setText(baseNutrition.carbohydrate.toString())
         binding.editProteinAmount.setText(baseNutrition.protein.toString())

@@ -113,15 +113,22 @@ class HomeFragment : Fragment() {
             val currentMonth = binding.month.text.toString().toInt()
             val currentYear = binding.year.text.toString().toInt()
 
-            if (currentMonth < 12) {
-                val newMonth = currentMonth + 1
-                binding.month.text = newMonth.toString()
-                setCalendar(currentYear, newMonth, 1)
-            } else if (currentMonth == 12) {
-                val newYear = currentYear + 1
-                binding.month.text = "1"
-                binding.year.text = newYear.toString()
-                setCalendar(newYear, 1, 1)
+            val localDate = LocalDate.now()
+            val localMonth = localDate.monthValue
+            val localYear = localDate.year
+
+            if (currentMonth == localMonth && currentYear == localYear) {}
+            else {
+                if (currentMonth < 12) {
+                    val newMonth = currentMonth + 1
+                    binding.month.text = newMonth.toString()
+                    setCalendar(currentYear, newMonth, 1)
+                } else if (currentMonth == 12) {
+                    val newYear = currentYear + 1
+                    binding.month.text = "1"
+                    binding.year.text = newYear.toString()
+                    setCalendar(newYear, 1, 1)
+                }
             }
         }
 
@@ -182,6 +189,7 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 dailyNutrition = app.apiService.getNutritionSummary(userId, day, month, year)
+                Log.e("뭔데뭔데뭔데뭔데뭔데", dailyNutrition.toString())
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getNutritionSummary API call", e)
             }
@@ -255,7 +263,15 @@ class HomeFragment : Fragment() {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month - 1)
-        val lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        var lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        val localDate = LocalDate.now()
+        val localMonth = localDate.monthValue
+        val localYear = localDate.year
+
+        if (localMonth == month && localYear == year) {
+            lastDay = localDate.dayOfMonth
+        }
 
         val formatter = DateTimeFormatter.ofPattern("E", Locale("ko-KR")) // 요일을 해당 나라의 언어로 저장하는 방법
         for (i in 1..lastDay) {
@@ -305,4 +321,5 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
 }

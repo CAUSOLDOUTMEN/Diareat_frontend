@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -33,6 +34,7 @@ import com.doinglab.foodlens.sdk.network.model.RecognitionResult
 import com.example.foodfood.R
 import com.example.foodfood.application.MyApplication
 import com.example.foodfood.databinding.ActivityCameraBinding
+import com.example.foodfood.loading.DialogLoading
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +42,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -55,7 +59,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
     private lateinit var app: MyApplication
     private lateinit var ns: NetworkService
-    private lateinit var progressDialog: AlertDialog
+    private lateinit var progressDialog: DialogLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,7 +201,17 @@ class CameraActivity : AppCompatActivity() {
 
                                     Log.e("작업 시간", "$elapsedTime 밀리초")
 
-                                    val baseNutrition = com.example.foodfood.api.createFood.BaseNutrition(response.carbohydrate.toInt(), response.fat.toInt(), response.kcal.toInt(), response.protein.toInt())
+                                    var kcal = response.kcal.toInt()
+                                    var carbohydrate = response.carbohydrate.toInt()
+                                    var protein = response.protein.toInt()
+                                    var fat = response.fat.toInt()
+
+                                    if (kcal == -1) kcal = 0
+                                    if (carbohydrate == -1) carbohydrate = 0
+                                    if (protein == -1) protein = 0
+                                    if (fat == -1) fat = 0
+
+                                    val baseNutrition = com.example.foodfood.api.createFood.BaseNutrition(carbohydrate, fat, kcal, protein)
                                     app.baseNutrition = baseNutrition
                                     val resultIntent = Intent()
                                     setResult(Activity.RESULT_OK, resultIntent)
@@ -214,20 +228,34 @@ class CameraActivity : AppCompatActivity() {
                                 override fun onSuccess(result: RecognitionResult) {
                                     val foodPosList = result.foodPositions
                                     for (fp in foodPosList) {
-                                        val foods: List<Food> =
-                                            fp.foods
-                                        for (food in foods) {
-                                            Log.i("FoodLens", food.getFoodName())
-                                            ns.getNutritionInfo(food.foodId, object: NutritionResultHandler {
-                                                override fun onSuccess(result: NutritionResult?) {
-                                                    Log.i("FoodLens", String.format("Calorie : %f", result?.getNutrition()?.getCalories()))
-                                                }
+                                        val foods: List<Food> = fp.foods
+                                        val food = foods[0]
+                                        val name = food.getFoodName()
+                                        ns.getNutritionInfo(food.foodId, object: NutritionResultHandler {
+                                            override fun onSuccess(result: NutritionResult?) {
+                                                var kcal = result?.getNutrition()?.getCalories()?.toInt()!!
+                                                var carbohydrate = result?.getNutrition()?.getCarbonHydrate()?.toInt()!!
+                                                var protein = result?.getNutrition()?.getProtein()?.toInt()!!
+                                                var fat = result?.getNutrition()?.getFat()?.toInt()!!
 
-                                                override fun onError(errorReason: BaseError?) {
-                                                    Log.e("FoodLens", errorReason!!.getMessage());
-                                                }
-                                            })
-                                        }
+                                                val baseNutrition = com.example.foodfood.api.createFood.BaseNutrition(carbohydrate, fat, kcal, protein)
+                                                app.baseNutrition = baseNutrition
+                                                val resultIntent = Intent()
+                                                resultIntent.putExtra("foodName", name)
+                                                setResult(Activity.RESULT_OK, resultIntent)
+                                                finish()
+
+                                                Log.i("Foodlens", name)
+                                                Log.i("FoodLens", String.format("Calorie : %f", result?.getNutrition()?.getCalories()))
+                                                Log.i("FoodLens", String.format("Carbohydrate : %f", result?.getNutrition()?.getCarbonHydrate()))
+                                                Log.i("FoodLens", String.format("Protein : %f", result?.getNutrition()?.getProtein()))
+                                                Log.i("FoodLens", String.format("Fat : %f", result?.getNutrition()?.getFat()))
+                                            }
+
+                                            override fun onError(errorReason: BaseError?) {
+                                                Log.e("FoodLens", errorReason!!.getMessage());
+                                            }
+                                        })
                                     }
                                 }
 
@@ -251,24 +279,22 @@ class CameraActivity : AppCompatActivity() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
+    fun uriToBitmap(context: Context, uri: Uri?): Bitmap? {
+        if (uri == null) {
+            return null
+        }
+
         return try {
-            val source = ImageDecoder.createSource(context.contentResolver, uri)
-            ImageDecoder.decodeBitmap(source)
-        } catch (e: Exception) {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: IOException) {
             e.printStackTrace()
             null
         }
     }
 
     private fun showProgressDialog() {
-        progressDialog = AlertDialog.Builder(this)
-            .setView(R.layout.progress_dialog)
-            .setCancelable(false)
-            .show()
-
-        val window = progressDialog.window
-        window?.setBackgroundDrawableResource(R.color.transparent)
+        progressDialog = DialogLoading(this)
+        progressDialog.show()
     }
 }

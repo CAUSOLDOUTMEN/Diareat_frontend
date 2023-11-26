@@ -66,6 +66,7 @@ class AnalysisFragment : Fragment() {
                 val day = currentDate.dayOfMonth
 
                 val response = app.apiService.getAnalysisGraphData(userId, day, month, year)
+                Log.e("뭐가 문젠데ㅔㅔㅔㅔㅔㅔㅔㅔㅔ", response.toString())
                 graphData = response.data
                 Log.e("보여줘라", response.data.toString())
             } catch (e: Exception) {

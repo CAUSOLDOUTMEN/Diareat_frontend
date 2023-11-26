@@ -94,11 +94,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnStatistics.setOnClickListener {
             setAnalysisFragment()
         }
-
-        binding.btnTemp.setOnClickListener {
-            val intent = Intent(this, FoodlensActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     fun setHomeFragment() {
@@ -237,7 +232,9 @@ class MainActivity : AppCompatActivity() {
     private val startCameraForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val fragment = AnalysisResultFragment()
+                val foodName = result.data?.getStringExtra("foodName")
+
+                val fragment = AnalysisResultFragment(foodName)
 
                 replaceFragment(fragment, "AnalysisResultFragment")
             }
@@ -274,7 +271,6 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 application.apiService.createFood(food)
-                Log.e("ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ", food.toString())
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during createFood API call", e)
             }

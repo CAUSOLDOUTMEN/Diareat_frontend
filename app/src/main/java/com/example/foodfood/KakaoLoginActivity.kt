@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.foodfood.application.MyApplication
 import com.example.foodfood.databinding.ActivityLoginBinding
+import com.example.foodfood.loading.DialogLoading
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.common.model.ClientError
@@ -25,7 +26,7 @@ class KakaoLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var app: MyApplication
-    private lateinit var progressDialog: AlertDialog
+    private lateinit var progressDialog: DialogLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,12 +196,7 @@ class KakaoLoginActivity : AppCompatActivity() {
     }
 
     private fun showProgressDialog() {
-        progressDialog = AlertDialog.Builder(this)
-            .setView(R.layout.progress_dialog)
-            .setCancelable(false)
-            .show()
-
-        val window = progressDialog.window
-        window?.setBackgroundDrawableResource(R.color.transparent)
+        progressDialog = DialogLoading(this)
+        progressDialog.show()
     }
 }
