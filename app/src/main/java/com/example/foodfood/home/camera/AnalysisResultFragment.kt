@@ -1,6 +1,7 @@
 package com.example.foodfood.home.camera
 
 import android.app.Dialog
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,7 +18,7 @@ import com.example.foodfood.databinding.FragmentAnalysisResultBinding
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class AnalysisResultFragment(private val foodName: String?) : Fragment() {
+class AnalysisResultFragment(private val foodName: String?, private val uri: Uri) : Fragment() {
     private lateinit var binding: FragmentAnalysisResultBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var application: MyApplication
@@ -44,6 +45,7 @@ class AnalysisResultFragment(private val foodName: String?) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         baseNutrition = application.baseNutrition
+        binding.foodImage.setImageURI(uri)
 
         val currentTime = LocalDateTime.now()
         val hour = currentTime.hour
