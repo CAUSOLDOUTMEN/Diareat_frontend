@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.foodfood.MainActivity
+import com.example.foodfood.R
 import com.example.foodfood.api.UserInfo
 import com.example.foodfood.api.userInfoSimple.Data
 import com.example.foodfood.databinding.FragmentProfileBinding
@@ -37,6 +39,11 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             userData = mainActivity.getSimpleUserInfo()
             binding.nickname.text = userData?.name
+            Glide.with(requireContext())
+                .load(userData?.image)
+                .placeholder(R.drawable.ic_profile_image)
+                .circleCrop()
+                .into(binding.profileImage)
         }
 
         return binding.root
