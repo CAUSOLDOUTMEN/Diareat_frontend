@@ -1,14 +1,19 @@
 package com.example.foodfood.home.camera
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.graphics.Rect
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -42,8 +47,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -60,6 +67,9 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var app: MyApplication
     private lateinit var ns: NetworkService
     private lateinit var progressDialog: DialogLoading
+    private lateinit var graphicOverlay: GraphicOverlay
+    private var btnIngredientChecked = false
+    private var btnFoodChecked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +82,9 @@ class CameraActivity : AppCompatActivity() {
         app = applicationContext as MyApplication
         previewView = binding.previewView
         cameraExecutor = Executors.newSingleThreadExecutor()
+        graphicOverlay = GraphicOverlay(this, null)
 
-        binding.btnIngredientPhoto.isPressed = true
+        btnIngredientChecked = true
 
         binding.btnIngredientPhoto.setOnClickListener {
             ingredientPressed()
@@ -92,15 +103,15 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun ingredientPressed() {
-        binding.btnFoodPhoto.isPressed = false
-        binding.btnIngredientPhoto.isPressed = true
+        btnIngredientChecked = true
+        btnFoodChecked = false
         binding.btnFoodPhoto.setImageResource(R.drawable.ic_btn_food_photo)
         binding.btnIngredientPhoto.setImageResource(R.drawable.ic_btn_ingredient_photo_pressed)
     }
 
     private fun foodPressed() {
-        binding.btnIngredientPhoto.isPressed = false
-        binding.btnFoodPhoto.isPressed = true
+        btnIngredientChecked = false
+        btnFoodChecked = true
         binding.btnFoodPhoto.setImageResource(R.drawable.ic_btn_food_photo_pressed)
         binding.btnIngredientPhoto.setImageResource(R.drawable.ic_btn_ingredient_photo)
     }
@@ -118,6 +129,8 @@ class CameraActivity : AppCompatActivity() {
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            binding.parentView.addView(graphicOverlay)
 
             val preview = Preview.Builder()
                 .build()
@@ -183,11 +196,16 @@ class CameraActivity : AppCompatActivity() {
                     savedUri = Uri.fromFile(photoFile)
 
                     if (savedUri != null) {
-                        if (binding.btnIngredientPhoto.isPressed) {
+                        if (btnIngredientChecked) {
                             showProgressDialog()
+                            val bitmap = uriToBitmap(this@CameraActivity, savedUri)
+                            val rotatedBitmap = rotateImageIfRequired(this@CameraActivity, bitmap!!, savedUri!!)
+                            val croppedBitmap = processCroppedImage(rotatedBitmap)
+                            val croppedUri = bitmapToUri(this@CameraActivity, croppedBitmap!!)
+
                             CoroutineScope(Dispatchers.IO).launch {
 
-                                val file = File(savedUri!!.path!!)
+                                val file = File(croppedUri!!.path!!)
                                 val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
                                 val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
@@ -222,9 +240,13 @@ class CameraActivity : AppCompatActivity() {
                                     progressDialog.dismiss()
                                 }
                             }
-                        } else {
+                        } else if (btnFoodChecked){
+                            showProgressDialog()
                             val bitmap = uriToBitmap(this@CameraActivity, savedUri!!)
-                            ns.predictMultipleFood(bitmap, object : RecognizeResultHandler {
+                            val rotatedBitmap = rotateImageIfRequired(this@CameraActivity, bitmap!!, savedUri!!)
+                            val croppedBitmap = processCroppedImage(rotatedBitmap)
+
+                            ns.predictMultipleFood(croppedBitmap, object : RecognizeResultHandler {
                                 override fun onSuccess(result: RecognitionResult) {
                                     val foodPosList = result.foodPositions
                                     for (fp in foodPosList) {
@@ -254,6 +276,7 @@ class CameraActivity : AppCompatActivity() {
 
                                             override fun onError(errorReason: BaseError?) {
                                                 Log.e("FoodLens", errorReason!!.getMessage());
+                                                progressDialog.dismiss()
                                             }
                                         })
                                     }
@@ -261,12 +284,11 @@ class CameraActivity : AppCompatActivity() {
 
                                 override fun onError(errorReason: BaseError) {
                                     Log.e("FoodLens", errorReason.message)
+                                    progressDialog.dismiss()
                                 }
                             })
+                            progressDialog.dismiss()
                         }
-
-                        binding.imageViewPreview.setImageURI(savedUri)
-                        binding.frameLayoutPreview.visibility = View.VISIBLE
                     }
                 }
 
@@ -293,8 +315,99 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    fun bitmapToUri(context: Context, bitmap: Bitmap): Uri? {
+        val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val image = File(imagesDir, "image.jpg")
+
+        val contentResolver: ContentResolver = context.contentResolver
+        var outputStream: OutputStream? = null
+
+        try {
+            outputStream = FileOutputStream(image)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+
+            // 파일이 저장된 후, 파일의 Uri를 가져옴
+            return Uri.fromFile(image)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                outputStream?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        return null
+    }
+
     private fun showProgressDialog() {
         progressDialog = DialogLoading(this)
         progressDialog.show()
+    }
+
+    private fun cropImage(originalBitmap: Bitmap, guideLineRect: Rect): Bitmap {
+        Log.e("GuideLineRect", "Left: ${guideLineRect.left}, Top: ${guideLineRect.top}, Right: ${guideLineRect.right}, Bottom: ${guideLineRect.bottom}")
+        Log.e("OriginalBitmap Size", "${originalBitmap.width} x ${originalBitmap.height}")
+
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+        val x = width / 20
+        val y = height / 40
+
+        val croppedBitmap = Bitmap.createBitmap(
+            originalBitmap,
+            x,
+            y,
+            (width * 18) / 20,
+            (height * 3) / 4,
+        )
+        Log.e("CroppedBitmap Size", "${croppedBitmap.width} x ${croppedBitmap.height}")
+        return croppedBitmap
+    }
+
+    private fun processCroppedImage(originalBitmap: Bitmap): Bitmap {
+        val guideLineRect = graphicOverlay.getGuideLineRect()
+
+        val croppedImage = cropImage(originalBitmap, guideLineRect)
+        Log.e("선넘지마라", croppedImage.toString())
+
+        binding.frameLayoutPreview.visibility = View.VISIBLE
+        binding.imageViewPreview.setImageBitmap(croppedImage)
+        binding.parentView.removeView(graphicOverlay)
+
+        return croppedImage
+    }
+
+    private fun rotateImageIfRequired(context: Context, bitmap: Bitmap, uri: Uri): Bitmap {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val ei: ExifInterface
+        try {
+            ei = ExifInterface(inputStream!!)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return bitmap
+        } finally {
+            try {
+                inputStream?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        return rotateBitmap(bitmap, orientation)
+    }
+
+    private fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap {
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.setRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.setRotate(270f)
+            else -> return bitmap
+        }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 }
