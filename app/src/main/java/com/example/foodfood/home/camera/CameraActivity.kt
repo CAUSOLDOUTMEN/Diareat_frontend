@@ -232,6 +232,7 @@ class CameraActivity : AppCompatActivity() {
                                     val baseNutrition = com.example.foodfood.api.createFood.BaseNutrition(carbohydrate, fat, kcal, protein)
                                     app.baseNutrition = baseNutrition
                                     val resultIntent = Intent()
+                                    resultIntent.putExtra("uri", croppedUri.toString())
                                     setResult(Activity.RESULT_OK, resultIntent)
                                     finish()
                                 } catch (e: Exception) {
@@ -245,6 +246,7 @@ class CameraActivity : AppCompatActivity() {
                             val bitmap = uriToBitmap(this@CameraActivity, savedUri!!)
                             val rotatedBitmap = rotateImageIfRequired(this@CameraActivity, bitmap!!, savedUri!!)
                             val croppedBitmap = processCroppedImage(rotatedBitmap)
+                            val croppedUri = bitmapToUri(this@CameraActivity, croppedBitmap!!)
 
                             ns.predictMultipleFood(croppedBitmap, object : RecognizeResultHandler {
                                 override fun onSuccess(result: RecognitionResult) {
@@ -264,6 +266,7 @@ class CameraActivity : AppCompatActivity() {
                                                 app.baseNutrition = baseNutrition
                                                 val resultIntent = Intent()
                                                 resultIntent.putExtra("foodName", name)
+                                                resultIntent.putExtra("uri", croppedUri.toString())
                                                 setResult(Activity.RESULT_OK, resultIntent)
                                                 finish()
 
@@ -353,14 +356,14 @@ class CameraActivity : AppCompatActivity() {
 
         val width = originalBitmap.width
         val height = originalBitmap.height
-        val x = width / 20
+        val x = width / 10
         val y = height / 40
 
         val croppedBitmap = Bitmap.createBitmap(
             originalBitmap,
             x,
             y,
-            (width * 18) / 20,
+            (width * 8) / 10,
             (height * 3) / 4,
         )
         Log.e("CroppedBitmap Size", "${croppedBitmap.width} x ${croppedBitmap.height}")
@@ -369,9 +372,7 @@ class CameraActivity : AppCompatActivity() {
 
     private fun processCroppedImage(originalBitmap: Bitmap): Bitmap {
         val guideLineRect = graphicOverlay.getGuideLineRect()
-
         val croppedImage = cropImage(originalBitmap, guideLineRect)
-        Log.e("선넘지마라", croppedImage.toString())
 
         binding.frameLayoutPreview.visibility = View.VISIBLE
         binding.imageViewPreview.setImageBitmap(croppedImage)
