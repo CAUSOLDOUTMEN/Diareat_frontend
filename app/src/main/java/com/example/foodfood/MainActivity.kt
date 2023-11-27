@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrame)
 
-        if (currentFragment is BookmarkFragment || currentFragment is FoodEntryFragment) {
+        if (currentFragment is BookmarkFragment || currentFragment is FoodEntryFragment || currentFragment is AnalysisResultFragment) {
             navigation.visibility = View.VISIBLE
             camera.visibility = View.VISIBLE
             super.onBackPressed()
@@ -233,6 +233,7 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val foodName = result.data?.getStringExtra("foodName")
+                Log.e("음식 이름 전달 확인", foodName.toString())
 
                 val fragment = AnalysisResultFragment(foodName)
 
