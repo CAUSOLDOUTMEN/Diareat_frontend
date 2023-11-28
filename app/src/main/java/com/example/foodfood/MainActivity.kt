@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -233,9 +234,12 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val foodName = result.data?.getStringExtra("foodName")
+                val stringUri = result.data?.getStringExtra("uri")
+                val uri = Uri.parse(stringUri)
+
                 Log.e("음식 이름 전달 확인", foodName.toString())
 
-                val fragment = AnalysisResultFragment(foodName)
+                val fragment = AnalysisResultFragment(foodName, uri)
 
                 replaceFragment(fragment, "AnalysisResultFragment")
             }
