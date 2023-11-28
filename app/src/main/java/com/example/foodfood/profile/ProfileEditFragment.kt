@@ -1,6 +1,7 @@
 package com.example.foodfood.profile
 
 import android.app.Dialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,11 +21,13 @@ class ProfileEditFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private var userInfo: com.example.foodfood.api.userInfo.UserInfo? = null
     private var userId = -1L
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainActivity = requireActivity() as MainActivity
+        sharedPreferences = mainActivity.sharedPreferences
         userId = mainActivity.getUserId()
     }
     override fun onCreateView(
@@ -52,6 +55,9 @@ class ProfileEditFragment : Fragment() {
             var newAge = binding.age.text.toString()
             var newHeight = binding.height.text.toString()
             var newWeight = binding.weight.text.toString()
+            var isChecked = binding.autoUpdateNutrition.isChecked
+            val autoUpdateNutrition = if (isChecked) 1 else 0
+            sharedPreferences.edit().putInt("autoUpdateNutrition", autoUpdateNutrition).apply()
 
             if (newName.isEmpty()) newName = binding.nickname.hint.toString()
             if (newAge.isEmpty()) newAge = binding.age.hint.toString()
@@ -59,15 +65,15 @@ class ProfileEditFragment : Fragment() {
             if (newWeight.isEmpty()) newWeight = binding.weight.hint.toString()
 
             val parsedAge = newAge.toIntOrNull()
-            val parsedHeight = newHeight.toDoubleOrNull()
-            val parsedWeight = newWeight.toDoubleOrNull()
+            val parsedHeight = newHeight.toIntOrNull()
+            val parsedWeight = newWeight.toIntOrNull()
 
             if (parsedHeight == null || parsedAge == null || parsedWeight == null ||
-                parsedHeight.toDouble() > 300.0 || parsedAge.toInt() > 120 || parsedWeight.toDouble() > 200.0) {
+                parsedHeight.toInt() > 300.0 || parsedAge.toInt() > 120 || parsedWeight.toInt() > 200.0) {
                 showProfileEditExceptionDialog()
             } else {
                 val newUserInfo = UpdateUserDto(
-                     parsedAge, parsedHeight, newName, userId, parsedWeight
+                     parsedAge, parsedHeight, newName, userId, parsedWeight, autoUpdateNutrition
                 )
                 mainActivity.updateUserInfo(newUserInfo)
                 mainActivity.popFragment()

@@ -53,6 +53,7 @@
         android:id="@+id/btnStartCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:src="@drawable/ic_btn_start_camera"
         android:background="@android:color/transparent"
         android:layout_marginHorizontal="15dp"

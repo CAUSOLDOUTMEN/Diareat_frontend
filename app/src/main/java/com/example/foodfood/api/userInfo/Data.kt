@@ -2,7 +2,7 @@ package com.example.foodfood.api.userInfo
 
 data class Data(
     val age: Int,
-    val height: Double,
+    val height: Int,
     val name: String,
-    val weight: Double
+    val weight: Int
 )

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,6 +73,7 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
         binding.searchData.setOnKeyListener { v, keyCode, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
                 validateSearch()
+                hideKeyboard(v)
             }
             true
         }
@@ -86,6 +88,8 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
     }
 
     private fun setRecyclerView() {
+        binding.noSearchResults.visibility = View.GONE
+        binding.recyclerFrame.visibility = View.VISIBLE
         lifecycleScope.launch {
             rankList = mainActivity.getWeeklyRankingData()!!
             binding.btnCancel.visibility = View.GONE
@@ -119,11 +123,20 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
         val user = SearchUser(inputName, userId)
         lifecycleScope.launch {
             searchResponse = mainActivity.searchUser(user)
-            setSearchRecyclerView()
+            if (searchResponse?.data.isNullOrEmpty()) {
+                binding.noSearchResults.visibility = View.VISIBLE
+                binding.recyclerFrame.visibility = View.GONE
+                binding.btnCancel.visibility = View.VISIBLE
+            } else {
+                binding.noSearchResults.visibility = View.GONE
+                binding.recyclerFrame.visibility = View.VISIBLE
+                setSearchRecyclerView()
+            }
         }
     }
 
     private fun setSearchRecyclerView() {
+        binding.noSearchResults.visibility = View.GONE
         binding.btnCancel.visibility = View.VISIBLE
         val searchData = binding.searchData.text.toString()
         val searchAdapter = SearchAdapter(requireContext(), searchResponse!!.data, searchData, followListener)
@@ -145,5 +158,10 @@ class WeeklyRankingFragment(private var rankList: List<Data>) : Fragment() {
 
         val window = dialog.window
         window?.setBackgroundDrawableResource(R.drawable.round_frame_white_20)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
