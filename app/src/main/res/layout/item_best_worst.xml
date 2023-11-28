@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="110sp"
+    android:layout_height="100dp"
     android:layout_marginVertical="5dp"
     android:layout_marginHorizontal="10dp"
     android:elevation="4dp"
@@ -17,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -25,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="음식 1"
                 android:fontFamily="@font/pretendard"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="@color/dark_blue"
                 android:layout_gravity="center"/>
 
@@ -39,8 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10/29"
-                android:layout_gravity="center"
-                android:textSize="18sp"
+                android:layout_gravity="bottom"
+                android:textSize="16sp"
                 android:fontFamily="@font/pretendard_regular"/>
 
         </LinearLayout>
@@ -117,7 +118,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
-                        android:id="@+id/protein"
+                        android:id="@+id/carbohydrate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -159,7 +160,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
-                        android:id="@+id/carbohydrate"
+                        android:id="@+id/protein"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="11g"
@@ -201,7 +202,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
-                        android:id="@+id/province"
+                        android:id="@+id/fat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="21g"

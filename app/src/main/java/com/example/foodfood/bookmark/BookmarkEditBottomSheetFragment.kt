@@ -64,7 +64,6 @@ class BookmarkEditBottomSheetFragment(private val updateFavoriteFoodDto: UpdateF
                 (parentFragment as BookmarkFragment).getBookmarkList()
                 dismiss()
             }
-            Toast.makeText(requireContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "제대로 입력해주세요.", Toast.LENGTH_SHORT).show()
         }

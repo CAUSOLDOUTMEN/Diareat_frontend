@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     private var doubleBackToExitPressedOnce = false
     private val backButtonInterval = 200
     private var userId = -1L
-    private lateinit var sharedPreferences: SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
     private lateinit var bookmarkList: List<Data>
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 100
@@ -95,6 +95,11 @@ class MainActivity : AppCompatActivity() {
         binding.btnStatistics.setOnClickListener {
             setAnalysisFragment()
         }
+
+//        binding.temp.setOnClickListener {
+//            val intent = Intent(this, FoodlensActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 
     fun setHomeFragment() {
@@ -359,6 +364,10 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 application.apiService.deleteBookmark(favoriteFoodId, userId)
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during deleteBookmark API call", e)
             }
@@ -370,6 +379,9 @@ class MainActivity : AppCompatActivity() {
             try {
                 Log.e("너는 뭐냐", updateFavoriteFoodDto.toString())
                 application.apiService.updateBookmark(updateFavoriteFoodDto)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "수정되었습니다.", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during updateBookmark API call", e)
             }
@@ -407,6 +419,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 application.apiService.updateUserInfo(updateUserDto)
+                Log.e("뭐가 문제냐ㅑㅑㅑㅑㅑ", updateUserDto.toString())
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error during updateUserInfo API call", e)
             }

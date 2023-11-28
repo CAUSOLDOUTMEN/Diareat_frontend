@@ -40,13 +40,13 @@ class DiaryAnalysisDetailFragment(private val bestWorst: Data) : Fragment() {
     }
 
     private fun setBestReayclerView() {
-        val adapter = BestAdapter(bestItem)
+        val adapter = BestAdapter(bestItem, requireContext())
         binding.bestRecyclerView.adapter = adapter
         binding.bestRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun setWorstRecyclerView() {
-        val adapter = WorstAdapter(worstItem)
+        val adapter = WorstAdapter(worstItem, requireContext())
         binding.worstRecyclerView.adapter = adapter
         binding.worstRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }

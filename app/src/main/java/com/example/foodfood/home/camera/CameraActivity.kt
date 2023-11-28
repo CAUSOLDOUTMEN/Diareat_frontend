@@ -130,7 +130,7 @@ class CameraActivity : AppCompatActivity() {
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            binding.parentView.addView(graphicOverlay)
+//            binding.parentView.addView(graphicOverlay)
 
             val preview = Preview.Builder()
                 .build()
@@ -196,8 +196,8 @@ class CameraActivity : AppCompatActivity() {
                     savedUri = Uri.fromFile(photoFile)
 
                     if (savedUri != null) {
+                        showProgressDialog()
                         if (btnIngredientChecked) {
-                            showProgressDialog()
                             val bitmap = uriToBitmap(this@CameraActivity, savedUri)
                             val rotatedBitmap = rotateImageIfRequired(this@CameraActivity, bitmap!!, savedUri!!)
                             val croppedBitmap = processCroppedImage(rotatedBitmap)
@@ -242,7 +242,6 @@ class CameraActivity : AppCompatActivity() {
                                 }
                             }
                         } else if (btnFoodChecked){
-                            showProgressDialog()
                             val bitmap = uriToBitmap(this@CameraActivity, savedUri!!)
                             val rotatedBitmap = rotateImageIfRequired(this@CameraActivity, bitmap!!, savedUri!!)
                             val croppedBitmap = processCroppedImage(rotatedBitmap)
@@ -268,6 +267,7 @@ class CameraActivity : AppCompatActivity() {
                                                 resultIntent.putExtra("foodName", name)
                                                 resultIntent.putExtra("uri", croppedUri.toString())
                                                 setResult(Activity.RESULT_OK, resultIntent)
+                                                progressDialog.dismiss()
                                                 finish()
 
                                                 Log.i("Foodlens", name)
@@ -290,7 +290,6 @@ class CameraActivity : AppCompatActivity() {
                                     progressDialog.dismiss()
                                 }
                             })
-                            progressDialog.dismiss()
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import com.example.foodfood.api.updateFavoriteFood.UpdateFavoriteFoodDto
 import com.example.foodfood.databinding.AddDiaryDialogLayoutBinding
 import com.example.foodfood.databinding.DialogDeleteBookmarkBinding
 import com.example.foodfood.databinding.FragmentBookmarkBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BookmarkFragment : Fragment(), FragmentResultListener {
@@ -63,15 +65,18 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     ): View {
         binding = FragmentBookmarkBinding.inflate(layoutInflater, container, false)
 
+        setBookmarkRecyclerView()
+
+        return binding.root
+    }
+
+    private fun setBookmarkRecyclerView() {
         lifecycleScope.launch {
             bookmarkList = mainActivity.getBookmarkList()!!
             bookmarkAdapter = BookmarkAdapter(bookmarkList, onItemClickListener)
             binding.recyclerView.adapter = bookmarkAdapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            Log.e("뭐냐고뭐냐고뭐냐고뭐냐고", bookmarkList.toString())
         }
-
-        return binding.root
     }
 
     private fun showAddDiaryDialog(id: Long) {
@@ -79,6 +84,9 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
         dialog.setContentView(R.layout.add_diary_dialog_layout)
 
         val dialogBinding = AddDiaryDialogLayoutBinding.bind(dialog.findViewById(R.id.dialogLayout))
+        val name = bookmarkList.find { it.favoriteFoodId == id }?.name
+
+        dialogBinding.dialogText.text = "'${name}' 을"
 
         dialogBinding.btnNo.setOnClickListener {
             dialog.dismiss()
@@ -109,9 +117,7 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
             dialog.dismiss()
             lifecycleScope.launch {
                 mainActivity.deleteBookmark(id)
-
-                bookmarkList = mainActivity.getBookmarkList()!!
-                bookmarkAdapter.notifyDataSetChanged()
+                getBookmarkList()
             }
         }
 
@@ -138,14 +144,15 @@ class BookmarkFragment : Fragment(), FragmentResultListener {
     private fun addDiary(id: Long) {
         lifecycleScope.launch {
             mainActivity.createFoodFromBookmark(id)
+            getBookmarkList()
         }
     }
 
     fun getBookmarkList() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             bookmarkList = mainActivity.getBookmarkList()!!
             bookmarkAdapter.nutrients = bookmarkList
-            binding.recyclerView.adapter?.notifyDataSetChanged()
+            bookmarkAdapter.notifyDataSetChanged()
         }
     }
 

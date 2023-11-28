@@ -1,9 +1,11 @@
 package com.example.foodfood.profile
 
 import android.app.Dialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +24,7 @@ class NutrientProfileEditFragment : Fragment() {
     private lateinit var binding: FragmentNutrientProfileEditBinding
     private lateinit var mainActivity: MainActivity
     private var userStandardIntake: UserStandardIntake? = null
+    private lateinit var sharedPreferences: SharedPreferences
     private var userId = -1L
 
     private val textWatcher = object : TextWatcher{
@@ -36,9 +39,11 @@ class NutrientProfileEditFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         mainActivity = requireActivity() as MainActivity
+        sharedPreferences = mainActivity.sharedPreferences
         userId = mainActivity.getUserId()
         lifecycleScope.launch {
             userStandardIntake = mainActivity.getUserStandardIntake()
+            Log.e("뭐냐 너는 또", userStandardIntake.toString())
             binding.kcal.text = userStandardIntake?.data?.calorie.toString()
             binding.carbohydrate.setText(userStandardIntake?.data?.carbohydrate.toString())
             binding.protein.setText(userStandardIntake?.data?.protein.toString())
@@ -67,19 +72,6 @@ class NutrientProfileEditFragment : Fragment() {
             val newCarbohydrate = binding.carbohydrate.text.toString()
             val newProtein = binding.protein.text.toString()
             val newFat = binding.fat.text.toString()
-
-//            if (newKcal.isEmpty()) {
-//                newKcal = binding.kcal.hint.toString()
-//            }
-//            if (newCarbohydrate.isEmpty()) {
-//                newCarbohydrate = binding.carbohydrate.hint.toString()
-//            }
-//            if (newProtein.isEmpty()) {
-//                newProtein = binding.protein.hint.toString()
-//            }
-//            if (newFat.isEmpty()) {
-//                newFat = binding.fat.hint.toString()
-//            }
 
             val parsedKcal = newKcal.toIntOrNull()
             val parsedCarbohydrate = newCarbohydrate.toIntOrNull()

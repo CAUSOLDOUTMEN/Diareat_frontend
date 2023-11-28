@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -66,6 +67,7 @@ class DiaryFragment : Fragment(), FragmentResultListener {
             if (!nutrient.favoriteChecked) {
                 val food = AddBookmark(nutrition, nutrient.foodId, nutrient.name, id)
                 mainActivity.addBookmark(food)
+                Toast.makeText(requireContext(), "즐겨찾기에 등록되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
         binding.recyclerView.adapter = diaryAdapter

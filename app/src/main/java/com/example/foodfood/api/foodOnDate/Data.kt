@@ -5,5 +5,7 @@ data class Data(
     val favoriteChecked: Boolean,
     val foodId: Long,
     val name: String,
-    val userId: Long
+    val userId: Long,
+    val hour: Int,
+    val minute: Int
 )

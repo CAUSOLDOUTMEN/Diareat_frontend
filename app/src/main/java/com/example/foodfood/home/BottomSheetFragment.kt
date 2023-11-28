@@ -45,6 +45,7 @@ class BottomSheetFragment(private val food: Data, val yy: Int, val mm: Int, val 
         super.onViewCreated(view, savedInstanceState)
 
         binding.editFoodName.hint = food.name
+        binding.registrationTime.text = food.hour.toString() + ":" + food.minute.toString()
         binding.editKcalAmount.hint = food.baseNutrition.kcal.toString()
         binding.editCarbohydrateAmount.hint = food.baseNutrition.carbohydrate.toString()
         binding.editProteinAmount.hint = food.baseNutrition.protein.toString()
