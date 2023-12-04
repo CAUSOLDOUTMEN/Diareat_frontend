@@ -39,7 +39,8 @@ interface ApiService {
     suspend fun joinUser(@Body request: Join): Login    // 입력된 유저 정보를 서버로 전송하는 함수
 
     @GET("/api/food/{userId}")
-    suspend fun getFoodOnDate(
+    suspend fun getFoodOnDate(  //날짜별 먹은 음식 리스트 조회
+        @Header("accessToken") accessToken: String,
         @Path("userId") userId: Long?,
         @Query("yy") yy: Int,
         @Query("mm") mm: Int,
@@ -47,7 +48,8 @@ interface ApiService {
         ): FoodOnDate
 
     @GET("/api/food/{userId}/nutrition")
-    suspend fun getNutritionSummary(
+    suspend fun getNutritionSummary(    //날짜별 총 영양성분 섭취 요약
+        @Header("accessToken") accessToken: String,
         @Path("userId") userId: Long?,
         @Query("dd") dd: Int,
         @Query("mm") mm: Int,
@@ -55,10 +57,14 @@ interface ApiService {
     ): NutritionSummary
 
     @POST("/api/food/save")
-    suspend fun createFood(@Body createFoodDto: CreateFood)
+    suspend fun createFood( // 음식 생성
+        @Header("accessToken") accessToken: String,
+        @Body createFoodDto: CreateFood
+    )
 
     @DELETE("/api/food/{foodId}/delete")
-    suspend fun deleteFood(
+    suspend fun deleteFood( // 음식 삭제
+        @Header("accessToken") accessToken: String,
         @Path("foodId") foodId: Long,
         @Header("userId") userId: Long,
         @Query("dd") dd: Int,
@@ -67,7 +73,8 @@ interface ApiService {
     )
 
     @POST("/api/food/update")
-    suspend fun editFood(
+    suspend fun editFood(   //음식 수정
+        @Header("accessToken") accessToken: String,
         @Body updateFoodDto: EditFood,
         @Query("dd") dd: Int,
         @Query("mm") mm: Int,
@@ -75,27 +82,39 @@ interface ApiService {
     )
 
     @POST("/api/food/favorite")
-    suspend fun addBookmark(@Body createFavoriteFoodDto: AddBookmark)
+    suspend fun addBookmark(    //즐겨찾기 추가
+        @Header("accessToken") accessToken: String,
+        @Body createFavoriteFoodDto: AddBookmark
+    )
 
     @GET("/api/food/favorite/{userId}")
-    suspend fun getFavoriteFood(@Path("userId") userId: Long?): GetBookmark
+    suspend fun getFavoriteFood(    //즐겨찾기 목록 조회
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long?
+    ): GetBookmark
 
     @POST("/api/food/favorite/createfrom")
-    suspend fun createFoodFromBookmark(@Body createFoodFromBookmark: CreateFoodFromBookmark)
+    suspend fun createFoodFromBookmark( //즐겨찾기에서 다이어리로 음식 추가
+        @Header("accessToken") accessToken: String,
+        @Body createFoodFromBookmark: CreateFoodFromBookmark
+    )
 
     @DELETE("/api/food/favorite/{favoriteFoodId}")
-    suspend fun deleteBookmark(
+    suspend fun deleteBookmark( // 즐겨찾기 삭제
+        @Header("accessToken") accessToken: String,
         @Path("favoriteFoodId") favoriteFoodId: Long,
         @Header("userId") userId: Long
     )
 
     @POST("/api/food/favorite/update")
-    suspend fun updateBookmark(
+    suspend fun updateBookmark( //즐겨찾기 수정
+        @Header("accessToken") accessToken: String,
         @Body updateFavoriteFoodDto: UpdateFavoriteFoodDto
     )
 
     @GET("/api/food/{userId}/analysis")
-    suspend fun getAnalysisGraphData(
+    suspend fun getAnalysisGraphData(   //음식 그래프 조회
+        @Header("accessToken") accessToken: String,
         @Path("userId") userId: Long,
         @Query("dd") dd: Int,
         @Query("mm") mm: Int,
@@ -103,7 +122,8 @@ interface ApiService {
     ): NutrientAnalysisGraph
 
     @GET("/api/food/{userId}/score")
-    suspend fun getBestWorstFood(
+    suspend fun getBestWorstFood(   //베스트, 워스트 조회
+        @Header("accessToken") accessToken: String,
         @Path("userId") userId: Long,
         @Query("dd") dd: Int,
         @Query("mm") mm: Int,
@@ -111,22 +131,38 @@ interface ApiService {
     ): BestWorst
 
     @GET("/api/user/{userId}/info/simple")
-    suspend fun getSimpleUserInfo(@Path("userId") userId: Long): SimpleUserInfo
+    suspend fun getSimpleUserInfo(  //프로필 간편 조회
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long
+    ): SimpleUserInfo
 
     @GET("/api/user/{userId}/info")
-    suspend fun getUserInfo(@Path("userId") userId: Long): UserInfo
+    suspend fun getUserInfo(    //유저 정보 조회
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long
+    ): UserInfo
 
     @PUT("/api/user/update")
-    suspend fun updateUserInfo(@Body updateUserDto: UpdateUserDto)
+    suspend fun updateUserInfo( //유저 정보 수정
+        @Header("accessToken") accessToken: String,
+        @Body updateUserDto: UpdateUserDto
+    )
 
     @GET("/api/user/{userId}/nutrition")
-    suspend fun getUserStandardIntake(@Path("userId") userId: Long): UserStandardIntake
+    suspend fun getUserStandardIntake(  //유저의 기준 섭취량 조회
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long
+    ): UserStandardIntake
 
     @PUT("/api/user/{userId}/nutrition")
-    suspend fun updateUserStandardIntake(@Body updateUserStandardIntake: UpdateUserStandardIntake)
+    suspend fun updateUserStandardIntake(   //유저의 목표 영양성분 섭취량 조회
+        @Header("accessToken") accessToken: String,
+        @Body updateUserStandardIntake: UpdateUserStandardIntake
+    )
 
     @GET("/api/food/{userId}/rank")
-    suspend fun getWeeklyRank(
+    suspend fun getWeeklyRank(  //주간 랭킹 조회
+        @Header("accessToken") accessToken: String,
         @Path("userId") userId: Long,
         @Query("dd") dd: Int,
         @Query("mm") mm: Int,
@@ -134,11 +170,22 @@ interface ApiService {
     ): WeeklyRank
 
     @POST("/api/user/search")
-    suspend fun searchUser(@Body searchUserDto: SearchUser): SearchUserResponse
+    suspend fun searchUser( //유저 검색
+        @Header("accessToken") accessToken: String,
+        @Body searchUserDto: SearchUser
+    ): SearchUserResponse
 
     @POST("/api/user/{userId}/follow/{followId}")
-    suspend fun followUser(@Path("userId") userId: Long, @Path("followId") followId: Long)
+    suspend fun followUser( //특정 유저 팔로우
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long,
+        @Path("followId") followId: Long
+    )
 
     @DELETE("/api/user/{userId}/follow/{followId}")
-    suspend fun unfollowUser(@Path("userId") userId: Long, @Path("followId") followId: Long)
+    suspend fun unfollowUser(   //특정 유저 팔로우 취소
+        @Header("accessToken") accessToken: String,
+        @Path("userId") userId: Long,
+        @Path("followId") followId: Long
+    )
 }

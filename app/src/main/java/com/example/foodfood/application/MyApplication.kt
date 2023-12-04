@@ -1,21 +1,28 @@
 package com.example.foodfood.application
 
 import android.app.Application
+import android.content.SharedPreferences
 import com.example.foodfood.api.ApiService
 import com.example.foodfood.api.OcrService
 import com.example.foodfood.api.createFood.BaseNutrition
 import com.kakao.sdk.common.KakaoSdk
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class MyApplication : Application() {
     lateinit var apiService: ApiService
     lateinit var ocrService: OcrService
-    var baseNutrition = BaseNutrition(0, 0, 0, 0)
+    var baseNutrition = BaseNutrition(0.0, 0.0, 0.0, 0.0)
+    private lateinit var sharedPreferences: SharedPreferences
+    private var accessToken: String? = ""
     override fun onCreate() {
         super.onCreate()
+        sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://diareat.thisiswandol.com/")
@@ -39,5 +46,9 @@ class MyApplication : Application() {
         ocrService = ocrRetrofit.create(OcrService::class.java)
 
         KakaoSdk.init(this, "032cc77ba17faa30703c6ff5d62735e6")
+    }
+
+    fun getSharedPrefs(): SharedPreferences {
+        return sharedPreferences
     }
 }
