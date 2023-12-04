@@ -5,4 +5,14 @@
         <item name="android:button">@drawable/checkbox_selector</item>
     </style>
 
+    <style name="CustomSmallProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/orange</item>
+        <item name="android:indeterminateTintMode">src_atop</item>
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:minWidth">32dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:maxWidth">32dp</item>
+        <item name="android:maxHeight">32dp</item>
+    </style>
+
 </resources>

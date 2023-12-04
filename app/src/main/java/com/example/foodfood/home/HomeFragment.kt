@@ -22,6 +22,7 @@ import com.example.foodfood.application.MyApplication
 import com.example.foodfood.bookmark.BookmarkFragment
 import com.example.foodfood.calendar.CalendarAdapter
 import com.example.foodfood.databinding.FragmentHomeBinding
+import com.example.foodfood.loading.DialogLoading
 import com.example.foodfood.profile.ProfileFragment
 import com.example.foodfood.viewModel.NutrientsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +50,9 @@ class HomeFragment : Fragment() {
     var year = today.year
     var month = today.monthValue
     var day = today.dayOfMonth
-    private lateinit var jwt: String
+    private lateinit var accessToken: String
+    private lateinit var progressDialog: DialogLoading
+    private var invisiblePosition = -1
 
     interface ItemClickListener {
         fun onItemClick(position: Int)
@@ -60,10 +63,10 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        btnNutrition = binding.btnTodayNutrition
-        sharedPreferences = (requireActivity() as MainActivity).getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        jwt = sharedPreferences.getString("jwt", "")!!
         app = (requireActivity() as MainActivity).application
+        sharedPreferences = app.getSharedPrefs()
+        btnNutrition = binding.btnTodayNutrition
+        accessToken = sharedPreferences.getString("accessToken", "")!!
         setCalendar(year, month, day)
         viewModel = (requireActivity() as MainActivity).getViewModel()
         userId = sharedPreferences.getLong("id", -1L)
@@ -162,44 +165,53 @@ class HomeFragment : Fragment() {
             // 프래그먼트가 액티비티에 추가되지 않은 경우
             return
         }
+        showProgressDialog()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = app.apiService.getFoodOnDate(userId, year, month, day)
+                val response = app.apiService.getFoodOnDate(accessToken, userId, year, month, day)
                 if (response.data == null) {
                     foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
                 } else {
                     foodOnDate = response
                 }
 
+                withContext(Dispatchers.Main) {
+                    Log.e("너냐???????????????", foodOnDate.toString())
+                    setDiaryFragment()
+                    progressDialog.dismiss()
+                }
+
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
-            }
-
-            withContext(Dispatchers.Main) {
-                Log.e("너냐???????????????", foodOnDate.toString())
-                setDiaryFragment()
+            } finally {
+                progressDialog.dismiss()
             }
         }
     }
 
     private fun setNutritionSummary() {
         todayNutritionClicked()
+        showProgressDialog()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                dailyNutrition = app.apiService.getNutritionSummary(userId, day, month, year)
+                dailyNutrition = app.apiService.getNutritionSummary(accessToken, userId, day, month, year)
                 Log.e("뭔데뭔데뭔데뭔데뭔데", dailyNutrition.toString())
+
+                withContext(Dispatchers.Main) {
+                    if (dailyNutrition.data.totalKcal == 0) {
+                        setEmptyFragment()
+                        progressDialog.dismiss()
+                    } else {
+                        setTodayNutritionFragment()
+                        progressDialog.dismiss()
+                    }
+                }
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getNutritionSummary API call", e)
-            }
-
-            withContext(Dispatchers.Main) {
-                if (dailyNutrition.data.totalKcal == 0) {
-                    setEmptyFragment()
-                } else {
-                    setTodayNutritionFragment()
-                }
+            } finally {
+                progressDialog.dismiss()
             }
         }
     }
@@ -245,7 +257,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        calendarAdapter = CalendarAdapter(dayList, initialPosition, requireContext(), itemClickListener)
+        calendarAdapter = CalendarAdapter(dayList, invisiblePosition, initialPosition, requireContext(), itemClickListener)
         binding.recyclerViewDate.adapter = calendarAdapter
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -269,11 +281,18 @@ class HomeFragment : Fragment() {
         val localMonth = localDate.monthValue
         val localYear = localDate.year
 
+//        if (localMonth == month && localYear == year) {
+//            lastDay = localDate.dayOfMonth
+//        }
+        val formatter = DateTimeFormatter.ofPattern("E", Locale("ko-KR")) // 요일을 해당 나라의 언어로 저장하는 방법
+
         if (localMonth == month && localYear == year) {
-            lastDay = localDate.dayOfMonth
+            val currentLastDay = localDate.dayOfMonth
+            invisiblePosition = currentLastDay
+        } else {
+            invisiblePosition = -1
         }
 
-        val formatter = DateTimeFormatter.ofPattern("E", Locale("ko-KR")) // 요일을 해당 나라의 언어로 저장하는 방법
         for (i in 1..lastDay) {
             val date = LocalDate.of(year, month, i)
             val weekday = date.format(formatter)
@@ -304,7 +323,7 @@ class HomeFragment : Fragment() {
     suspend fun getFoodList(): List<Data> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = app.apiService.getFoodOnDate(userId, year, month, day)
+                val response = app.apiService.getFoodOnDate(accessToken, userId, year, month, day)
 
                 if (response.data == null) {
                     foodOnDate = FoodOnDate(data = emptyList(), header = Header(code = 200, message = "SUCCESS"), msg = "음식")
@@ -318,8 +337,13 @@ class HomeFragment : Fragment() {
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error during getFoodOnDate API call", e)
                 return@withContext emptyList()
+            } finally {
             }
         }
     }
 
+    private fun showProgressDialog() {
+        progressDialog = DialogLoading(requireContext())
+        progressDialog.show()
+    }
 }

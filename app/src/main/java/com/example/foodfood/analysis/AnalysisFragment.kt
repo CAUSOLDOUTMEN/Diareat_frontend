@@ -1,5 +1,6 @@
 package com.example.foodfood.analysis
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.example.foodfood.analysis.ranking.WeeklyRankingFragment
 import com.example.foodfood.api.analysisGraph.Data
 import com.example.foodfood.application.MyApplication
 import com.example.foodfood.databinding.FragmentAnalysisBinding
+import com.example.foodfood.loading.DialogLoading
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +28,9 @@ class AnalysisFragment : Fragment() {
     private lateinit var graphData: Data
     private lateinit var rankList: List<com.example.foodfood.api.weeklyRank.Data>
     private var userId = -1L
+    private lateinit var progressDialog: DialogLoading
+    private lateinit var sharedPreferences: SharedPreferences
+    private var accessToken = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +40,8 @@ class AnalysisFragment : Fragment() {
 
         mainActivity = requireActivity() as MainActivity
         app = mainActivity.application
+        sharedPreferences = app.getSharedPrefs()
+        accessToken = sharedPreferences.getString("accessToken", "")!!
         userId = mainActivity.getUserId()
 
         return binding.root
@@ -58,6 +65,7 @@ class AnalysisFragment : Fragment() {
     }
 
     private fun setDiaryAnalysisFragment() {
+        showProgressDialog()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val currentDate = LocalDate.now()
@@ -65,12 +73,14 @@ class AnalysisFragment : Fragment() {
                 val month = currentDate.monthValue
                 val day = currentDate.dayOfMonth
 
-                val response = app.apiService.getAnalysisGraphData(userId, day, month, year)
+                val response = app.apiService.getAnalysisGraphData(accessToken, userId, day, month, year)
                 Log.e("뭐가 문젠데ㅔㅔㅔㅔㅔㅔㅔㅔㅔ", response.toString())
                 graphData = response.data
                 Log.e("보여줘라", response.data.toString())
             } catch (e: Exception) {
                 Log.e("AnalysisFragment", "Error during getAnalysisGraphData API call", e)
+            } finally {
+                progressDialog.dismiss()
             }
 
             withContext(Dispatchers.Main) {
@@ -87,17 +97,20 @@ class AnalysisFragment : Fragment() {
     }
 
     private fun setWeeklyRankingFragment() {
+        showProgressDialog()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val currentDate = LocalDate.now()
                 val year = currentDate.year
                 val month = currentDate.monthValue
                 val day = currentDate.dayOfMonth
-                val response = app.apiService.getWeeklyRank(userId, day, month, year)
+                val response = app.apiService.getWeeklyRank(accessToken, userId, day, month, year)
                 rankList = response.data
                 Log.e("너느 뭐임???", rankList.toString())
             } catch (e: Exception) {
                 Log.e("AnalysisFragment", "Error during getWeeklyRank API call", e)
+            } finally {
+                progressDialog.dismiss()
             }
 
             withContext(Dispatchers.Main) {
@@ -118,5 +131,10 @@ class AnalysisFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.analysisSubFrame, fragment, tag)
             .commit()
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = DialogLoading(requireContext())
+        progressDialog.show()
     }
 }

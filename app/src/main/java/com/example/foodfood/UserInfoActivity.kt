@@ -12,6 +12,7 @@ import android.widget.RadioGroup
 import com.example.foodfood.api.Join
 import com.example.foodfood.application.MyApplication
 import com.example.foodfood.databinding.ActivityUserInfoBinding
+import com.example.foodfood.loading.DialogLoading
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class UserInfoActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var app: MyApplication
     private var accessToken = ""
+    private lateinit var progressDialog: DialogLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +83,8 @@ class UserInfoActivity : AppCompatActivity() {
 
         val user = Join(age, gender, height, nickname, accessToken, weight)
 
+        showProgressDialog()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = app.apiService.joinUser(user)
@@ -90,6 +94,8 @@ class UserInfoActivity : AppCompatActivity() {
                 startActivity(intent)
             } catch (e: Exception) {
                 Log.e("UserInfoActivity", "Error during joinUser API call", e)
+            } finally {
+                progressDialog.dismiss()
             }
         }
 
@@ -97,5 +103,10 @@ class UserInfoActivity : AppCompatActivity() {
         startActivity(intent)
 
         finish()
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = DialogLoading(this)
+        progressDialog.show()
     }
 }
