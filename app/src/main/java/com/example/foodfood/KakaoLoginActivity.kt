@@ -35,7 +35,7 @@ class KakaoLoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         app = applicationContext as MyApplication
-        sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        sharedPreferences = app.getSharedPrefs()
 
         //카카오톡 설치되어있는지 확인
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
@@ -65,6 +65,7 @@ class KakaoLoginActivity : AppCompatActivity() {
 
                             if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
                                 sharedPreferences.edit().putLong("id", response.data.id).apply()
+                                sharedPreferences.edit().putString("accessToken", response.data.jwt).apply()
                                 makeToast()
                             } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
                                 val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
@@ -107,6 +108,7 @@ class KakaoLoginActivity : AppCompatActivity() {
 
                             if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
                                 sharedPreferences.edit().putLong("id", response.data.id).apply()
+                                sharedPreferences.edit().putString("accessToken", response.data.jwt).apply()
                                 makeToast()
                             } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
                                 val intent = Intent(this@KakaoLoginActivity, UserInfoActivity::class.java)
@@ -178,6 +180,7 @@ class KakaoLoginActivity : AppCompatActivity() {
                     if (response.data.id != null) { //id값이 null이 아닌 경우 이미 회원가입을 완료한 상태. MainActivity로 이동
                         println(response.data.jwt)
                         sharedPreferences.edit().putLong("id", response.data.id).apply()
+                        sharedPreferences.edit().putString("accessToken", response.data.jwt).apply()
                         makeToast()
                     } else {    //id가 null인 경우 유저 정보 입력 페이지로 이동
                         println(response.data.jwt)
